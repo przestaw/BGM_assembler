@@ -1,3 +1,6 @@
 # genome files
 *.fna
 *.fasta
+
+*.fna.*
+*.fasta.*

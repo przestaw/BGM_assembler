@@ -1,5 +1,4 @@
 from src.dna_util import complement
-import copy as cp
 
 # Nt.BspQI is a nicking endonuclease that cleaves only one strand of DNA on a double-stranded DNA substrate.
 # 5' ... G C T C T T C N^ ... 3'
@@ -7,7 +6,14 @@ import copy as cp
 # BssSI restriction enzyme recognizes CACGAG - Nb.BssSI cuts one site
 # 5' ... C^A C G A G ... 3'
 # 3' ... G T G C T^C ... 5'
-default_enzymes = {'BspQI': 'GCTCTTC', 'BssSI': 'CACGAG'}
+# Nt.BbvCI
+# 5' ... C C^T C A G C... 3'
+# 3' ... G G A G T C G... 5'
+# Nb.BsrDI
+# 5' ... G C A A T G N N ... 3'
+# 3' ... C G T T A C^N N ... 5'
+
+default_enzymes = {'BspQI': 'GCTCTTC', 'BssSI': 'CACGAG', 'BbvCI': 'CCTCAGC', 'BsrDI': 'GCAATG'}
 
 
 def digest_with_enzyme(genome, enzyme):
