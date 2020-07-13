@@ -1,4 +1,4 @@
-from src.dna_util import complement
+from src.dna_util import reverse_complement
 
 # Nt.BspQI is a nicking endonuclease that cleaves only one strand of DNA on a double-stranded DNA substrate.
 # 5' ... G C T C T T C N^ ... 3'
@@ -30,8 +30,8 @@ def digest_with_pattern(genome, enzyme_pattern):
 
     # prepare patterns
     patterns = [enzyme_pattern]
-    if complement(enzyme_pattern) != enzyme_pattern:
-        patterns.append(complement(enzyme_pattern))
+    if reverse_complement(enzyme_pattern) != enzyme_pattern:
+        patterns.append(reverse_complement(enzyme_pattern))
 
     # rev_pat = []
     # for p in patterns:
@@ -71,3 +71,31 @@ def gen_bin_map_from_digest(digest, quantize=1000):
         result.append(flag)
 
     return ''.join(result)
+
+
+# count distances between labels
+def gen_distances_from_quants(quanted, symbol = '1'):
+    dist = 1
+    map = []
+
+    for i in quanted:
+        if i == symbol:
+            map.append(dist)
+            dist = 1
+        else:
+            dist = dist + 1
+
+    return map
+
+
+# count distances between labels
+def gen_positions_from_digest(digest, symbol = '1'):
+    dist = 0
+    map = []
+
+    for i in digest:
+        if i == symbol:
+            map.append(dist)
+        dist = dist + 1
+
+    return map
