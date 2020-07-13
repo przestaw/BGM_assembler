@@ -3,3 +3,4 @@
 - *ipython* notebooks - contains analysis of sequences (how random and DNA sequences are digested)
 - fasta - place where analyzed files should be placed
 - src - contains scripts to be used on command line
+- data - contains raw data for analysis
