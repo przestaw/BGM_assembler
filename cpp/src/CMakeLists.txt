@@ -1,0 +1,3 @@
+file(GLOB OM_DATA_SRC "${PROJECT_SOURCE_DIR}/src/data/*.cpp")
+
+set(LIB_SRC ${LIB_SRC} ${OM_DATA_SRC} PARENT_SCOPE)
