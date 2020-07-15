@@ -6,16 +6,34 @@
 #include <fstream>
 
 using namespace oma::data;
-std::vector<BinaryMap> FileLoader::loadFile(const std::string& filename) {
+
+std::vector<BinaryMap> FileLoader::loadFile(std::istream& input) {
   std::vector<BinaryMap> ret;
+
+  for (auto temp = parseBinMap(input); std::get<0>(temp);
+       temp      = parseBinMap(input)) {
+    ret.emplace_back(std::get<1>(temp), std::get<2>(temp));
+  }
 
   return ret;
 }
-BinaryMap FileLoader::parseBinaryMap(std::istream& in) {
+
+FileLoader::ParsedRecord FileLoader::parseBinMap(std::istream& in) {
   std::string nameLine;
-  getline(in, nameLine, '\n');
+  if(getline(in, nameLine, '\n')){
+    return ParsedRecord(true, nameLine, FileLoader::getSequence(in));
+  } else {
+    return ParsedRecord(false, "", BinaryMap::Bitset());
+  }
+}
 
-  // TODO : read lines of ~80 symbols and convert to binary sequence
+BinaryMap::Bitset FileLoader::getSequence(std::istream& in) {
+  std::string seq, tmpLine;
 
-  return BinaryMap(nameLine, BinaryMap::Bitset());
+  while (in.peek() != '>' && !in.eof()) {
+    getline(in, tmpLine, '\n');
+    seq += tmpLine;
+  }
+
+  return BinaryMap::Bitset(seq);
 }

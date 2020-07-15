@@ -11,12 +11,15 @@
 
 namespace oma::data {
   class FileLoader {
+  private:
+    using ParsedRecord = std::tuple<bool, std::string, BinaryMap::Bitset>;
   public:
     // TODO : Container for BinaryMaps - vector method as private
-    static std::vector<BinaryMap> loadFile(const std::string& filename);
+    static std::vector<BinaryMap> loadFile(std::istream& input);
 
   private:
-    BinaryMap parseBinaryMap(std::istream& in);
+    static inline ParsedRecord parseBinMap(std::istream& in);
+    static inline BinaryMap::Bitset getSequence(std::istream& in);
   };
 } // namespace oma::data
 

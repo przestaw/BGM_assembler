@@ -16,3 +16,5 @@ void BinaryMap::setRightBest(BinaryMap *best, unsigned int shift) {
 }
 
 BinaryMap::Bitset BinaryMap::getMap() { return Bitset(map); }
+
+const std::string &BinaryMap::getIdentifier() const { return identifier; }

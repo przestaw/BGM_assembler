@@ -13,16 +13,20 @@ using boost::dynamic_bitset;
 namespace oma::data {
   class BinaryMap {
   public:
-    using Bitset = dynamic_bitset<uint64_t>;
+    using Bitset    = dynamic_bitset<uint64_t>;
+    using Neighbour = std::pair<BinaryMap *, unsigned>;
     /**
      * Constructor
      * @param identifier identifier for BinaryMap
      * @param map raw binary map
      */
     BinaryMap(const std::string &identifier, Bitset map);
+    const std::string &getIdentifier() const;
     void setLeftBest(BinaryMap *best, unsigned shift);
     void setRightBest(BinaryMap *best, unsigned shift);
     Bitset getMap(); // NOTE : copy as it will be modified [shifted]
+    Neighbour getLeftNeighbour();
+    Neighbour getRightNeighbour();
   private:
     std::string identifier;
     Bitset map;

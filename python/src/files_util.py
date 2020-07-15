@@ -42,7 +42,7 @@ def write_silico_maps(maps, filename):
     for map_it in maps:
         # write ID
         file.write('> '+map_it[0]+'\n')
-        lines_no = int(len(map_it[0])/80) + (0 if (len(map_it[0]) % 80) == 0 else 1)
+        lines_no = int(len(map_it[1])/80) + (0 if (len(map_it[1]) % 80) == 0 else 1)
         for i in range(0, lines_no):
             file.write(map_it[1][i*80:(i+1)*80]+'\n')
     file.close()

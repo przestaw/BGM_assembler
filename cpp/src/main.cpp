@@ -2,6 +2,10 @@
 #include <iostream>
 #include <project_defines.h>
 
+#include <data/file_loader.h>
+#include <data/maps_container.h>
+#include <include/c++/7/fstream>
+
 using namespace boost::program_options;
 
 /**
@@ -60,6 +64,15 @@ int main(int argc, char *argv[]) {
     // TODO : transform and save ?
   } else {
     // NOTE : temp playgorund
+    std::string filename = "./data/testmaps/2Mb_ecoli_2000quant_500len_errorfree.binmaps";
+    std::ifstream file;
+    file.open(filename);
+    auto maps = oma::data::FileLoader::loadFile(file);
+    file.close();
+
+    for(auto& it : maps){
+      std::cout << it.getIdentifier() << "\n\t" << it.getMap() << '\n';
+    }
   }
   return 0;
 }
