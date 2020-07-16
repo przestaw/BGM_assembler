@@ -93,7 +93,7 @@ add_library(${LIBRARY} ${LIB_SRC} ${LIB_INC})
 add_dependencies(${LIBRARY} ${CHECK})
 
 # Program executable
-add_executable(${EXECUTABLE} src/main.cpp)
+add_executable(${EXECUTABLE} main.cpp)
 add_dependencies(${EXECUTABLE} ${LIBRARY})
 target_link_libraries(${EXECUTABLE} ${LIBRARY})
 target_link_libraries(${EXECUTABLE} ${EXTERNAL_LIBS})

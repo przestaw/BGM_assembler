@@ -2,6 +2,7 @@
 #include <iostream>
 #include <project_defines.h>
 
+#include <align_algorithm.h>
 #include <data/file_loader.h>
 #include <data/maps_container.h>
 #include <include/c++/7/fstream>
@@ -64,14 +65,43 @@ int main(int argc, char *argv[]) {
     // TODO : transform and save ?
   } else {
     // NOTE : temp playgorund
-    std::string filename = "./data/testmaps/2Mb_ecoli_2000quant_500len_errorfree.binmaps";
+    std::string filename =
+        "./data/testmaps/2Mb_ecoli_2000quant_500len_errorfree.binmaps";
     std::ifstream file;
     file.open(filename);
-    auto maps = oma::data::FileLoader::loadFile(file);
+    auto maps = oma::FileLoader::loadFile(file);
     file.close();
 
-    for(auto& it : maps){
+    for (auto &it : maps) {
       std::cout << it.getIdentifier() << "\n\t" << it.getMap() << '\n';
+    }
+
+    oma::MapsContainer mapsContainer(maps);
+
+    oma::AlignAlgorithm aligner(350);
+
+    aligner.align_maps_single(mapsContainer);
+
+    auto lambdaL = [](oma::BinaryMap map) {
+      if (map.getLeftNeighbour().first) {
+        return "L : " + map.getLeftNeighbour().first->getIdentifier() + " "
+               + std::to_string(map.getLeftNeighbour().second);
+      } else {
+        return std::string("L : XX");
+      }
+    };
+    auto lambdaR = [](oma::BinaryMap map) {
+      if (map.getRightNeighbour().first) {
+        return "R : " + map.getRightNeighbour().first->getIdentifier() + " "
+               + std::to_string(map.getRightNeighbour().second);
+      } else {
+        return std::string("R : XX");
+      }
+    };
+
+    for (auto &it : mapsContainer) {
+      std::cout << it.getIdentifier() << "\n\t" << lambdaL(it) << "\n\t"
+                << lambdaR(it) << "\n";
     }
   }
   return 0;

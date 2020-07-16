@@ -10,7 +10,7 @@
 
 using boost::dynamic_bitset;
 
-namespace oma::data {
+namespace oma {
   class BinaryMap {
   public:
     using Bitset    = dynamic_bitset<uint64_t>;
@@ -21,21 +21,23 @@ namespace oma::data {
      * @param map raw binary map
      */
     BinaryMap(const std::string &identifier, Bitset map);
-    const std::string &getIdentifier() const;
+    [[nodiscard]] const std::string &getIdentifier() const;
     void setLeftBest(BinaryMap *best, unsigned shift);
     void setRightBest(BinaryMap *best, unsigned shift);
     Bitset getMap(); // NOTE : copy as it will be modified [shifted]
-    Neighbour getLeftNeighbour();
-    Neighbour getRightNeighbour();
+    const Bitset &getMap() const;
+    [[nodiscard]] const Neighbour &getLeftNeighbour() const;
+    [[nodiscard]] const Neighbour &getRightNeighbour() const;
+
   private:
     std::string identifier;
     Bitset map;
-    // Left best aligned map -> TODO maybe in different container
-    BinaryMap *lBest = nullptr;
-    unsigned lShift  = 0;
-    // Right best aligned map -> TODO maybe in different container
-    BinaryMap *rBest = nullptr;
-    unsigned rShift  = 0;
+    // Left best aligned map -> TODO maybe index/id instead of pointer
+    //    BinaryMap *lBest = nullptr;
+    //    unsigned lShift  = 0;
+    Neighbour leftNeighbour;
+    // Right best aligned map
+    Neighbour rightNeighbour;
   };
 } // namespace oma::data
 

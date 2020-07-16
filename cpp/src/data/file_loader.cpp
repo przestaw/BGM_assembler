@@ -5,7 +5,7 @@
 #include <data/file_loader.h>
 #include <fstream>
 
-using namespace oma::data;
+using namespace oma;
 
 std::vector<BinaryMap> FileLoader::loadFile(std::istream& input) {
   std::vector<BinaryMap> ret;

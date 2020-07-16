@@ -3,7 +3,7 @@
 //
 #include <data/maps_container.h>
 
-using namespace oma::data;
+using namespace oma;
 
 MapsContainer::MapsContainer(std::vector<BinaryMap> maps)
     : std::vector<BinaryMap>(std::move(maps)) {}
