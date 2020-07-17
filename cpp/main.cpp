@@ -15,7 +15,8 @@ using namespace boost::program_options;
  */
 struct Params {
   bool run = false;
-  std::string filename;
+  std::string input_file;
+  std::string output_file;
   unsigned margin = 0;
 }; //!< global Params object
 
@@ -28,10 +29,10 @@ inline Params parseParams(int argc, char *argv[]) {
   Params params;
   try {
     options_description desc{"Options"};
-    desc.add_options()("help,h", "Help screen")("input,i", value<std::string>(),
-                                                "Input file")(
-        "output,o", value<std::string>(),
-        "Output file")("margin,m", value<unsigned>(),
+    desc.add_options()("help,h", "Help screen")
+        ("input,i", value<std::string>(),"Input file")
+            ("output,o", value<std::string>(), "Output file")
+                ("margin,m", value<unsigned>(),
                        "Margin of maps overlap in quants "
                        "[min no of symbols for overlap to be meaningfull]");
 
@@ -49,14 +50,47 @@ inline Params parseParams(int argc, char *argv[]) {
         params.margin = vm["margin"].as<unsigned>();
       }
       if (vm.count("input") > 0) {
+        if (vm.count("output") == 0) {
+          throw oma::error::missing_argument("output");
+        } else {
+          params.output_file = vm["output"].as<std::string>();
+        }
+
         params.run      = true;
-        params.filename = vm["input"].as<std::string>();
+        params.input_file = vm["input"].as<std::string>();
       }
     }
   } catch (const boost::program_options::error &ex) {
     std::cerr << ex.what() << " !\n";
   }
   return params;
+}
+
+void temp_output(const oma::MapsContainer& mapsContainer, const std::string &output_filename){
+  auto lambdaL = [](const oma::BinaryMap &map) {
+    if (map.getLeftNeighbour().first) {
+      return "L : " + map.getLeftNeighbour().first->getIdentifier() + " "
+             + std::to_string(map.getLeftNeighbour().second);
+    } else {
+      return std::string("L : XX");
+    }
+  };
+  auto lambdaR = [](const oma::BinaryMap &map) {
+    if (map.getRightNeighbour().first) {
+      return "R : " + map.getRightNeighbour().first->getIdentifier() + " "
+             + std::to_string(map.getRightNeighbour().second);
+    } else {
+      return std::string("R : XX");
+    }
+  };
+
+  std::ofstream output;
+  output.open(output_filename);
+  for (const auto &it : mapsContainer) {
+    output << it.getIdentifier() << "\n\t" << lambdaL(it) << "\n\t"
+           << lambdaR(it) << "\n";
+  }
+  output.close();
 }
 
 /**
@@ -68,45 +102,21 @@ int main(int argc, char *argv[]) {
             << "by Stawczyk Przemyslaw" << std::endl; // flush stream
 
   Params params = parseParams(argc, argv);
-  if (params.run == true) {
+  if (params.run) {
     std::cout << "RUNNING\n";
 
-    std::ifstream file;
-    file.open(params.filename);
-    auto maps = oma::FileLoader::loadFile(file);
-    file.close();
+    std::ifstream input;
+    input.open(params.input_file);
+    auto maps = oma::FileLoader::loadFile(input);
+    input.close();
 
     oma::MapsContainer mapsContainer(maps);
-
     oma::AlignAlgorithm aligner(params.margin);
 
     aligner.align_maps_single(mapsContainer);
 
-    auto lambdaL = [](const oma::BinaryMap &map) {
-      if (map.getLeftNeighbour().first) {
-        return "L : " + map.getLeftNeighbour().first->getIdentifier() + " "
-               + std::to_string(map.getLeftNeighbour().second);
-      } else {
-        return std::string("L : XX");
-      }
-    };
-    auto lambdaR = [](const oma::BinaryMap &map) {
-      if (map.getRightNeighbour().first) {
-        return "R : " + map.getRightNeighbour().first->getIdentifier() + " "
-               + std::to_string(map.getRightNeighbour().second);
-      } else {
-        return std::string("R : XX");
-      }
-    };
-
-    for (const auto &it : mapsContainer) {
-      std::cout << it.getIdentifier() << "\n\t" << lambdaL(it) << "\n\t"
-                << lambdaR(it) << "\n";
-    }
-
-  } else {
-    // NOTE : temp playgorund
-    return -1;
+    temp_output(mapsContainer, params.output_file);
   }
+
   return 0;
 }
