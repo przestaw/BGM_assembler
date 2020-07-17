@@ -5,6 +5,7 @@
 #include <align_algorithm.h>
 #include <data/file_loader.h>
 #include <data/maps_container.h>
+#include <error/exeception.h>
 #include <include/c++/7/fstream>
 
 using namespace boost::program_options;
@@ -15,22 +16,24 @@ using namespace boost::program_options;
 struct Params {
   bool run = false;
   std::string filename;
-} params; //!< global Params object
+  unsigned margin = 0;
+}; //!< global Params object
 
 /**
  * Function for arguments parsing
  * @param argc arguments count from stdin
  * @param argv arguments array
  */
-inline void parseParams(int argc, char *argv[]) {
+inline Params parseParams(int argc, char *argv[]) {
+  Params params;
   try {
     options_description desc{"Options"};
-    desc.add_options()("help,h", "Help screen")(
-        "input,i", value<std::vector<std::string>>(),
-        "Input file")("output,o", value<std::string>(), "Output file")(
-        "margin,m", value<unsigned>(),
-        "Margin of maps overlap in quants "
-        "[min no of symbols for overlap to be meaningfull]");
+    desc.add_options()("help,h", "Help screen")("input,i", value<std::string>(),
+                                                "Input file")(
+        "output,o", value<std::string>(),
+        "Output file")("margin,m", value<unsigned>(),
+                       "Margin of maps overlap in quants "
+                       "[min no of symbols for overlap to be meaningfull]");
 
     variables_map vm;
     store(parse_command_line(argc, argv, desc), vm);
@@ -40,6 +43,11 @@ inline void parseParams(int argc, char *argv[]) {
     if (vm.count("help")) {
       std::cout << desc << '\n';
     } else {
+      if (vm.count("margin") == 0) {
+        throw oma::error::missing_argument("margin");
+      } else {
+        params.margin = vm["margin"].as<unsigned>();
+      }
       if (vm.count("input") > 0) {
         params.run      = true;
         params.filename = vm["input"].as<std::string>();
@@ -48,6 +56,7 @@ inline void parseParams(int argc, char *argv[]) {
   } catch (const boost::program_options::error &ex) {
     std::cerr << ex.what() << " !\n";
   }
+  return params;
 }
 
 /**
@@ -58,31 +67,22 @@ int main(int argc, char *argv[]) {
   std::cout << "Prototype OM algorithm - OMA\n"
             << "by Stawczyk Przemyslaw" << std::endl; // flush stream
 
-  parseParams(argc, argv);
-  if (params.run) {
+  Params params = parseParams(argc, argv);
+  if (params.run == true) {
     std::cout << "RUNNING\n";
-    // TODO : container for OM data
-    // TODO : transform and save ?
-  } else {
-    // NOTE : temp playgorund
-    std::string filename =
-        "./data/testmaps/2Mb_ecoli_2000quant_500len_errorfree.binmaps";
+
     std::ifstream file;
-    file.open(filename);
+    file.open(params.filename);
     auto maps = oma::FileLoader::loadFile(file);
     file.close();
 
-    for (auto &it : maps) {
-      std::cout << it.getIdentifier() << "\n\t" << it.getMap() << '\n';
-    }
-
     oma::MapsContainer mapsContainer(maps);
 
-    oma::AlignAlgorithm aligner(350);
+    oma::AlignAlgorithm aligner(params.margin);
 
     aligner.align_maps_single(mapsContainer);
 
-    auto lambdaL = [](oma::BinaryMap map) {
+    auto lambdaL = [](const oma::BinaryMap &map) {
       if (map.getLeftNeighbour().first) {
         return "L : " + map.getLeftNeighbour().first->getIdentifier() + " "
                + std::to_string(map.getLeftNeighbour().second);
@@ -90,7 +90,7 @@ int main(int argc, char *argv[]) {
         return std::string("L : XX");
       }
     };
-    auto lambdaR = [](oma::BinaryMap map) {
+    auto lambdaR = [](const oma::BinaryMap &map) {
       if (map.getRightNeighbour().first) {
         return "R : " + map.getRightNeighbour().first->getIdentifier() + " "
                + std::to_string(map.getRightNeighbour().second);
@@ -99,10 +99,14 @@ int main(int argc, char *argv[]) {
       }
     };
 
-    for (auto &it : mapsContainer) {
+    for (const auto &it : mapsContainer) {
       std::cout << it.getIdentifier() << "\n\t" << lambdaL(it) << "\n\t"
                 << lambdaR(it) << "\n";
     }
+
+  } else {
+    // NOTE : temp playgorund
+    return -1;
   }
   return 0;
 }

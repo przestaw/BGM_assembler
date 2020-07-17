@@ -5,11 +5,11 @@ using namespace oma;
 BinaryMap::BinaryMap(const std::string &c_identifier, Bitset c_map)
     : identifier(c_identifier), map(std::move(c_map)) {}
 
-void BinaryMap::setLeftBest(BinaryMap *best, unsigned int shift) {
+void BinaryMap::setLeftNeighbour(BinaryMap *best, unsigned int shift) {
   leftNeighbour = std::make_pair(best, shift);
 }
 
-void BinaryMap::setRightBest(BinaryMap *best, unsigned int shift) {
+void BinaryMap::setRightNeighbour(BinaryMap *best, unsigned int shift) {
   rightNeighbour = std::make_pair(best, shift);
 }
 

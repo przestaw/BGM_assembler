@@ -8,12 +8,14 @@ using namespace oma;
 MapsContainer::MapsContainer(std::vector<BinaryMap> maps)
     : std::vector<BinaryMap>(std::move(maps)) {}
 
-void MapsContainer::addLNeighbour(size_t map, size_t neighbour, unsigned shift) {
-  (*this)[map].setLeftBest(&(*this)[neighbour], shift);
-  (*this)[neighbour].setRightBest(&(*this)[map], shift);
+void MapsContainer::addLeftNeighbour(size_t map, size_t neighbour,
+                                     unsigned shift) {
+  (*this)[map].setLeftNeighbour(&(*this)[neighbour], shift);
+  (*this)[neighbour].setRightNeighbour(&(*this)[map], shift);
 }
 
-void MapsContainer::addRNeighbour(size_t map, size_t neighbour, unsigned shift) {
-  (*this)[map].setRightBest(&(*this)[neighbour], shift);
-  (*this)[neighbour].setLeftBest(&(*this)[map], shift);
+void MapsContainer::addRightNeighbour(size_t map, size_t neighbour,
+                                      unsigned shift) {
+  (*this)[map].setRightNeighbour(&(*this)[neighbour], shift);
+  (*this)[neighbour].setLeftNeighbour(&(*this)[map], shift);
 }

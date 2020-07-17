@@ -20,7 +20,8 @@ std::vector<BinaryMap> FileLoader::loadFile(std::istream& input) {
 
 FileLoader::ParsedRecord FileLoader::parseBinMap(std::istream& in) {
   std::string nameLine;
-  if(getline(in, nameLine, '\n')){
+  if (in.peek() == '>') {
+    getline(in, nameLine, '\n');
     return ParsedRecord(true, nameLine, FileLoader::getSequence(in));
   } else {
     return ParsedRecord(false, "", BinaryMap::Bitset());

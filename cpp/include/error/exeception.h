@@ -6,6 +6,7 @@
 #define TEMPLATE_EXECEPTION_H
 
 #include <iostream>
+#include <local/include/boost/program_options/errors.hpp>
 #include <stdexcept>
 
 namespace oma {
@@ -18,6 +19,14 @@ namespace oma {
     class runtime_exception : public exception {
     public:
       explicit runtime_exception(const std::string &desc) : exception(desc) {}
+    };
+
+    class missing_argument : public boost::program_options::error {
+    public:
+      explicit missing_argument(const std::string &desc)
+          : boost::program_options::error("Missing required argument " + desc
+                                          + "\nPlease include argument value") {
+      }
     };
   } // namespace error
 } // namespace oma

@@ -18,7 +18,7 @@ void AlignAlgorithm::align_maps_single(MapsContainer& maps) {
 
 void AlignAlgorithm::align_one_map(MapsContainer& maps, size_t index) {
   // left neighbour [if present - found as best right neighbour]
-  if (maps[index].getLeftNeighbour().first != nullptr) {
+  if (maps[index].getLeftNeighbour().first == nullptr) {
     Alignment best   = Alignment(0, std::numeric_limits<size_t>::max());
     size_t neighbour = 0;
     /* NOTE : iterate from index to max
@@ -37,11 +37,11 @@ void AlignAlgorithm::align_one_map(MapsContainer& maps, size_t index) {
      *  - see note in align function
      */
     if (best.first != 0) {
-      maps.addLNeighbour(index, neighbour, best.first);
+      maps.addLeftNeighbour(index, neighbour, best.first);
     }
   }
   // right neighbour
-  if (maps[index].getRightNeighbour().first != nullptr) {
+  if (maps[index].getRightNeighbour().first == nullptr) {
     Alignment best   = Alignment(0, std::numeric_limits<size_t>::max());
     size_t neighbour = 0;
     /* NOTE : iterate from index to max
@@ -61,7 +61,7 @@ void AlignAlgorithm::align_one_map(MapsContainer& maps, size_t index) {
      *  - see note in align function
      */
     if (best.first != 0) {
-      maps.addRNeighbour(index, neighbour, best.first);
+      maps.addRightNeighbour(index, neighbour, best.first);
     }
   }
 }
@@ -70,7 +70,7 @@ AlignAlgorithm::Alignment
 AlignAlgorithm::align(BinaryMap::Bitset ref, BinaryMap::Bitset tested) const {
   // TODO : check or assure that maps are longer than minOverlap
   //        i.e. filter too short maps
-  const size_t max_shift = std::max(ref.size(), tested.size()) - minOverlap;
+  const size_t max_shift = 1 + std::max(ref.size(), tested.size()) - minOverlap;
   // init best as worst numerically possible
   size_t best       = std::numeric_limits<size_t>::max();
   size_t best_shift = 0;
@@ -88,15 +88,18 @@ AlignAlgorithm::align(BinaryMap::Bitset ref, BinaryMap::Bitset tested) const {
     /* NOTE : assuming variance as in binominal distribution
      *  var = n * p * (1 - p)
      *  n = no of bits
-     *  p = propability of 1 = 1/2
+     *  p = probability of 1 = 1/2
      *  var = n * 1/4
      *  3 sigma rule
      *  var * 3 = 3 * n / 4
+     *  E(x) = n * p = n/2
+     *  treshold = n/2 - 3n/4 = - n/4
      */
     size_t xor_result = shifted.count();
     // NOTE : must be calculated for each shift as n changes
-    size_t var_3 = 3 * shifted.size() / 4;
-    if (xor_result < var_3) {
+    // size_t var_3 = 3 * shifted.size() / 4;
+    // FIXME : temporary - 20% 1's as treshold
+    if (xor_result < shifted.size() / 5) {
       // TODO : SCORE ???
       if (best > xor_result) {
         best       = xor_result;

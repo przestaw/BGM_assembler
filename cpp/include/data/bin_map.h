@@ -21,9 +21,11 @@ namespace oma {
      * @param map raw binary map
      */
     BinaryMap(const std::string &identifier, Bitset map);
+
     [[nodiscard]] const std::string &getIdentifier() const;
-    void setLeftBest(BinaryMap *best, unsigned shift);
-    void setRightBest(BinaryMap *best, unsigned shift);
+    // FIXME : index instead of pointer ?
+    void setLeftNeighbour(BinaryMap *best, unsigned shift);
+    void setRightNeighbour(BinaryMap *best, unsigned shift);
     Bitset getMap(); // NOTE : copy as it will be modified [shifted]
     const Bitset &getMap() const;
     [[nodiscard]] const Neighbour &getLeftNeighbour() const;
@@ -33,12 +35,10 @@ namespace oma {
     std::string identifier;
     Bitset map;
     // Left best aligned map -> TODO maybe index/id instead of pointer
-    //    BinaryMap *lBest = nullptr;
-    //    unsigned lShift  = 0;
     Neighbour leftNeighbour;
     // Right best aligned map
     Neighbour rightNeighbour;
   };
-} // namespace oma::data
+} // namespace oma
 
 #endif // BIN_MAP_H
