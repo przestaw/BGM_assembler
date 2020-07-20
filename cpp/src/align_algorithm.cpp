@@ -98,8 +98,8 @@ AlignAlgorithm::align(BinaryMap::Bitset ref, BinaryMap::Bitset tested) const {
     size_t xor_result = shifted.count();
     // NOTE : must be calculated for each shift as n changes
     // size_t var_3 = 3 * shifted.size() / 4;
-    // FIXME : temporary - 20% 1's as treshold
-    if (xor_result < shifted.size() / 5) {
+    // FIXME : temporary - 10% 1's as treshold
+    if (xor_result < shifted.size() / 10) {
       // TODO : SCORE ???
       if (best > xor_result) {
         best       = xor_result;

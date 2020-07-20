@@ -29,10 +29,10 @@ inline Params parseParams(int argc, char *argv[]) {
   Params params;
   try {
     options_description desc{"Options"};
-    desc.add_options()("help,h", "Help screen")
-        ("input,i", value<std::string>(),"Input file")
-            ("output,o", value<std::string>(), "Output file")
-                ("margin,m", value<unsigned>(),
+    desc.add_options()("help,h", "Help screen")("input,i", value<std::string>(),
+                                                "Input file")(
+        "output,o", value<std::string>(),
+        "Output file")("margin,m", value<unsigned>(),
                        "Margin of maps overlap in quants "
                        "[min no of symbols for overlap to be meaningfull]");
 
@@ -44,11 +44,6 @@ inline Params parseParams(int argc, char *argv[]) {
     if (vm.count("help")) {
       std::cout << desc << '\n';
     } else {
-      if (vm.count("margin") == 0) {
-        throw oma::error::missing_argument("margin");
-      } else {
-        params.margin = vm["margin"].as<unsigned>();
-      }
       if (vm.count("input") > 0) {
         if (vm.count("output") == 0) {
           throw oma::error::missing_argument("output");
@@ -56,8 +51,16 @@ inline Params parseParams(int argc, char *argv[]) {
           params.output_file = vm["output"].as<std::string>();
         }
 
-        params.run      = true;
+        params.run        = true;
         params.input_file = vm["input"].as<std::string>();
+
+        if (vm.count("margin") == 0) {
+          throw oma::error::missing_argument("margin");
+        } else {
+          params.margin = vm["margin"].as<unsigned>();
+        }
+      } else {
+        throw oma::error::missing_argument("input");
       }
     }
   } catch (const boost::program_options::error &ex) {
@@ -66,7 +69,8 @@ inline Params parseParams(int argc, char *argv[]) {
   return params;
 }
 
-void temp_output(const oma::MapsContainer& mapsContainer, const std::string &output_filename){
+void temp_output(const oma::MapsContainer &mapsContainer,
+                 const std::string &output_filename) {
   auto lambdaL = [](const oma::BinaryMap &map) {
     if (map.getLeftNeighbour().first) {
       return "L : " + map.getLeftNeighbour().first->getIdentifier() + " "
@@ -93,6 +97,27 @@ void temp_output(const oma::MapsContainer& mapsContainer, const std::string &out
   output.close();
 }
 
+std::string print_map_list(const oma::BinaryMap &map) {
+  if (map.getRightNeighbour().first) {
+    return map.getRightNeighbour().first->getIdentifier() + "\n"
+           + print_map_list(*map.getRightNeighbour().first);
+  } else {
+    return std::string("---\n");
+  }
+}
+
+void temp_output_2(const oma::MapsContainer &mapsContainer,
+                   const std::string &output_filename) {
+  std::ofstream output;
+  output.open(output_filename);
+  for (const auto &it : mapsContainer) {
+    if(it.getLeftNeighbour().first == nullptr){
+      output << print_map_list(it);
+    }
+  }
+  output.close();
+}
+
 /**
  * Main function
  * @return 0 on success
@@ -115,7 +140,7 @@ int main(int argc, char *argv[]) {
 
     aligner.align_maps_single(mapsContainer);
 
-    temp_output(mapsContainer, params.output_file);
+    temp_output_2(mapsContainer, params.output_file);
   }
 
   return 0;

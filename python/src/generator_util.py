@@ -14,7 +14,7 @@ def generate_errorfree_overlaping(genome, one_map_len, shift=100):
 
     example = []
     while j < len(genome[1]):
-        temp = [str(i) + '_' + str(j) + ' ' + genome[0], genome[1][i:j]]
+        temp = [str(i) + ' ' + str(j) + ' |' + genome[0], genome[1][i:j]]
         i = i + shift
         j = j + shift
         example.append(temp)
@@ -48,7 +48,7 @@ def generate_errorfree_distribued(genome, one_map_len, std_dev, coverage=25, see
         start = np.random.random_integers(0, len(genome[1]) - length)
         end = int(start + length)
 
-        temp = [str(start) + '_' + str(end) + ' ' + genome[0], genome[1][start:end]]
+        temp = [str(start) + ' ' + str(end) + ' |' + genome[0], genome[1][start:end]]
 
         so_far = so_far + length
         example.append(temp)

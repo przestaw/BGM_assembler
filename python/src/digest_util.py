@@ -1,4 +1,4 @@
-from src.dna_util import reverse_complement
+from dna_util import reverse_complement
 
 # Nt.BspQI is a nicking endonuclease that cleaves only one strand of DNA on a double-stranded DNA substrate.
 # 5' ... G C T C T T C N^ ... 3'

@@ -25,7 +25,7 @@ namespace oma {
     public:
       explicit missing_argument(const std::string &desc)
           : boost::program_options::error("Missing required argument " + desc
-                                          + "\nPlease include argument value") {
+                                          + "\nPlease include argument with value") {
       }
     };
   } // namespace error
