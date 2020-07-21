@@ -3,7 +3,8 @@
 using namespace oma;
 
 BinaryMap::BinaryMap(const std::string &c_identifier, Bitset c_map)
-    : identifier(c_identifier), map(std::move(c_map)) {}
+    : identifier(c_identifier), map(std::move(c_map)),
+      leftNeighbour(nullptr, 0), rightNeighbour(nullptr, 0) {}
 
 void BinaryMap::setLeftNeighbour(BinaryMap *best, unsigned int shift) {
   leftNeighbour = std::make_pair(best, shift);

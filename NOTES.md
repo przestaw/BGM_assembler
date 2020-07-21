@@ -41,6 +41,8 @@
 - because of false alignments : -> threshold is set to be is 1/10
 
 - for maps quanted with 500, 1000 errors happens at ends and sometimes in the middle
+    
+- Maps with quant 500 are very likely to be aligned incorrectly
     - Seems like maps quanted with lower values are more prone to false alignments *[mostly 0 -> mostly 0 from XOR operation]*
     
 - for normally distributed maps - errors *[false alignments]*

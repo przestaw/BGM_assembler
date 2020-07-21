@@ -17,6 +17,9 @@ parser.add_argument('-l', '--length', help='Define how long maps you need (in ba
 parser.add_argument('-d', '--std_dev', help='Define standard deviation for map len - for normally distributed maps',
                     required=False,
                     default=50)
+parser.add_argument('-e', '--enzyme', help='Choose enzyme for digest : ' + str(
+        [enzyme + '(' + pattern + ')' for enzyme, pattern in dig.default_enzymes.items()]), required=False,
+                    default='BspQI')
 parser.add_argument('-i', '--input', help='Define seq source', required=False, default='rand')
 parser.add_argument('-t', '--type', help='Define type: [normal, perfect_overlap]', required=False, default='normal')
 parser.add_argument('-f', '--file', help='FASTA genome input file', required=False)
@@ -35,7 +38,7 @@ if __name__ == '__main__':
 
     digest = []
     for seq_it in sequences:
-        digest.append([seq_it[0], dig.digest_with_enzyme(seq_it[1], enzyme='BspQI')])
+        digest.append([seq_it[0], dig.digest_with_enzyme(seq_it[1], enzyme=args.enzyme)])
 
     maps = []
     for dig_it in digest:

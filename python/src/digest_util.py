@@ -64,7 +64,7 @@ def gen_bin_map_from_digest(digest, quantize=1000):
     for quant in range(0, quants_no):
         flag = '0'
         # last digest might be smaller - slicing takes care of that
-        for i in digest[quant * quantize:(quant+1) * quantize]:
+        for i in digest[quant * quantize:(quant + 1) * quantize]:
             if i == '1':
                 flag = '1'
                 break
@@ -74,7 +74,7 @@ def gen_bin_map_from_digest(digest, quantize=1000):
 
 
 # count distances between labels
-def gen_distances_from_quants(quanted, symbol = '1'):
+def gen_distances_from_quants(quanted, symbol='1'):
     dist = 1
     map = []
 
@@ -89,7 +89,7 @@ def gen_distances_from_quants(quanted, symbol = '1'):
 
 
 # count distances between labels
-def gen_positions_from_digest(digest, symbol = '1'):
+def gen_positions_from_digest(digest, symbol='1'):
     dist = 0
     map = []
 

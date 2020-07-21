@@ -11,7 +11,7 @@ def random_genome(lenght=10, seed=0):
     rand_gen = []
     for _ in range(lenght):
         rand_gen.append(
-            bases[np.random.randint(0, len(bases))]
+                bases[np.random.randint(0, len(bases))]
         )
 
     return ''.join(rand_gen)
