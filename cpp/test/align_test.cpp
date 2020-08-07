@@ -2,7 +2,7 @@
 // Created by przemek on 7/16/20.
 //
 
-#include <align_algorithm.h>
+#include <algorithms/align_algorithm.h>
 #include <boost/test/unit_test.hpp>
 #include <data/bin_map.h>
 

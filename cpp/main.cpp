@@ -2,7 +2,7 @@
 #include <iostream>
 #include <project_defines.h>
 
-#include <align_algorithm.h>
+#include <algorithms/align_algorithm.h>
 #include <data/file_loader.h>
 #include <data/maps_container.h>
 #include <error/exeception.h>

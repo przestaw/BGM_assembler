@@ -2,7 +2,7 @@
 // Created by przemek on 7/16/20.
 //
 
-#include <align_algorithm.h>
+#include <algorithms/align_algorithm.h>
 #include <iostream>
 
 using namespace oma;

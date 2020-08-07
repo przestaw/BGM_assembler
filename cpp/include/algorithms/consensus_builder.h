@@ -1,0 +1,65 @@
+//
+// Created by przemek on 8/7/20.
+//
+
+#ifndef OMA_CONSENSUS_BUILDER_H
+#define OMA_CONSENSUS_BUILDER_H
+
+#include <data/maps_container.h>
+namespace oma {
+  class ConsensusBuilder {
+  public:
+    explicit ConsensusBuilder(MapsContainer &maps);
+
+  private:
+    /*
+     * detect (and sort) Contigs of maps
+     *
+     * NOTE: maybe revers direction instead of sorting
+     * NOTE: remeber about detection of cycles
+     *       -> Maybe extra fields in BinaryMap or MapsContainer
+     *       -> break cycle through least trustful connection
+     *
+     * TODO: container for produced "lists" with new "coordinates"
+     * TODO: lenght, 0's/1's count in "neighbourhood"
+     *
+     * NOTE: use statistics of "neighbourhood" to determine least trustful
+     */
+    void detectContigs();
+
+    /*
+     * Make consensus -> for each of contigs
+     *
+     * NOTE: intention to be thread-independent
+     *       -> run on 1 thread per each contig on as many cores as available
+     * NOTE: std::thread + std::future?
+     * NOTE: std::async ?
+     * NOTE: http://www.davidespataro.it/cpp-concurrency-threads-future/
+     *
+     * NOTE: could be made const by returning resulting BinaryMap
+     * NOTE: synchronised appends?
+     */
+    // void makeConsensus(contig);
+
+    /*
+     * TODO: container and filed for 'contigs'
+     *       -> metaobjects [refering maps in maps container]
+     * NOTE: vector could allow for 'empty' state detection
+     * NOTE: could function as LIFO queue for makeConsensus
+     */
+    // std::vector<Contig> contigs;
+
+    /*
+     * TODO: container for resulting consensus maps?
+     *       -> maybe just another MapsContainer
+     * NOTE: synchronised appends?
+     * NOTE: std::thread + std::future?
+     * NOTE: std::async ?
+     */
+    // MapsContainer consensusMaps;
+
+    MapsContainer &connectedMaps;
+  };
+} // namespace oma
+
+#endif // OMA_CONSENSUS_BUILDER_H
