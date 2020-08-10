@@ -1,6 +1,6 @@
 file(GLOB TEST_SRC "${PROJECT_SOURCE_DIR}/test/*.cpp")
 file(GLOB TEST_DATA "${PROJECT_SOURCE_DIR}/test/data/*.cpp")
-#file(GLOB TEST_ALG "${PROJECT_SOURCE_DIR}/test/algorithms/*.cpp")
+file(GLOB TEST_ALG "${PROJECT_SOURCE_DIR}/test/algorithms/*.cpp")
 
 set(TEST_SRC ${TEST_SRC} ${TEST_DATA} ${TEST_ALG})
 

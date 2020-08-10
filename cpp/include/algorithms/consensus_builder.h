@@ -6,10 +6,16 @@
 #define OMA_CONSENSUS_BUILDER_H
 
 #include <data/maps_container.h>
+#include <mutex>
 namespace oma {
   class ConsensusBuilder {
   public:
     explicit ConsensusBuilder(MapsContainer &maps);
+
+    void runSingleConsensus();
+    void runMultiConsensus(unsigned threads);
+
+    [[nodiscard]] const std::vector<BinaryMap> &getConsensusMaps() const;
 
   private:
     /*
@@ -40,6 +46,8 @@ namespace oma {
      * NOTE: synchronised appends?
      */
     // void makeConsensus(contig);
+    inline void
+    makeConsensus(BinaryMap *lastMap); // will produce 'inverted' contigs
 
     /*
      * TODO: container and filed for 'contigs'
@@ -57,7 +65,12 @@ namespace oma {
      * NOTE: std::async ?
      */
     // MapsContainer consensusMaps;
+    std::vector<BinaryMap> consensusMaps;
 
+    std::mutex consensusLock;
+    void addReadyMap(const BinaryMap::Bitset &readyMap);
+
+    // input
     MapsContainer &connectedMaps;
   };
 } // namespace oma

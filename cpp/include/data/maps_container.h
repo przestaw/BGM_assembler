@@ -11,7 +11,8 @@
 namespace oma {
   class MapsContainer : public std::vector<BinaryMap> {
   public:
-    explicit MapsContainer(std::vector<BinaryMap> maps);
+    explicit MapsContainer(
+        std::vector<BinaryMap> maps = std::vector<BinaryMap>());
     // NOTE : set neighbour for both
     void addLeftNeighbour(size_t map, size_t neighbour, unsigned shift);
     void addRightNeighbour(size_t map, size_t neighbour, unsigned shift);
