@@ -32,6 +32,8 @@ namespace oma {
      * NOTE: use statistics of "neighbourhood" to determine least trustful
      */
     void detectContigs();
+    void breakCycles();
+    void breakOneCycle(BinaryMap *map);
 
     /*
      * Make consensus -> for each of contigs

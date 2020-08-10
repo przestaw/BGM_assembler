@@ -24,6 +24,8 @@ namespace oma {
      *              "neighbours"
      *       - ???
      */
+    void breakLink(size_t left, size_t right);
+
   private:
     // Synchronization primitives ??
     // Bitsets for track of empty neighbours ??

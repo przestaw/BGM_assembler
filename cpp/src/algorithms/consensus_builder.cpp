@@ -12,14 +12,55 @@ const std::vector<BinaryMap> &ConsensusBuilder::getConsensusMaps() const {
   return consensusMaps;
 }
 
+void ConsensusBuilder::breakCycles() {
+  for (auto &map : connectedMaps) {
+    if (map.getRightNeighbour().first == nullptr) {
+      // mark all from acyclic contig
+      map.mark = true;
+      auto tmp = map.getLeftNeighbour().first;
+      // linear contig - because of neighbours structure
+      while (tmp) {
+        tmp->mark = true;
+        tmp       = tmp->getLeftNeighbour().first;
+      }
+    }
+  }
+
+  for (auto &map : connectedMaps) {
+    // if not marked
+    if (!map.mark) {}
+  }
+}
+
+void ConsensusBuilder::breakOneCycle(BinaryMap *map) {
+  auto tmp         = map;
+  unsigned lenOvlp = 0;
+  BinaryMap *right = nullptr;
+  // find largest shift
+  do {
+    tmp->mark = true;
+
+    if (lenOvlp < map->getLeftNeighbour().second) {
+      lenOvlp = map->getLeftNeighbour().second;
+      right   = map->getLeftNeighbour().first;
+    }
+
+    tmp = tmp->getLeftNeighbour().first;
+  } while (tmp != map);
+  // break cycle
+
+  // TODO : use index instead of pointers
+  //        -> rewrite pointers use
+}
+
 void ConsensusBuilder::runSingleConsensus() {
   detectContigs(); // TODO : implement and use
 
   // NOTE: temporary way of iterate over "contigs"
-  for (auto &consensusMap : connectedMaps) {
-    if (consensusMap.getRightNeighbour().first == nullptr) {
-      makeConsensus(&consensusMap);
-      std::cout << '\n' << consensusMap.getIdentifier() << '\n';
+  for (auto &map : connectedMaps) {
+    if (map.getRightNeighbour().first == nullptr) {
+      makeConsensus(&map);
+      std::cout << '\n' << map.getIdentifier() << '\n';
     }
   }
 }
@@ -59,6 +100,9 @@ void ConsensusBuilder::makeConsensus(BinaryMap *lastMap) {
   // set counter to next voter
   std::size_t dist = 0;
   dist             = lastMap->getLeftNeighbour().second;
+
+  // NOTE : shift is realative to what ?
+  //        -> find all L_neighbours as it's mutual relation
 
   // run till no voter left
   while (!voters.empty()) {

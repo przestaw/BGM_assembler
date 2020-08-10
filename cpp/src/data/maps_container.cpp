@@ -19,3 +19,8 @@ void MapsContainer::addRightNeighbour(size_t map, size_t neighbour,
   (*this)[map].setRightNeighbour(&(*this)[neighbour], shift);
   (*this)[neighbour].setLeftNeighbour(&(*this)[map], shift);
 }
+
+void MapsContainer::breakLink(size_t left, size_t right) {
+  (*this)[left].setRightNeighbour(&(*this)[right], 0);
+  (*this)[right].setLeftNeighbour(&(*this)[left], 0);
+}

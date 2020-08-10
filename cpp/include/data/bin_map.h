@@ -31,6 +31,7 @@ namespace oma {
     [[nodiscard]] const Neighbour &getLeftNeighbour() const;
     [[nodiscard]] const Neighbour &getRightNeighbour() const;
 
+    bool mark = false; // TEMPORARY
   private:
     std::string identifier;
     Bitset map;
