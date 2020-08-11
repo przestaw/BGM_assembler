@@ -36,5 +36,9 @@ BinaryMap::Bitset FileLoader::getSequence(std::istream& in) {
     seq += tmpLine;
   }
 
+  // std::string reverse = seq;
+  std::reverse(seq.begin(), seq.end());
+
   return BinaryMap::Bitset(seq);
+  // TODO : return pair<seq, rev_seq>
 }

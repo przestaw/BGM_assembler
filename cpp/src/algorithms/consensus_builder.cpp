@@ -47,14 +47,14 @@ void ConsensusBuilder::breakOneCycle(int map) {
 
     tmp = conMaps[tmp].getLeftNeighbour().first;
   } while (tmp != map);
-  // break cycle
 
-  // TODO : use index instead of pointers
-  //        -> rewrite pointers use
+  // break cycle
+  conMaps.breakLink(conMaps[right].getLeftNeighbour().first, right);
 }
 
 void ConsensusBuilder::runSingleConsensus() {
-  detectContigs(); // TODO : implement and use
+  breakCycles(); // break cycles before finding contigs
+  // detectContigs(); // TODO : implement and use
 
   // NOTE: temporary way of iterate over "contigs"
   for (size_t map = 0; map < conMaps.size(); ++map) {
@@ -64,7 +64,15 @@ void ConsensusBuilder::runSingleConsensus() {
   }
 }
 
-void ConsensusBuilder::detectContigs() {}
+void ConsensusBuilder::detectContigs() {
+  for (size_t map = 0; map < conMaps.size(); ++map) {
+    if (conMaps[map].getRightNeighbour().first < 0) {
+      // "create" contig -> for consensus
+      // NOTE : could be list of most right maps or special structure for faster
+      //        consensus
+    }
+  }
+}
 
 bool ConsensusBuilder::votePosition(
     std::list<std::pair<std::size_t, int>> &voters) {
@@ -101,7 +109,7 @@ void ConsensusBuilder::makeConsensus(int lastMap) {
   std::size_t dist = 0;
   dist             = conMaps[lastMap].getLeftNeighbour().second;
 
-  // NOTE : shift is realative to what ?
+  // NOTE : shift is realative to RIGHT overhang
   //        -> find all L_neighbours as it's mutual relation
 
   // run till no voter left

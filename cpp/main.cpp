@@ -1,12 +1,11 @@
-#include <boost/program_options.hpp>
-#include <iostream>
-#include <project_defines.h>
-
 #include <algorithms/align_algorithm.h>
+#include <boost/program_options.hpp>
 #include <data/file_loader.h>
 #include <data/maps_container.h>
 #include <error/exeception.h>
-#include <include/c++/7/fstream>
+#include <fstream>
+#include <iostream>
+#include <project_defines.h>
 
 using namespace boost::program_options;
 
@@ -71,18 +70,20 @@ inline Params parseParams(int argc, char *argv[]) {
 
 void temp_output(const oma::MapsContainer &mapsContainer,
                  const std::string &output_filename) {
-  auto lambdaL = [](const oma::BinaryMap &map) {
-    if (map.getLeftNeighbour().first) {
-      return "L : " + map.getLeftNeighbour().first->getIdentifier() + " "
+  auto lambdaL = [&](const oma::BinaryMap &map) {
+    if (map.getLeftNeighbour().first >= 0) {
+      return "L : "
+             + mapsContainer[map.getLeftNeighbour().first].getIdentifier() + " "
              + std::to_string(map.getLeftNeighbour().second);
     } else {
       return std::string("L : XX");
     }
   };
-  auto lambdaR = [](const oma::BinaryMap &map) {
-    if (map.getRightNeighbour().first) {
-      return "R : " + map.getRightNeighbour().first->getIdentifier() + " "
-             + std::to_string(map.getRightNeighbour().second);
+  auto lambdaR = [&](const oma::BinaryMap &map) {
+    if (map.getRightNeighbour().first >= 0) {
+      return "R : "
+             + mapsContainer[map.getRightNeighbour().first].getIdentifier()
+             + " " + std::to_string(map.getRightNeighbour().second);
     } else {
       return std::string("R : XX");
     }
@@ -90,19 +91,23 @@ void temp_output(const oma::MapsContainer &mapsContainer,
 
   std::ofstream output;
   output.open(output_filename);
+
   for (const auto &it : mapsContainer) {
     output << it.getIdentifier() << "\n\t" << lambdaL(it) << "\n\t"
            << lambdaR(it) << "\n";
   }
+
   output.close();
 }
 
-std::string print_map_list(const oma::BinaryMap &map) {
-  if (map.getRightNeighbour().first) {
-    return map.getRightNeighbour().first->getIdentifier() + "\n"
-           + print_map_list(*map.getRightNeighbour().first);
+std::string print_map_list(const oma::MapsContainer &mapsContainer,
+                           const oma::BinaryMap &map) {
+  if (map.getRightNeighbour().first >= 0) {
+    return mapsContainer[map.getRightNeighbour().first].getIdentifier() + "\n"
+           + print_map_list(mapsContainer,
+                            mapsContainer[map.getRightNeighbour().first]);
   } else {
-    return std::string("---\n");
+    return std::string("# --\t-- #\n");
   }
 }
 
@@ -110,11 +115,14 @@ void temp_output_2(const oma::MapsContainer &mapsContainer,
                    const std::string &output_filename) {
   std::ofstream output;
   output.open(output_filename);
-  for (const auto &it : mapsContainer) {
-    if(it.getLeftNeighbour().first == nullptr){
-      output << print_map_list(it);
+
+  for (const auto &map : mapsContainer) {
+    if (map.getLeftNeighbour().first < 0) {
+      output << mapsContainer[map.getRightNeighbour().first].getIdentifier()
+                    + "\n" + print_map_list(mapsContainer, map);
     }
   }
+
   output.close();
 }
 
@@ -140,6 +148,7 @@ int main(int argc, char *argv[]) {
 
     aligner.align_maps_single(mapsContainer);
 
+    temp_output(mapsContainer, params.output_file + ".details");
     temp_output_2(mapsContainer, params.output_file);
   }
 
