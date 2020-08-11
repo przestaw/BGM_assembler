@@ -7,7 +7,7 @@
 
 BOOST_AUTO_TEST_SUITE(OMA_Test_Suite)
 
-BOOST_AUTO_TEST_SUITE(Align_Test_Suite)
+BOOST_AUTO_TEST_SUITE(Consensus_Test_Suite)
 
 BOOST_AUTO_TEST_CASE(OneMap_CreatesValidMap) {
   oma::MapsContainer mapsContainer;
@@ -51,7 +51,6 @@ BOOST_AUTO_TEST_CASE(TwoMaps_CreatesValidMap) {
   BOOST_REQUIRE_EQUAL(1, testFixture.getConsensusMaps().size());
   std::string res;
   boost::to_string(testFixture.getConsensusMaps()[0].getMap(), res);
-  std::cout << res;
 
   BOOST_CHECK_EQUAL(res, mapStr);
 }

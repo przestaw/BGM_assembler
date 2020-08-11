@@ -6,46 +6,46 @@
 
 using namespace oma;
 
-ConsensusBuilder::ConsensusBuilder(MapsContainer &maps) : connectedMaps(maps) {}
+ConsensusBuilder::ConsensusBuilder(MapsContainer &maps) : conMaps(maps) {}
 
 const std::vector<BinaryMap> &ConsensusBuilder::getConsensusMaps() const {
   return consensusMaps;
 }
 
 void ConsensusBuilder::breakCycles() {
-  for (auto &map : connectedMaps) {
-    if (map.getRightNeighbour().first == nullptr) {
+  for (auto &map : conMaps) {
+    if (map.getRightNeighbour().first < 0) {
       // mark all from acyclic contig
       map.mark = true;
-      auto tmp = map.getLeftNeighbour().first;
+      int tmp  = map.getLeftNeighbour().first;
       // linear contig - because of neighbours structure
-      while (tmp) {
-        tmp->mark = true;
-        tmp       = tmp->getLeftNeighbour().first;
+      while (tmp >= 0) {
+        conMaps[tmp].mark = true;
+        tmp               = conMaps[tmp].getLeftNeighbour().first;
       }
     }
   }
 
-  for (auto &map : connectedMaps) {
+  for (auto &map : conMaps) {
     // if not marked
     if (!map.mark) {}
   }
 }
 
-void ConsensusBuilder::breakOneCycle(BinaryMap *map) {
-  auto tmp         = map;
+void ConsensusBuilder::breakOneCycle(int map) {
+  int tmp          = map;
   unsigned lenOvlp = 0;
-  BinaryMap *right = nullptr;
+  int right        = -1;
   // find largest shift
   do {
-    tmp->mark = true;
+    conMaps[tmp].mark = true;
 
-    if (lenOvlp < map->getLeftNeighbour().second) {
-      lenOvlp = map->getLeftNeighbour().second;
-      right   = map->getLeftNeighbour().first;
+    if (lenOvlp < conMaps[map].getLeftNeighbour().second) {
+      lenOvlp = conMaps[map].getLeftNeighbour().second;
+      right   = conMaps[map].getLeftNeighbour().first;
     }
 
-    tmp = tmp->getLeftNeighbour().first;
+    tmp = conMaps[tmp].getLeftNeighbour().first;
   } while (tmp != map);
   // break cycle
 
@@ -57,24 +57,24 @@ void ConsensusBuilder::runSingleConsensus() {
   detectContigs(); // TODO : implement and use
 
   // NOTE: temporary way of iterate over "contigs"
-  for (auto &map : connectedMaps) {
-    if (map.getRightNeighbour().first == nullptr) {
-      makeConsensus(&map);
-      std::cout << '\n' << map.getIdentifier() << '\n';
+  for (size_t map = 0; map < conMaps.size(); ++map) {
+    if (conMaps[map].getRightNeighbour().first < 0) {
+      makeConsensus(map);
     }
   }
 }
 
 void ConsensusBuilder::detectContigs() {}
 
-bool votePosition(std::list<std::pair<std::size_t, BinaryMap *>> &voters) {
+bool ConsensusBuilder::votePosition(
+    std::list<std::pair<std::size_t, int>> &voters) {
   std::size_t count = voters.size();
   std::size_t ones  = 0;
-  std::cout << "-\n";
+
   // incremented inside loop
   for (auto iter = voters.begin(); iter != voters.end();) {
     // decrement and test position
-    if (iter->second->getMap().test(--iter->first)) {
+    if (conMaps[iter->second].getMap().test(--iter->first)) {
       ++ones;
     }
 
@@ -90,16 +90,16 @@ bool votePosition(std::list<std::pair<std::size_t, BinaryMap *>> &voters) {
   return (count - ones) <= ones;
 }
 
-void ConsensusBuilder::makeConsensus(BinaryMap *lastMap) {
+void ConsensusBuilder::makeConsensus(int lastMap) {
   BinaryMap::Bitset contig;
 
   // voters for consensus
-  std::list<std::pair<std::size_t, BinaryMap *>> voters;
+  std::list<std::pair<std::size_t, int>> voters;
   // add first voter
-  voters.emplace_back(lastMap->getMap().size(), lastMap);
+  voters.emplace_back(conMaps[lastMap].getMap().size(), lastMap);
   // set counter to next voter
   std::size_t dist = 0;
-  dist             = lastMap->getLeftNeighbour().second;
+  dist             = conMaps[lastMap].getLeftNeighbour().second;
 
   // NOTE : shift is realative to what ?
   //        -> find all L_neighbours as it's mutual relation
@@ -112,10 +112,10 @@ void ConsensusBuilder::makeConsensus(BinaryMap *lastMap) {
       --dist;
     } else {
       // add next map 'voter'
-      while (dist == 0 && lastMap->getLeftNeighbour().first) {
-        dist    = lastMap->getLeftNeighbour().second;
-        lastMap = lastMap->getLeftNeighbour().first;
-        voters.emplace_back(lastMap->getMap().size(), lastMap);
+      while (dist == 0 && conMaps[lastMap].getLeftNeighbour().first >= 0) {
+        dist    = conMaps[lastMap].getLeftNeighbour().second;
+        lastMap = conMaps[lastMap].getLeftNeighbour().first;
+        voters.emplace_back(conMaps[lastMap].getMap().size(), lastMap);
       }
     }
 

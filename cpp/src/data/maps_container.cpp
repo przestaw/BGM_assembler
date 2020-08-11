@@ -10,17 +10,17 @@ MapsContainer::MapsContainer(std::vector<BinaryMap> maps)
 
 void MapsContainer::addLeftNeighbour(size_t map, size_t neighbour,
                                      unsigned shift) {
-  (*this)[map].setLeftNeighbour(&(*this)[neighbour], shift);
-  (*this)[neighbour].setRightNeighbour(&(*this)[map], shift);
+  (*this)[map].setLeftNeighbour(neighbour, shift);
+  (*this)[neighbour].setRightNeighbour(map, shift);
 }
 
 void MapsContainer::addRightNeighbour(size_t map, size_t neighbour,
                                       unsigned shift) {
-  (*this)[map].setRightNeighbour(&(*this)[neighbour], shift);
-  (*this)[neighbour].setLeftNeighbour(&(*this)[map], shift);
+  (*this)[map].setRightNeighbour(neighbour, shift);
+  (*this)[neighbour].setLeftNeighbour(map, shift);
 }
 
 void MapsContainer::breakLink(size_t left, size_t right) {
-  (*this)[left].setRightNeighbour(&(*this)[right], 0);
-  (*this)[right].setLeftNeighbour(&(*this)[left], 0);
+  (*this)[left].setRightNeighbour(-1, 0);
+  (*this)[right].setLeftNeighbour(-1, 0);
 }

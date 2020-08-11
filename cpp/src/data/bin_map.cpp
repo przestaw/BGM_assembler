@@ -1,16 +1,17 @@
 #include <data/bin_map.h>
+#include <utility>
 
 using namespace oma;
 
-BinaryMap::BinaryMap(const std::string &c_identifier, Bitset c_map)
-    : identifier(c_identifier), map(std::move(c_map)),
-      leftNeighbour(nullptr, 0), rightNeighbour(nullptr, 0) {}
+BinaryMap::BinaryMap(std::string c_identifier, Bitset c_map)
+    : identifier(std::move(c_identifier)), map(std::move(c_map)),
+      leftNeighbour(-1, 0), rightNeighbour(-1, 0) {}
 
-void BinaryMap::setLeftNeighbour(BinaryMap *best, unsigned int shift) {
+void BinaryMap::setLeftNeighbour(int best, unsigned int shift) {
   leftNeighbour = std::make_pair(best, shift);
 }
 
-void BinaryMap::setRightNeighbour(BinaryMap *best, unsigned int shift) {
+void BinaryMap::setRightNeighbour(int best, unsigned int shift) {
   rightNeighbour = std::make_pair(best, shift);
 }
 

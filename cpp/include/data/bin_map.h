@@ -14,18 +14,18 @@ namespace oma {
   class BinaryMap {
   public:
     using Bitset    = dynamic_bitset<uint64_t>;
-    using Neighbour = std::pair<BinaryMap *, unsigned>;
+    using Neighbour = std::pair<int, unsigned>;
     /**
      * Constructor
      * @param identifier identifier for BinaryMap
      * @param map raw binary map
      */
-    BinaryMap(const std::string &identifier, Bitset map);
+    BinaryMap(std::string identifier, Bitset map);
 
     [[nodiscard]] const std::string &getIdentifier() const;
     // FIXME : index instead of pointer ?
-    void setLeftNeighbour(BinaryMap *best, unsigned shift);
-    void setRightNeighbour(BinaryMap *best, unsigned shift);
+    void setLeftNeighbour(int best, unsigned shift);
+    void setRightNeighbour(int best, unsigned shift);
     Bitset getMap(); // NOTE : copy as it will be modified [shifted]
     const Bitset &getMap() const;
     [[nodiscard]] const Neighbour &getLeftNeighbour() const;

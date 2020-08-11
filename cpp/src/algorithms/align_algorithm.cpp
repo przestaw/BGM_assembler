@@ -18,7 +18,7 @@ void AlignAlgorithm::align_maps_single(MapsContainer& maps) {
 
 void AlignAlgorithm::align_one_map(MapsContainer& maps, size_t index) {
   // left neighbour [if present - found as best right neighbour]
-  if (maps[index].getLeftNeighbour().first == nullptr) {
+  if (maps[index].getLeftNeighbour().first < 0) {
     Alignment best   = Alignment(0, std::numeric_limits<size_t>::max());
     size_t neighbour = 0;
     /* NOTE : iterate from index to max
@@ -41,29 +41,29 @@ void AlignAlgorithm::align_one_map(MapsContainer& maps, size_t index) {
     }
   }
   // right neighbour
-  if (maps[index].getRightNeighbour().first == nullptr) {
-    Alignment best   = Alignment(0, std::numeric_limits<size_t>::max());
-    size_t neighbour = 0;
-    /* NOTE : iterate from index to max
-     *      - if pair with lower position it would be found earlier
-     */
-    for (size_t iter = 1 + index; iter < maps.size(); ++iter) {
-      // reuse align fun by switching arguments
-      Alignment result = align(maps[iter].getMap(), maps[index].getMap());
-      // NOTE : if result of alignment is better save it as new best
-      if (result.second < best.second) {
-        best      = result;
-        neighbour = iter;
-      }
-    }
-    /* NOTE :
-     *  value different than zero indicates significant alignment
-     *  - see note in align function
-     */
-    if (best.first != 0) {
-      maps.addRightNeighbour(index, neighbour, best.first);
-    }
-  }
+  //  if (maps[index].getRightNeighbour().first == nullptr) {
+  //    Alignment best   = Alignment(0, std::numeric_limits<size_t>::max());
+  //    size_t neighbour = 0;
+  //    /* NOTE : iterate from index to max
+  //     *      - if pair with lower position it would be found earlier
+  //     */
+  //    for (size_t iter = 1 + index; iter < maps.size(); ++iter) {
+  //      // reuse align fun by switching arguments
+  //      Alignment result = align(maps[iter].getMap(), maps[index].getMap());
+  //      // NOTE : if result of alignment is better save it as new best
+  //      if (result.second < best.second) {
+  //        best      = result;
+  //        neighbour = iter;
+  //      }
+  //    }
+  //    /* NOTE :
+  //     *  value different than zero indicates significant alignment
+  //     *  - see note in align function
+  //     */
+  //    if (best.first != 0) {
+  //      maps.addRightNeighbour(index, neighbour, best.first);
+  //    }
+  //  }
 }
 
 AlignAlgorithm::Alignment

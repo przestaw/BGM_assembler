@@ -33,7 +33,7 @@ namespace oma {
      */
     void detectContigs();
     void breakCycles();
-    void breakOneCycle(BinaryMap *map);
+    void breakOneCycle(int map);
 
     /*
      * Make consensus -> for each of contigs
@@ -48,9 +48,8 @@ namespace oma {
      * NOTE: synchronised appends?
      */
     // void makeConsensus(contig);
-    inline void
-    makeConsensus(BinaryMap *lastMap); // will produce 'inverted' contigs
-
+    inline void makeConsensus(int lastMap); // will produce 'inverted' contigs
+    bool votePosition(std::list<std::pair<std::size_t, int>> &voters);
     /*
      * TODO: container and filed for 'contigs'
      *       -> metaobjects [refering maps in maps container]
@@ -73,7 +72,7 @@ namespace oma {
     void addReadyMap(const BinaryMap::Bitset &readyMap);
 
     // input
-    MapsContainer &connectedMaps;
+    MapsContainer &conMaps;
   };
 } // namespace oma
 

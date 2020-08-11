@@ -20,13 +20,20 @@ namespace oma {
     explicit AlignAlgorithm(unsigned minOverlap = 300);
     void align_maps_single(MapsContainer &maps);
 
-    /* NOTE :     1.            2.               3.
+    /* NOTE :     1.            2.                3.
      *  ref    :  [_________X],    [________XX],     [_______XXX]
-     *  tested : [X_________] , [XX________]   , [XXX_______]
+     *  tested : [Y_________] , [YY________]   , [YYY_______]
+     *            1.            2.                3.
+     *  ref    :  [_________X],    [________XX],     [_______XXX]
+     *  tested :  [_________] ,    [________]   ,    [_______]
+     *            1.            2.                3.
+     *  ref    :    [_________X],    [________XX],       [_______XXX]
+     *  tested : [YYY_________] ,   [Y________]  , [YYYYYY_______]
      *
-     * Note : return shift of value 0 means no meaningful alignment
+     * NOTE : return shift of value 0 means no meaningful alignment
      */
-    Alignment align(BinaryMap::Bitset ref, BinaryMap::Bitset tested) const;
+    [[nodiscard]] Alignment align(BinaryMap::Bitset ref,
+                                  BinaryMap::Bitset tested) const;
 
   private:
     void align_one_map(MapsContainer &maps, size_t index);

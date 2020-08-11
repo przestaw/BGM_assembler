@@ -47,6 +47,26 @@ BOOST_AUTO_TEST_CASE(TwoAllDifferentMaps_AreNotAligned) {
   BOOST_CHECK_EQUAL(res.first, 0);
 }
 
+BOOST_AUTO_TEST_CASE(TwoDiffrentlySizedMaps_AreAligned) {
+  oma::BinaryMap::Bitset one(
+      std::string("00000000000001111111111"
+                  "111111111111111111111111111111111111111111111111111111111111"
+                  "1111111111111111111111111111111111111111"));
+  oma::BinaryMap::Bitset two(std::string(
+      "00111111111111111111111111111111111111111111111111111111111111"
+      "111111111111111111111111111111111111111111111111110000000000"
+      "0000000000000000000000000000000000000000"));
+
+  oma::AlignAlgorithm aligner(100);
+
+  oma::AlignAlgorithm::Alignment res = aligner.align(two, one);
+
+  // shift
+  BOOST_CHECK_EQUAL(res.first, 50);
+  // perfect match
+  BOOST_CHECK_EQUAL(res.second, 0);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE_END()
