@@ -28,3 +28,22 @@ const BinaryMap::Neighbour &oma::BinaryMap::getLeftNeighbour() const {
 const BinaryMap::Neighbour &oma::BinaryMap::getRightNeighbour() const {
   return rightNeighbour;
 }
+
+std::string BinaryMap::toFastaRecord() const {
+  std::string ret = "> ";
+  ret += identifier;
+  ret += "\n";
+
+  // bitset string is reversed
+  std::string temp;
+  boost::to_string(map, temp);
+  std::reverse(temp.begin(), temp.end());
+
+  // write in 80 bits chunks
+  unsigned count = 1 + (temp.size() - 1) / 80;
+  for (unsigned i = 0; i < count; ++i) {
+    ret += temp.substr(i * 80, 80) + "\n";
+  }
+
+  return ret;
+}

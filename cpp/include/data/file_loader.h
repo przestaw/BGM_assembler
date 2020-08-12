@@ -15,7 +15,6 @@ namespace oma {
     using ParsedRecord = std::tuple<bool, std::string, BinaryMap::Bitset>;
 
   public:
-    // TODO : Container for BinaryMaps - vector method as private
     static std::vector<BinaryMap> loadFile(std::istream& input);
 
   private:

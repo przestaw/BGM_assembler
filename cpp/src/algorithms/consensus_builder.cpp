@@ -52,7 +52,7 @@ void ConsensusBuilder::breakOneCycle(int map) {
   conMaps.breakLink(conMaps[right].getLeftNeighbour().first, right);
 }
 
-void ConsensusBuilder::runSingleConsensus() {
+void ConsensusBuilder::runConsensusSingle() {
   breakCycles(); // break cycles before finding contigs
   // detectContigs(); // TODO : implement and use
 

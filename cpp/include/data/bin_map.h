@@ -14,7 +14,7 @@ namespace oma {
   class BinaryMap {
   public:
     using Bitset    = dynamic_bitset<uint64_t>;
-    using Neighbour = std::pair<int, unsigned>;
+    using Neighbour = std::pair<int, unsigned>; // NOTE : pair <index, shift>
     /**
      * Constructor
      * @param identifier identifier for BinaryMap
@@ -26,10 +26,11 @@ namespace oma {
     // FIXME : index instead of pointer ?
     void setLeftNeighbour(int best, unsigned shift);
     void setRightNeighbour(int best, unsigned shift);
-    Bitset getMap(); // NOTE : copy as it will be modified [shifted]
-    const Bitset &getMap() const;
+    [[nodiscard]] Bitset getMap(); // NOTE : copy as it will be modified
+    [[nodiscard]] const Bitset &getMap() const;
     [[nodiscard]] const Neighbour &getLeftNeighbour() const;
     [[nodiscard]] const Neighbour &getRightNeighbour() const;
+    [[nodiscard]] std::string toFastaRecord() const;
 
     bool mark = false; // TEMPORARY
   private:

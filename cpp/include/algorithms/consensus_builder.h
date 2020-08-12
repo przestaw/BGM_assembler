@@ -12,7 +12,7 @@ namespace oma {
   public:
     explicit ConsensusBuilder(MapsContainer &maps);
 
-    void runSingleConsensus();
+    void runConsensusSingle();
     void runMultiConsensus(unsigned threads);
 
     [[nodiscard]] const std::vector<BinaryMap> &getConsensusMaps() const;

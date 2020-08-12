@@ -1,2 +1,4 @@
-*.result 
-*.result.details 
+*.result
+*.result.* 
+*.details 
+*.drafts 

@@ -21,7 +21,7 @@ BOOST_AUTO_TEST_CASE(OneMap_CreatesValidMap) {
                              oma::BinaryMap::Bitset(std::string(mapStr)));
   oma::ConsensusBuilder testFixture(mapsContainer);
 
-  testFixture.runSingleConsensus();
+  testFixture.runConsensusSingle();
 
   BOOST_REQUIRE_EQUAL(1, testFixture.getConsensusMaps().size());
   std::string res;
@@ -46,7 +46,7 @@ BOOST_AUTO_TEST_CASE(TwoMaps_CreatesValidMap) {
   mapsContainer.addRightNeighbour(0, 1, 5);
   oma::ConsensusBuilder testFixture(mapsContainer);
 
-  testFixture.runSingleConsensus();
+  testFixture.runConsensusSingle();
 
   BOOST_REQUIRE_EQUAL(1, testFixture.getConsensusMaps().size());
   std::string res;
@@ -77,7 +77,7 @@ BOOST_AUTO_TEST_CASE(ThreeMaps_CreatesValidMap) {
   mapsContainer.addRightNeighbour(1, 2, 2);
   oma::ConsensusBuilder testFixture(mapsContainer);
 
-  testFixture.runSingleConsensus();
+  testFixture.runConsensusSingle();
 
   BOOST_REQUIRE_EQUAL(1, testFixture.getConsensusMaps().size());
   std::string res;

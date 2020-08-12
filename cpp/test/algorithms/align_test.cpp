@@ -20,7 +20,8 @@ BOOST_AUTO_TEST_CASE(TwoPerfectlyMatchedMaps_AreAligned) {
                   "111111111111111111111111111111111111111111111111110000000000"
                   "0000000000000000000000000000000000000000"));
 
-  oma::AlignAlgorithm aligner(100);
+  oma::MapsContainer maps; // for compatibility
+  oma::AlignAlgorithm aligner(maps, 100);
 
   oma::AlignAlgorithm::Alignment res = aligner.align(two, one);
 
@@ -39,7 +40,8 @@ BOOST_AUTO_TEST_CASE(TwoAllDifferentMaps_AreNotAligned) {
       std::string("000000000000000000000000000000000000000000000000000000000000"
                   "0000000000000000000000000000000000000000"));
 
-  oma::AlignAlgorithm aligner(100);
+  oma::MapsContainer maps; // for compatibility
+  oma::AlignAlgorithm aligner(maps, 100);
 
   oma::AlignAlgorithm::Alignment res = aligner.align(two, one);
 
@@ -57,7 +59,8 @@ BOOST_AUTO_TEST_CASE(TwoDiffrentlySizedMaps_AreAligned) {
       "111111111111111111111111111111111111111111111111110000000000"
       "0000000000000000000000000000000000000000"));
 
-  oma::AlignAlgorithm aligner(100);
+  oma::MapsContainer maps; // for compatibility
+  oma::AlignAlgorithm aligner(maps, 100);
 
   oma::AlignAlgorithm::Alignment res = aligner.align(two, one);
 

@@ -17,8 +17,8 @@ namespace oma {
      */
     using Alignment = std::pair<unsigned, size_t>;
 
-    explicit AlignAlgorithm(unsigned minOverlap = 300);
-    void align_maps_single(MapsContainer &maps);
+    explicit AlignAlgorithm(MapsContainer &maps, unsigned minOverlap = 300);
+    void alignMapsSingle();
 
     /* NOTE :     1.            2.                3.
      *  ref    :  [_________X],    [________XX],     [_______XXX]
@@ -36,9 +36,10 @@ namespace oma {
                                   BinaryMap::Bitset tested) const;
 
   private:
-    void align_one_map(MapsContainer &maps, size_t index);
+    void alignOneMap(size_t index);
 
-    unsigned minOverlap;
+    MapsContainer &_maps;
+    unsigned _minOverlap;
   };
 } // namespace oma
 
