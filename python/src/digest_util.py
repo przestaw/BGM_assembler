@@ -91,11 +91,18 @@ def gen_distances_from_quants(quanted, symbol='1'):
 # count distances between labels
 def gen_positions_from_digest(digest, symbol='1'):
     dist = 0
-    map = []
+    rmap = []
 
     for i in digest:
         if i == symbol:
-            map.append(dist)
+            rmap.append(dist)
         dist = dist + 1
 
-    return map
+    return rmap
+
+
+# removes 0 from end and beginning of seq
+def remove_overhang(seq, symbol='0'):
+    ret = seq.lstrip(symbol)
+    ret = ret.rstrip(symbol)
+    return ret

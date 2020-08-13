@@ -10,6 +10,7 @@ __pycache__/
 #directories
 *Doxygen/
 .idea/*
+*.idea/*
 .ipynb_checkpoints/*
 [Bb]in/*
 [Dd]ebug/*
@@ -62,4 +63,4 @@ CMakeCache.txt
 *.aux
 *.log
 *.synctex.gz
-*.toc 
+*.toc
