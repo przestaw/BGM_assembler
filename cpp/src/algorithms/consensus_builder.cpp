@@ -51,7 +51,10 @@ void ConsensusBuilder::breakOneCycle(int map) {
   } while (tmp != map);
 
   // break cycle
-  conMaps.breakLink(conMaps[right].getLeftNeighbour().first, right);
+  // FIXME : there should be no need for that
+  if (right != -1) {
+    conMaps.breakLink(conMaps[right].getLeftNeighbour().first, right);
+  }
 }
 
 void ConsensusBuilder::runConsensusSingle() {

@@ -1,0 +1,64 @@
+> 1763153 2987751 |Escherichia coli str. K-12 substr. MG1655
+	L : XX
+	R : > 1731951 3053280 |Escherichia coli str. K-12 substr. MG1655 59
+> 1731951 3053280 |Escherichia coli str. K-12 substr. MG1655
+	L : > 1763153 2987751 |Escherichia coli str. K-12 substr. MG1655 59
+	R : > 2811956 3687356 |Escherichia coli str. K-12 substr. MG1655 635
+> 2811956 3687356 |Escherichia coli str. K-12 substr. MG1655
+	L : > 1731951 3053280 |Escherichia coli str. K-12 substr. MG1655 635
+	R : > 2209300 3728078 |Escherichia coli str. K-12 substr. MG1655 45
+> 2209300 3728078 |Escherichia coli str. K-12 substr. MG1655
+	L : > 2811956 3687356 |Escherichia coli str. K-12 substr. MG1655 45
+	R : XX
+	
+> 322631 860295 |Escherichia coli str. K-12 substr. MG1655
+	L : XX
+	R : XX
+> 266358 1673047 |Escherichia coli str. K-12 substr. MG1655
+	L : XX
+	R : XX
+> 3014457 3684210 |Escherichia coli str. K-12 substr. MG1655
+	L : XX
+	R : XX
+> 3088333 3678532 |Escherichia coli str. K-12 substr. MG1655
+	L : XX
+	R : XX
+
+> 245010 2062943 |Escherichia coli str. K-12 substr. MG1655
+	L : XX
+	R : > 1412076 2955258 |Escherichia coli str. K-12 substr. MG1655 910
+> 1412076 2955258 |Escherichia coli str. K-12 substr. MG1655
+	L : > 245010 2062943 |Escherichia coli str. K-12 substr. MG1655 910
+	R : XX
+
+> 638500 1623586 |Escherichia coli str. K-12 substr. MG1655
+	L : XX
+	R : > 1093496 2065439 |Escherichia coli str. K-12 substr. MG1655 417
+> 1093496 2065439 |Escherichia coli str. K-12 substr. MG1655
+	L : > 638500 1623586 |Escherichia coli str. K-12 substr. MG1655 417
+	R : > 1602816 2232995 |Escherichia coli str. K-12 substr. MG1655 192
+> 1602816 2232995 |Escherichia coli str. K-12 substr. MG1655
+	L : > 1093496 2065439 |Escherichia coli str. K-12 substr. MG1655 192
+	R : > 1134932 2432580 |Escherichia coli str. K-12 substr. MG1655 189
+> 1134932 2432580 |Escherichia coli str. K-12 substr. MG1655
+	L : > 1602816 2232995 |Escherichia coli str. K-12 substr. MG1655 189
+	R : > 1937218 2924110 |Escherichia coli str. K-12 substr. MG1655 497
+> 1937218 2924110 |Escherichia coli str. K-12 substr. MG1655
+	L : > 1134932 2432580 |Escherichia coli str. K-12 substr. MG1655 497
+	R : > 2083597 3646831 |Escherichia coli str. K-12 substr. MG1655 726
+> 2083597 3646831 |Escherichia coli str. K-12 substr. MG1655
+	L : > 1937218 2924110 |Escherichia coli str. K-12 substr. MG1655 726
+	R : XX
+
+> 936755 2519390 |Escherichia coli str. K-12 substr. MG1655
+	L : XX
+	R : > 2187003 3785835 |Escherichia coli str. K-12 substr. MG1655 1262
+> 2187003 3785835 |Escherichia coli str. K-12 substr. MG1655
+	L : > 936755 2519390 |Escherichia coli str. K-12 substr. MG1655 1262
+	R : > 3113626 4154154 |Escherichia coli str. K-12 substr. MG1655 373
+> 3113626 4154154 |Escherichia coli str. K-12 substr. MG1655
+	L : > 2187003 3785835 |Escherichia coli str. K-12 substr. MG1655 373
+	R : > 2907663 4489677 |Escherichia coli str. K-12 substr. MG1655 330
+> 2907663 4489677 |Escherichia coli str. K-12 substr. MG1655
+	L : > 3113626 4154154 |Escherichia coli str. K-12 substr. MG1655 330
+	R : XX

@@ -72,6 +72,11 @@ AlignAlgorithm::Alignment
 AlignAlgorithm::align(BinaryMap::Bitset ref, BinaryMap::Bitset tested) const {
   // TODO : check or assure that maps are longer than minOverlap
   //        i.e. filter too short maps
+
+  // FIXME : filter maps by len
+  if (std::min(ref.size(), tested.size()) <= _minOverlap) {
+    return std::make_pair(-1, std::numeric_limits<size_t>::max());
+  }
   const size_t max_shift =
       1 + std::min(ref.size(), tested.size()) - _minOverlap;
   // init best as worst numerically possible
