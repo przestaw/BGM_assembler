@@ -17,7 +17,7 @@ namespace oma {
 
     [[nodiscard]] const std::vector<BinaryMap> &getConsensusMaps() const;
 
-  private:
+    // private:
     /*
      * detect (and sort) Contigs of maps
      *

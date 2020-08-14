@@ -144,6 +144,55 @@ int main(int argc, char *argv[]) {
     oma::AssemblyTask assemblyTask(assemblyParams);
 
     assemblyTask.run(true);
+  } else {
+    std::string mapStr  = "1010111100001101010001110101";
+    std::string mapStr1 = "10101111000011010100011";
+    std::string mapStr2 = "0101111000011010100011101";
+    std::string mapStr3 = "11100001101010001110101";
+
+    std::reverse(mapStr1.begin(), mapStr1.end());
+    std::reverse(mapStr2.begin(), mapStr2.end());
+    std::reverse(mapStr3.begin(), mapStr3.end());
+
+    oma::MapsContainer mapsContainer;
+    mapsContainer.emplace_back("map1",
+                               oma::BinaryMap::Bitset(std::string(mapStr1)));
+    mapsContainer.emplace_back("map2",
+                               oma::BinaryMap::Bitset(std::string(mapStr2)));
+    mapsContainer.emplace_back("map3",
+                               oma::BinaryMap::Bitset(std::string(mapStr3)));
+
+    mapsContainer.addRightNeighbour(0, 1, 3);
+    mapsContainer.addRightNeighbour(1, 2, 2);
+    mapsContainer.addRightNeighbour(2, 0, 2);
+
+    oma::ConsensusBuilder consensusBuilder(mapsContainer);
+
+    consensusBuilder.breakCycles();
+
+    auto lambdaL = [&](const oma::BinaryMap &map) {
+      if (map.getLeftNeighbour().first >= 0) {
+        return "L : "
+               + mapsContainer[map.getLeftNeighbour().first].getIdentifier()
+               + " " + std::to_string(map.getLeftNeighbour().second);
+      } else {
+        return std::string("L : XX");
+      }
+    };
+    auto lambdaR = [&](const oma::BinaryMap &map) {
+      if (map.getRightNeighbour().first >= 0) {
+        return "R : "
+               + mapsContainer[map.getRightNeighbour().first].getIdentifier()
+               + " " + std::to_string(map.getRightNeighbour().second);
+      } else {
+        return std::string("R : XX");
+      }
+    };
+
+    for (const auto &it : mapsContainer) {
+      std::cout << it.getIdentifier() << "\n\t" << lambdaL(it) << "\n\t"
+                << lambdaR(it) << "\n";
+    }
   }
 
   return 0;

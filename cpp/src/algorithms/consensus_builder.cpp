@@ -26,9 +26,11 @@ void ConsensusBuilder::breakCycles() {
     }
   }
 
-  for (auto &map : conMaps) {
+  for (size_t i = 0; i < conMaps.size(); ++i) {
     // if not marked
-    if (!map.mark) {}
+    if (!conMaps[i].mark) {
+      breakOneCycle(i);
+    }
   }
 }
 
@@ -135,6 +137,6 @@ void ConsensusBuilder::makeConsensus(int lastMap) {
 
 void ConsensusBuilder::addReadyMap(const BinaryMap::Bitset &readyMap) {
   std::unique_lock lock(consensusLock);
-  consensusMaps.emplace_back("Contig " + std::to_string(readyMap.size()),
+  consensusMaps.emplace_back("Contig " + std::to_string(consensusMaps.size()),
                              readyMap);
 }

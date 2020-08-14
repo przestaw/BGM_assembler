@@ -5,7 +5,8 @@ using namespace oma;
 
 BinaryMap::BinaryMap(std::string c_identifier, Bitset c_map)
     : identifier(std::move(c_identifier)), map(std::move(c_map)),
-      leftNeighbour(-1, 0), rightNeighbour(-1, 0) {}
+      leftNeighbour(-1, std::numeric_limits<unsigned>::max()),
+      rightNeighbour(-1, std::numeric_limits<unsigned>::max()) {}
 
 void BinaryMap::setLeftNeighbour(int best, unsigned int shift) {
   leftNeighbour = std::make_pair(best, shift);
