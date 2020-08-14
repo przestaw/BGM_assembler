@@ -135,6 +135,6 @@ void AssemblyTask::writeResult() {
 
   // TODO : possible choice for output files
   outDetails(_params.getOutputFile() + ".details");
-  outDrafts(_params.getOutputFile() + ".drafts");
+  // outDrafts(_params.getOutputFile() + ".drafts");
   outContigs(_params.getOutputFile());
 }

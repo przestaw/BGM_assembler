@@ -48,5 +48,19 @@
 - for normally distributed maps - errors *[false alignments]*
     - typically maps are in line with local misplacements ??
     
+### bad_alloc -- ecoli_1000quant_5cov_valid.binmap
+
+- state - commit : *list protection in MapsContainer*
+
+- ecoli_1000quant_5cov_valid.binmap : 
+    - std::bad_alloc when writing output [draft map]
+    - ecoli_1000quant_5cov_valid.binmap.details == no cycles
+    - no draft map == working
+    
+- ecoli_1000quant_35cov_valid.binmap
+    - std::bad_alloc
+    - munmap_chunk(): invalid pointer *or* std::bad_alloc [when no draft_map out]
+
+    
 
     
