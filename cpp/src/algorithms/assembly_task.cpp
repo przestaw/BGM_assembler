@@ -40,7 +40,7 @@ void AssemblyTask::run(bool verbose) {
   }
   performConsensus();
   if (verbose) {
-    print("loading maps");
+    print("writing result");
   }
   writeResult();
 }

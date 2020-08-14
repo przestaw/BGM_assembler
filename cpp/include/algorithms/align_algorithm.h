@@ -15,7 +15,7 @@ namespace oma {
      *  shift of 0 indicates no alignment
      *   -> [as shift 0 would mean duplicate this should not affect results]
      */
-    using Alignment = std::pair<unsigned, size_t>;
+    using Alignment = std::pair<int64_t, size_t>;
 
     explicit AlignAlgorithm(MapsContainer &maps, unsigned minOverlap = 300);
     void alignMapsSingle();
