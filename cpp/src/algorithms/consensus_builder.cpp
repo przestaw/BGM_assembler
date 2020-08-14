@@ -106,8 +106,7 @@ void ConsensusBuilder::makeConsensus(int lastMap) {
   // add first voter
   voters.emplace_back(conMaps[lastMap].getMap().size(), lastMap);
   // set counter to next voter
-  std::size_t dist = 0;
-  dist             = conMaps[lastMap].getLeftNeighbour().second;
+  std::size_t dist = conMaps[lastMap].getLeftNeighbour().second;
 
   // NOTE : shift is realative to RIGHT overhang
   //        -> find all L_neighbours as it's mutual relation
@@ -115,17 +114,16 @@ void ConsensusBuilder::makeConsensus(int lastMap) {
   // run till no voter left
   while (!voters.empty()) {
 
-    if (dist > 0) {
-      // decrement distance to next voter
-      --dist;
-    } else {
+    if (dist == 0) {
       // add next map 'voter'
       while (dist == 0 && conMaps[lastMap].getLeftNeighbour().first >= 0) {
-        dist    = conMaps[lastMap].getLeftNeighbour().second;
         lastMap = conMaps[lastMap].getLeftNeighbour().first;
+        dist    = conMaps[lastMap].getLeftNeighbour().second;
         voters.emplace_back(conMaps[lastMap].getMap().size(), lastMap);
       }
     }
+    // decrement distance to next voter
+    --dist;
 
     // vote
     bool consensusResult = votePosition(voters);
