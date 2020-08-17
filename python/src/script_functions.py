@@ -5,8 +5,8 @@ import generator_util as gen
 def generate_valid_maps_from_seq(sequences, enzyme, quant, coverage=25, seed=4231):
     # digest with enzyme
     genome_seq = []
-    for gen_iter in sequences:
-        genome_seq.append([gen_iter[0], dig.digest_with_enzyme(gen_iter[1], enzyme=enzyme)])
+    for idx, gen_iter in enumerate(sequences, start=1):
+        genome_seq.append(['chr ' + str(idx) + gen_iter[0], dig.digest_with_enzyme(gen_iter[1], enzyme=enzyme)])
 
     # sample genome strands
     seq = []
@@ -24,8 +24,8 @@ def generate_valid_maps_from_seq(sequences, enzyme, quant, coverage=25, seed=423
 
 def digest_and_quantize(sequences, enzyme, quant):
     digest = []
-    for seq_it in sequences:
-        digest.append([seq_it[0], dig.digest_with_enzyme(seq_it[1], enzyme=enzyme)])
+    for idx, seq_it in enumerate(sequences, start=1):
+        digest.append(['chr ' + str(idx) + seq_it[0], dig.digest_with_enzyme(seq_it[1], enzyme=enzyme)])
 
     maps = []
     for dig_it in digest:
