@@ -44,12 +44,14 @@ BOOST_AUTO_TEST_CASE(EmptyStreamTest_ReturnsEmpty) {
   BOOST_CHECK_EQUAL(result.size(), 0);
 }
 
-BOOST_AUTO_TEST_CASE(StreamFileTest_ReturnsCorrectVal) {
+BOOST_AUTO_TEST_CASE(StreamFileTest_ReturnsCorrectCount) {
   std::stringstream stream(testFile);
   auto result = oma::FileLoader::loadFile(stream);
 
   BOOST_CHECK_EQUAL(result.size(), 2);
 }
+
+// FIXME : 2 maps from 1 input + check bits
 
 BOOST_AUTO_TEST_SUITE_END()
 BOOST_AUTO_TEST_SUITE_END()

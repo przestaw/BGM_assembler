@@ -12,14 +12,22 @@
 namespace oma {
   class FileLoader {
   private:
-    using ParsedRecord = std::tuple<bool, std::string, BinaryMap::Bitset>;
+    using SingleRecord = std::tuple<bool, std::string, BinaryMap::Bitset>;
+
+    using SequencePair = std::pair<BinaryMap::Bitset, BinaryMap::Bitset>;
+    using ParsedRecord = std::tuple<bool, std::string, SequencePair>;
 
   public:
+    // FIXME : use 2 maps [with reverse map] function variants
     static std::vector<BinaryMap> loadFile(std::istream& input);
 
   private:
-    static inline ParsedRecord parseBinMap(std::istream& in);
+    // FIXME : remove single maps variants
+    static inline SingleRecord parseBinMap(std::istream& in);
     static inline BinaryMap::Bitset getSequence(std::istream& in);
+
+    static inline ParsedRecord parseBinMaps(std::istream& in);
+    static inline SequencePair getSequences(std::istream& in);
   };
 } // namespace oma::data
 

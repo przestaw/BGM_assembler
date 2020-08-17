@@ -17,7 +17,7 @@ namespace oma {
 
     [[nodiscard]] const std::vector<BinaryMap> &getConsensusMaps() const;
 
-    // private:
+  private:
     /*
      * detect (and sort) Contigs of maps
      *
@@ -48,7 +48,7 @@ namespace oma {
      * NOTE: synchronised appends?
      */
     // void makeConsensus(contig);
-    inline void makeConsensus(int lastMap); // will produce 'inverted' contigs
+    void makeConsensus(int lastMap); // will produce 'inverted' contigs
     bool votePosition(std::list<std::pair<std::size_t, int>> &voters);
     /*
      * TODO: container and filed for 'contigs'
@@ -68,6 +68,7 @@ namespace oma {
     // MapsContainer consensusMaps;
     std::vector<BinaryMap> consensusMaps;
 
+    // output
     std::mutex consensusLock;
     void addReadyMap(const BinaryMap::Bitset &readyMap);
 

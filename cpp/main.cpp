@@ -64,67 +64,6 @@ inline Params parseParams(int argc, char *argv[]) {
   return params;
 }
 
-/*
-// void temp_output(const oma::MapsContainer &mapsContainer,
-//                 const std::string &output_filename) {
-//  auto lambdaL = [&](const oma::BinaryMap &map) {
-//    if (map.getLeftNeighbour().first >= 0) {
-//      return "L : "
-//             + mapsContainer[map.getLeftNeighbour().first].getIdentifier() + "
-//             "
-//             + std::to_string(map.getLeftNeighbour().second);
-//    } else {
-//      return std::string("L : XX");
-//    }
-//  };
-//  auto lambdaR = [&](const oma::BinaryMap &map) {
-//    if (map.getRightNeighbour().first >= 0) {
-//      return "R : "
-//             + mapsContainer[map.getRightNeighbour().first].getIdentifier()
-//             + " " + std::to_string(map.getRightNeighbour().second);
-//    } else {
-//      return std::string("R : XX");
-//    }
-//  };
-//
-//  std::ofstream output;
-//  output.open(output_filename);
-//
-//  for (const auto &it : mapsContainer) {
-//    output << it.getIdentifier() << "\n\t" << lambdaL(it) << "\n\t"
-//           << lambdaR(it) << "\n";
-//  }
-//
-//  output.close();
-//}
-//
-// std::string print_map_list(const oma::MapsContainer &mapsContainer,
-//                           const oma::BinaryMap &map) {
-//  if (map.getRightNeighbour().first >= 0) {
-//    return mapsContainer[map.getRightNeighbour().first].getIdentifier() + "\n"
-//           + print_map_list(mapsContainer,
-//                            mapsContainer[map.getRightNeighbour().first]);
-//  } else {
-//    return std::string("# --\t-- #\n");
-//  }
-//}
-//
-// void temp_output_2(const oma::MapsContainer &mapsContainer,
-//                   const std::string &output_filename) {
-//  std::ofstream output;
-//  output.open(output_filename);
-//
-//  for (const auto &map : mapsContainer) {
-//    if (map.getLeftNeighbour().first < 0) {
-//      output << mapsContainer[map.getRightNeighbour().first].getIdentifier()
-//                    + "\n" + print_map_list(mapsContainer, map);
-//    }
-//  }
-//
-//  output.close();
-//}
-*/
-
 /**
  * Main function
  * @return 0 on success
