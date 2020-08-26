@@ -77,7 +77,7 @@ int main(int argc, char *argv[]) {
     std::cout << "RUNNING\n";
 
     oma::AssemblyTask::Params assemblyParams(
-        params.input_file, params.output_file, 1, params.margin, 0.1);
+        params.input_file, params.output_file, 1, params.margin, 0.5, 0.1);
     oma::AssemblyTask assemblyTask(assemblyParams);
 
     assemblyTask.run(true);

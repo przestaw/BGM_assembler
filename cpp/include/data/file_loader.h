@@ -19,7 +19,9 @@ namespace oma {
 
   public:
     // FIXME : use 2 maps [with reverse map] function variants
-    static std::vector<BinaryMap> loadFile(std::istream& input);
+    // FIXME : filter maps
+    static std::vector<BinaryMap> loadFile(std::istream& input,
+                                           size_t minLen = 1);
 
   private:
     // FIXME : remove single maps variants
@@ -29,6 +31,6 @@ namespace oma {
     static inline ParsedRecord parseBinMaps(std::istream& in);
     static inline SequencePair getSequences(std::istream& in);
   };
-} // namespace oma::data
+} // namespace oma
 
 #endif // OMA_FILE_LOADER_H

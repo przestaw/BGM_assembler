@@ -13,9 +13,10 @@ using namespace oma;
 
 AssemblyTask::Params::Params(std::string inputFile, std::string outputFile,
                              unsigned int threads, unsigned int minOverlap,
-                             double threshold)
+                             double minPart, double threshold)
     : _inputFile(std::move(inputFile)), _outputFile(std::move(outputFile)),
-      _threads(threads), _minOverlap(minOverlap), _threshold(threshold) {}
+      _threads(threads), _minOverlap(minOverlap), _minPart(minPart),
+      _threshold(threshold) {}
 
 AssemblyTask::AssemblyTask(AssemblyTask::Params params)
     : _params(std::move(params)), _aligner(_maps, _params.getMinOverlap()),
@@ -48,7 +49,7 @@ void AssemblyTask::run(bool verbose) {
 void AssemblyTask::loadMaps() {
   std::ifstream input;
   input.open(_params.getInputFile());
-  _maps = MapsContainer(FileLoader::loadFile(input));
+  _maps = MapsContainer(FileLoader::loadFile(input, _params.getMinMapLen()));
   input.close();
 }
 

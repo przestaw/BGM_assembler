@@ -17,7 +17,17 @@ namespace oma {
      */
     using Alignment = std::pair<int64_t, size_t>;
 
-    explicit AlignAlgorithm(MapsContainer &maps, unsigned minOverlap = 300);
+    /**
+     * Constructor
+     * @param maps maps container reference
+     * @param minOverlapQuants min no of Quants for overlap to be meaningful
+     * @param minOverlapPart min part of map for overlap to be meaningful
+     * @param threshold max no of diffrences for overlap to be meaningful
+     */
+    explicit AlignAlgorithm(MapsContainer &maps,
+                            unsigned minOverlapQuants = 300,
+                            double minOverlapPart     = 0.5,
+                            double threshold          = 0.1);
     void alignMapsSingle();
 
     /* NOTE :     1.            2.                3.
@@ -33,13 +43,15 @@ namespace oma {
      * NOTE : return shift of value 0 means no meaningful alignment
      */
     [[nodiscard]] Alignment align(BinaryMap::Bitset ref,
-                                  BinaryMap::Bitset tested) const;
+                                  const BinaryMap::Bitset &tested) const;
 
   private:
     void alignOneMap(size_t index);
 
     MapsContainer &_maps;
-    unsigned _minOverlap;
+    unsigned _minOverlapQuants;
+    double _minOverlapPart;
+    double _threshold;
   };
 } // namespace oma
 

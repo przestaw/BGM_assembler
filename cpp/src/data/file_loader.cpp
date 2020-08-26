@@ -7,8 +7,11 @@
 
 using namespace oma;
 
-std::vector<BinaryMap> FileLoader::loadFile(std::istream& input) {
+std::vector<BinaryMap> FileLoader::loadFile(std::istream& input,
+                                            size_t minLen) {
   std::vector<BinaryMap> ret;
+
+  (void)minLen; // TODO : use
 
   for (auto temp = parseBinMap(input); std::get<0>(temp);
        temp      = parseBinMap(input)) {
