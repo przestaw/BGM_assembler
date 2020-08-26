@@ -48,7 +48,11 @@ void AssemblyTask::run(bool verbose) {
 void AssemblyTask::loadMaps() {
   std::ifstream input;
   input.open(_params.getInputFile());
-  _maps = MapsContainer(FileLoader::loadFile(input));
+
+  auto loaded = MapsContainer(FileLoader::loadFile(input));
+  // change container to loaded maps
+  std::swap(_maps, loaded);
+
   input.close();
 }
 

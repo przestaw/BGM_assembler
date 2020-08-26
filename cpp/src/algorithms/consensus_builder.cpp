@@ -16,11 +16,11 @@ void ConsensusBuilder::breakCycles() {
   for (auto &map : conMaps) {
     if (map.getRightNeighbour().first < 0) {
       // mark all from acyclic contig
-      map.mark = true;
+      map.setMark();
       int tmp  = map.getLeftNeighbour().first;
       // linear contig - because of neighbours structure
       while (tmp >= 0) {
-        conMaps[tmp].mark = true;
+        conMaps[tmp].setMark();
         tmp               = conMaps[tmp].getLeftNeighbour().first;
       }
     }
@@ -28,7 +28,7 @@ void ConsensusBuilder::breakCycles() {
 
   for (size_t i = 0; i < conMaps.size(); ++i) {
     // if not marked
-    if (!conMaps[i].mark) {
+    if (!conMaps[i].isMark()) {
       breakOneCycle(i);
     }
   }
@@ -40,7 +40,7 @@ void ConsensusBuilder::breakOneCycle(int map) {
   int right        = -1;
   // find largest shift
   do {
-    conMaps[tmp].mark = true;
+    conMaps[tmp].setMark();
 
     if (lenOvlp < conMaps[map].getLeftNeighbour().second) {
       lenOvlp = conMaps[map].getLeftNeighbour().second;

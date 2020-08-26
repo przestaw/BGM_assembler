@@ -23,7 +23,6 @@ namespace oma {
     BinaryMap(std::string identifier, Bitset map);
 
     [[nodiscard]] const std::string &getIdentifier() const;
-    // FIXME : index instead of pointer ?
     void setLeftNeighbour(int best, unsigned shift);
     void setRightNeighbour(int best, unsigned shift);
     [[nodiscard]] Bitset getMap(); // NOTE : copy as it will be modified
@@ -32,7 +31,11 @@ namespace oma {
     [[nodiscard]] const Neighbour &getRightNeighbour() const;
     [[nodiscard]] std::string toFastaRecord() const;
 
-    bool mark = false; // TEMPORARY
+    //[[nodiscard]] bool isAligned() const;
+    //void setAligned(bool aligned = true);
+    [[nodiscard]] bool isMark() const;
+    void setMark(bool mark = true);
+
   private:
     std::string identifier;
     Bitset map;
@@ -40,6 +43,10 @@ namespace oma {
     Neighbour leftNeighbour;
     // Right best aligned map
     Neighbour rightNeighbour;
+    // flag for alignment
+    //bool aligned;
+    // flag for cycle breaking
+    bool mark;
   };
 } // namespace oma
 

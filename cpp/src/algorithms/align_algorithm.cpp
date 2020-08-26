@@ -3,7 +3,7 @@
 //
 
 #include <algorithms/align_algorithm.h>
-#include <iostream>
+#include <thread>
 
 using namespace oma;
 
@@ -11,12 +11,41 @@ AlignAlgorithm::AlignAlgorithm(MapsContainer& maps, unsigned int minOverlap)
     : _maps(maps), _minOverlap(minOverlap) {}
 
 void AlignAlgorithm::alignMapsSingle() {
-  for (size_t iter = 0; iter < _maps.size(); ++iter) { alignOneMap(iter); }
+  //for (size_t iter = 0; iter < _maps.size(); ++iter) { alignOneMap(iter); }
+  rangeWorkerThread(0, _maps.size());
+}
+
+void AlignAlgorithm::alignMapsMulti(unsigned int threadsCount) {
+  const auto processorCount = std::thread::hardware_concurrency();
+
+  if(threadsCount == 0){
+    threadsCount = processorCount;
+  }
+
+  if (threadsCount == 1){
+    // single thread
+    alignMapsSingle();
+  } else {
+    // multi thread
+    std::vector<std::thread> threads;
+
+    // allocate memory for threads
+    threads.reserve(threadsCount);
+    // create threads
+    for(unsigned i = 0; i < threadsCount; ++i){
+      threads.emplace_back(&AlignAlgorithm::workerThread, this);
+    }
+
+    // join threads
+    for (auto &workerThread : threads) {
+      workerThread.join();
+    }
+  }
 }
 
 void AlignAlgorithm::alignOneMap(size_t index) {
   // Right neighbour [if present - found as best left neighbour]
-  if (_maps[index].getRightNeighbour().first < 0) {
+  //if (_maps[index].getRightNeighbour().first < 0) {
     Alignment best   = Alignment(-1, std::numeric_limits<size_t>::max());
     size_t neighbour = 0;
     /* NOTE : iterate from index to max
@@ -39,7 +68,7 @@ void AlignAlgorithm::alignOneMap(size_t index) {
     if (best.first >= 0) {
       _maps.addRightNeighbour(index, neighbour, best.first);
     }
-  }
+  //}
   // Left neighbour
   //  if (_maps[index].getLeftNeighbour().first < 0) {
   //    Alignment best   = Alignment(-1, std::numeric_limits<size_t>::max());
@@ -177,3 +206,16 @@ AlignAlgorithm::align(BinaryMap::Bitset ref, BinaryMap::Bitset tested) const {
 
   return std::make_pair(best_shift, best);
 }
+
+void AlignAlgorithm::workerThread() {
+  size_t index = _maps.getUnaligned();
+  while (index < _maps.size()){
+    alignOneMap(index);
+    index = _maps.getUnaligned();
+  }
+}
+
+void AlignAlgorithm::rangeWorkerThread(size_t begin, size_t end) {
+  for (size_t iter = begin; iter < end; ++iter) { alignOneMap(iter); }
+}
+
