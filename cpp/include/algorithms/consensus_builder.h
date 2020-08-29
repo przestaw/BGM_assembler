@@ -18,6 +18,8 @@ namespace oma {
     [[nodiscard]] const std::vector<BinaryMap> &getConsensusMaps() const;
 
   private:
+    void workerThread();
+
     /*
      * detect (and sort) Contigs of maps
      *
@@ -57,6 +59,8 @@ namespace oma {
      * NOTE: could function as LIFO queue for makeConsensus
      */
     // std::vector<Contig> contigs;
+    std::mutex congigLock;
+    std::deque<size_t> contigs;
 
     /*
      * TODO: container for resulting consensus maps?

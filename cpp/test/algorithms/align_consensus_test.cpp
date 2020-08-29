@@ -224,7 +224,7 @@ BOOST_AUTO_TEST_CASE(Multi_ThreeMapsSameDist_CreatesValidMap) {
   testAligner.alignMapsMulti(0);
 
   oma::ConsensusBuilder testConsensus(mapsContainer);
-  testConsensus.runConsensusSingle();
+  testConsensus.runMultiConsensus(0);
 
   BOOST_REQUIRE_EQUAL(1, testConsensus.getConsensusMaps().size());
   std::string res;
@@ -256,7 +256,7 @@ BOOST_AUTO_TEST_CASE(Multi_ThreeMapsDiffDist_CreatesValidMap_3) {
   testAligner.alignMapsMulti(0);
 
   oma::ConsensusBuilder testConsensus(mapsContainer);
-  testConsensus.runConsensusSingle();
+  testConsensus.runMultiConsensus(0);
 
   BOOST_REQUIRE_EQUAL(1, testConsensus.getConsensusMaps().size());
   std::string res;
@@ -306,7 +306,7 @@ BOOST_AUTO_TEST_CASE(Multi_FourMapsSameDist_CreatesValidMap) {
   testAligner.alignMapsMulti(0);
 
   oma::ConsensusBuilder testConsensus(mapsContainer);
-  testConsensus.runConsensusSingle();
+  testConsensus.runMultiConsensus(0);
 
   BOOST_REQUIRE_EQUAL(1, testConsensus.getConsensusMaps().size());
   std::string res;
@@ -356,7 +356,7 @@ BOOST_AUTO_TEST_CASE(Multi_FourMapsDiffDist_CreatesValidMap) {
   testAligner.alignMapsMulti(0);
 
   oma::ConsensusBuilder testConsensus(mapsContainer);
-  testConsensus.runConsensusSingle();
+  testConsensus.runMultiConsensus(0);
 
   BOOST_REQUIRE_EQUAL(1, testConsensus.getConsensusMaps().size());
   std::string res;

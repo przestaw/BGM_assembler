@@ -56,9 +56,13 @@ void AssemblyTask::loadMaps() {
   input.close();
 }
 
-void AssemblyTask::alignMaps() { _aligner.alignMapsSingle(); }
+void AssemblyTask::alignMaps() {
+  _aligner.alignMapsMulti(_params.getThreads());
+}
 
-void AssemblyTask::performConsensus() { _consensus.runConsensusSingle(); }
+void AssemblyTask::performConsensus() {
+  _consensus.runMultiConsensus(_params.getThreads());
+}
 
 void AssemblyTask::writeResult() {
   /*
