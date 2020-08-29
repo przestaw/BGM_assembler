@@ -19,7 +19,9 @@ AssemblyTask::Params::Params(std::string inputFile, std::string outputFile,
       _threshold(threshold) {}
 
 AssemblyTask::AssemblyTask(AssemblyTask::Params params)
-    : _params(std::move(params)), _aligner(_maps, _params.getMinOverlap()),
+    : _params(std::move(params)),
+      _aligner(_maps, _params.getMinOverlap(), _params.getMinPart(),
+               _params.getThreshold()),
       _consensus(_maps) {}
 
 void AssemblyTask::run(bool verbose) {
