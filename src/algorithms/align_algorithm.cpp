@@ -215,3 +215,15 @@ AlignAlgorithm::align(BinaryMap::Bitset ref,
 
   return std::make_pair(best_shift, best);
 }
+
+void AlignAlgorithm::workerThread() {
+  size_t index = _maps.getUnaligned();
+  while (index < _maps.size()){
+    alignOneMap(index);
+    index = _maps.getUnaligned();
+  }
+}
+
+void AlignAlgorithm::rangeWorkerThread(size_t begin, size_t end) {
+  for (size_t iter = begin; iter < end; ++iter) { alignOneMap(iter); }
+}
