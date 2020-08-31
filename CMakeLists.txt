@@ -31,7 +31,8 @@ enable_testing()
 
 # Add external libs : boost
 find_package(Boost COMPONENTS program_options unit_test_framework REQUIRED)
-set(EXTERNAL_LIBS "Boost::program_options")
+find_package(Threads REQUIRED)
+set(EXTERNAL_LIBS "Boost::program_options" "Boost::unit_test_framework" "Threads::Threads")
 
 # CXX standard
 set(CMAKE_CXX_STANDARD 17)

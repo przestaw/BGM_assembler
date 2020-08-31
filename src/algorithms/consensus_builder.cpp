@@ -3,6 +3,7 @@
 //
 #include <algorithms/consensus_builder.h>
 #include <iostream>
+#include <thread>
 
 using namespace oma;
 
@@ -16,11 +17,11 @@ void ConsensusBuilder::breakCycles() {
   for (auto &map : conMaps) {
     if (map.getRightNeighbour().first < 0) {
       // mark all from acyclic contig
-      map.mark = true;
+      map.setMark();
       int tmp  = map.getLeftNeighbour().first;
       // linear contig - because of neighbours structure
       while (tmp >= 0) {
-        conMaps[tmp].mark = true;
+        conMaps[tmp].setMark();
         tmp               = conMaps[tmp].getLeftNeighbour().first;
       }
     }
@@ -28,7 +29,7 @@ void ConsensusBuilder::breakCycles() {
 
   for (size_t i = 0; i < conMaps.size(); ++i) {
     // if not marked
-    if (!conMaps[i].mark) {
+    if (!conMaps[i].isMark()) {
       breakOneCycle(i);
     }
   }
@@ -40,7 +41,7 @@ void ConsensusBuilder::breakOneCycle(int map) {
   int right        = -1;
   // find largest shift
   do {
-    conMaps[tmp].mark = true;
+    conMaps[tmp].setMark();
 
     if (lenOvlp < conMaps[map].getLeftNeighbour().second) {
       lenOvlp = conMaps[map].getLeftNeighbour().second;
@@ -59,13 +60,67 @@ void ConsensusBuilder::breakOneCycle(int map) {
 
 void ConsensusBuilder::runConsensusSingle() {
   breakCycles(); // break cycles before finding contigs
-  // detectContigs(); // TODO : implement and use
+  detectContigs();
+
+  for (const auto &i : contigs) { makeConsensus(i); }
 
   // NOTE: temporary way of iterate over "contigs"
-  for (size_t map = 0; map < conMaps.size(); ++map) {
-    if (conMaps[map].getRightNeighbour().first < 0) {
-      makeConsensus(map);
+  //  for (size_t map = 0; map < conMaps.size(); ++map) {
+  //    if (conMaps[map].getRightNeighbour().first < 0) {
+  //      makeConsensus(map);
+  //    }
+  //  }
+}
+
+void ConsensusBuilder::runMultiConsensus(unsigned int threadsCount) {
+  const auto processorCount = std::thread::hardware_concurrency();
+
+  if (threadsCount == 0) {
+    threadsCount = processorCount;
+  }
+
+  if (threadsCount == 1) {
+    // single thread
+    runConsensusSingle();
+  } else {
+    breakCycles(); // break cycles before finding contigs
+    detectContigs();
+
+    // multi thread
+    std::vector<std::thread> threads;
+
+    // allocate memory for threads
+    threads.reserve(threadsCount);
+    // create threads
+    for (unsigned i = 0; i < threadsCount; ++i) {
+      threads.emplace_back(&ConsensusBuilder::workerThread, this);
     }
+
+    // join threads
+    for (auto &workerThread : threads) { workerThread.join(); }
+  }
+}
+
+void ConsensusBuilder::workerThread() {
+  bool flag = true;
+
+  auto getContig = [&]() {
+    std::unique_lock guard(congigLock);
+    if (!contigs.empty()) {
+      const auto ret = contigs.back();
+      contigs.pop_back();
+      return ret;
+    } else {
+      flag = false;
+      return size_t(0);
+    }
+  };
+
+  size_t index = getContig();
+
+  while (flag) {
+    makeConsensus(index);
+    index = getContig();
   }
 }
 
@@ -75,6 +130,7 @@ void ConsensusBuilder::detectContigs() {
       // "create" contig -> for consensus
       // NOTE : could be list of most right maps or special structure for faster
       //        consensus
+      contigs.emplace_back(map);
     }
   }
 }
