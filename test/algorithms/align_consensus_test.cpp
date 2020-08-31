@@ -138,7 +138,7 @@ BOOST_AUTO_TEST_CASE(Single_FourMapsSameDist_CreatesValidMap) {
   mapsContainer.emplace_back("map4",
                              oma::BinaryMap::Bitset(std::string(mapStr4)));
 
-  oma::AlignAlgorithm testAligner(mapsContainer, 40);
+  oma::AlignAlgorithm testAligner(mapsContainer, 40, 0.4, 0.1);
   testAligner.alignMapsSingle();
 
   oma::ConsensusBuilder testConsensus(mapsContainer);
@@ -188,7 +188,7 @@ BOOST_AUTO_TEST_CASE(Single_FourMapsDiffDist_CreatesValidMap) {
   mapsContainer.emplace_back("map4",
                              oma::BinaryMap::Bitset(std::string(mapStr4)));
 
-  oma::AlignAlgorithm testAligner(mapsContainer, 40);
+  oma::AlignAlgorithm testAligner(mapsContainer, 40, 0.4, 0.1);
   testAligner.alignMapsSingle();
 
   oma::ConsensusBuilder testConsensus(mapsContainer);

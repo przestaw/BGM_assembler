@@ -19,10 +19,12 @@ namespace oma {
     class Params {
     public:
       Params(std::string inputFile, std::string outputFile)
-          : Params(std::move(inputFile), std::move(outputFile), 1, 200, 0.1) {}
+          : Params(std::move(inputFile), std::move(outputFile), 1, 200, 0.5,
+                   0.1) {}
 
       Params(std::string inputFile, std::string outputFile,
-             unsigned int threads, unsigned int minOverlap, double threshold);
+             unsigned int threads, unsigned int minOverlap, double minPart,
+             double threshold);
 
       [[nodiscard]] inline unsigned int getThreads() const { return _threads; }
       [[nodiscard]] inline unsigned getMinOverlap() const {
@@ -35,12 +37,17 @@ namespace oma {
       [[nodiscard]] inline const std::string& getOutputFile() const {
         return _outputFile;
       }
+      [[nodiscard]] inline double getMinPart() const { return _minPart; }
+      [[nodiscard]] inline size_t getMinMapLen() const {
+        return 1 + static_cast<size_t>(_minOverlap / _minPart);
+      }
 
     private:
       std::string _inputFile;
       std::string _outputFile;
       unsigned _threads;
       unsigned _minOverlap;
+      double _minPart;
       double _threshold;
     };
 
