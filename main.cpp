@@ -50,7 +50,7 @@ inline ProgramParams parseParams(int argc, char *argv[]) {
       std::cout << desc << '\n';
     } else {
       auto checkPresence = [&vm](const std::string &name) {
-        if (vm.count(name)) {
+        if (!vm.count(name)) {
           throw oma::error::missing_argument(name);
         }
       };
