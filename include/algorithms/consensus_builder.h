@@ -7,6 +7,10 @@
 
 #include <data/maps_container.h>
 #include <mutex>
+#include <deque>
+#include <list>
+#include <vector>
+
 namespace oma {
   class ConsensusBuilder {
   public:
