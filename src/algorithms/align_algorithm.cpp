@@ -3,6 +3,7 @@
 //
 
 #include <algorithms/align_algorithm.h>
+#include <functional>
 #include <thread>
 
 using namespace oma;

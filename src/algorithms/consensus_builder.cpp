@@ -1,9 +1,11 @@
 //
 // Created by przemek on 8/7/20.
 //
-#include <algorithms/consensus_builder.h>
+
 #include <iostream>
+#include <functional>
 #include <thread>
+#include <algorithms/consensus_builder.h>
 
 using namespace oma;
 

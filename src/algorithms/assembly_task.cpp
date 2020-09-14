@@ -2,12 +2,14 @@
 // Created by przemek on 12.08.2020.
 //
 
-#include <algorithms/assembly_task.h>
-#include <data/file_loader.h>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <utility>
+#include <functional>
+#include <algorithms/assembly_task.h>
+#include <data/file_loader.h>
+
 
 using namespace oma;
 
