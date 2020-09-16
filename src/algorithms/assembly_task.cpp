@@ -2,49 +2,89 @@
 // Created by przemek on 12.08.2020.
 //
 
+#include <algorithms/assembly_task.h>
+#include <data/file_loader.h>
 #include <fstream>
+#include <functional>
 #include <iomanip>
 #include <iostream>
 #include <utility>
-#include <functional>
-#include <algorithms/assembly_task.h>
-#include <data/file_loader.h>
-
 
 using namespace oma;
 
 AssemblyTask::Params::Params(std::string inputFile, std::string outputFile,
                              unsigned int threads, unsigned int minOverlap,
-                             double minPart, double threshold)
+                             double minPart, double threshold, unsigned repeats)
     : _inputFile(std::move(inputFile)), _outputFile(std::move(outputFile)),
       _threads(threads), _minOverlap(minOverlap), _minPart(minPart),
-      _threshold(threshold) {}
+      _threshold(threshold), _repeats(repeats) {}
 
 AssemblyTask::AssemblyTask(AssemblyTask::Params params)
     : _params(std::move(params)), _aligner(_maps, _params.getMinOverlap()),
       _consensus(_maps) {}
 
 void AssemblyTask::run(bool verbose) {
+  if (verbose) {
+    runVerbose();
+  } else {
+    runQuiet();
+  }
+}
+
+double AssemblyTask::runPerfTest() {
+  loadMaps();
+
+  auto begin = std::chrono::system_clock::now();
+
+  for (unsigned i = 1; i <= _params.getRepeats(); ++i) {
+    alignMaps();
+    performConsensus();
+
+    _maps.resetAndReplace(_consensus.getConsensusMaps());
+    _consensus.reset();
+  }
+
+  auto end = std::chrono::system_clock::now();
+
+  writeResult();
+
+  return std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() / 1000.0;
+}
+
+void AssemblyTask::runQuiet() {
+  loadMaps();
+
+  for (unsigned i = 1; i <= _params.getRepeats(); ++i) {
+    alignMaps();
+    performConsensus();
+
+    _maps.resetAndReplace(_consensus.getConsensusMaps());
+    _consensus.reset();
+  }
+
+  writeResult();
+}
+
+void AssemblyTask::runVerbose() {
   auto print = [](const std::string &what) {
     std::time_t t = std::time(nullptr);
     std::cout << what + " at time : "
               << std::put_time(std::localtime(&t), "%F %T %C") << "\n";
   };
-  if (verbose) {
-    print("loading maps");
-  }
+  print("loading maps");
   loadMaps();
-  if (verbose) {
-    print("aligning maps");
+
+  for (unsigned i = 1; i <= _params.getRepeats(); ++i) {
+    print("aligning maps " + std::to_string(i) + " ");
+    alignMaps();
+    print("performing consensus " + std::to_string(i) + " ");
+    loadMaps();
+
+    _maps.resetAndReplace(_consensus.getConsensusMaps());
+    _consensus.reset();
   }
-  alignMaps();
-  if (verbose) {
-    print("performing consensus");
-  }
-  performConsensus();
-  if (verbose) {
-    print("writing result");
-  }
+
+  print("writing result");
   writeResult();
 }
 
@@ -52,7 +92,8 @@ void AssemblyTask::loadMaps() {
   std::ifstream input;
   input.open(_params.getInputFile());
 
-  auto loaded = MapsContainer(FileLoader::loadFile(input, _params.getMinMapLen()));
+  auto loaded =
+      MapsContainer(FileLoader::loadFile(input, _params.getMinMapLen()));
   // change container to loaded maps
   std::swap(_maps, loaded);
 

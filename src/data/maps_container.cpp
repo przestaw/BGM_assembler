@@ -80,3 +80,9 @@ size_t MapsContainer::getUnaligned() {
     return size();
   }
 }
+
+void MapsContainer::resetAndReplace(const std::vector<BinaryMap>& maps) {
+  vector<BinaryMap> *myMap = this;
+  *myMap = maps;
+  unalignedPivot = 0;
+}

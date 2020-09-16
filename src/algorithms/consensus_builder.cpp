@@ -201,3 +201,8 @@ void ConsensusBuilder::addReadyMap(const BinaryMap::Bitset &readyMap) {
   consensusMaps.emplace_back("Contig " + std::to_string(consensusMaps.size()),
                              readyMap);
 }
+
+void ConsensusBuilder::reset() {
+  this->consensusMaps.clear();
+  this->contigs.clear();
+}

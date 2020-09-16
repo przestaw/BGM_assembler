@@ -39,6 +39,8 @@ inline ProgramParams parseParams(int argc, char *argv[]) {
                        "No of threads used for parallel algorithm parts"
                        "[0 will force to use max detected threads, higher "
                        "values will create desired threads count]");
+    desc.add_options()("folds,f", value<unsigned>()->default_value(1),
+                       "No of folds [repeated assemblies]");
     desc.add_options()("verbose,v", "Verbose output [current state]");
 
     variables_map vm;
@@ -61,12 +63,19 @@ inline ProgramParams parseParams(int argc, char *argv[]) {
       checkPresence("margin_part");
       checkPresence("thresh");
       // threads has default value
+      // folds has default value
+
+      // folds cannot be less than 1
+      unsigned folds = 1;
+      if (vm["folds"].as<unsigned>() > folds) {
+        folds = vm["folds"].as<unsigned>();
+      }
 
       params._run    = true;
       params._params = oma::AssemblyTask::Params(
           vm["input"].as<std::string>(), vm["output"].as<std::string>(),
           vm["threads"].as<unsigned>(), vm["margin_quant"].as<unsigned>(),
-          vm["margin_part"].as<double>(), vm["thresh"].as<double>());
+          vm["margin_part"].as<double>(), vm["thresh"].as<double>(), folds);
       params._verbose = vm.count("verbose");
     }
   } catch (const boost::program_options::error &ex) {

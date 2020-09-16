@@ -9,8 +9,10 @@
 #include <vector>
 #include <mutex>
 
+using std::vector;
+
 namespace oma {
-  class MapsContainer : public std::vector<BinaryMap> {
+  class MapsContainer : public vector<BinaryMap> {
   public:
     explicit MapsContainer(
         std::vector<BinaryMap> maps = std::vector<BinaryMap>());
@@ -39,6 +41,12 @@ namespace oma {
      * @return unaligned map index
      */
     size_t getUnaligned();
+
+    /**
+     * Resets container and replaces content
+     * @param maps new maps
+     */
+    void resetAndReplace(const std::vector<BinaryMap> &maps);
 
     /* TODO: - synchronized access to map neighbours
      *          ? -> in maps (rwlock) or through maps container

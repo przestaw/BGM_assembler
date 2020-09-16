@@ -24,9 +24,9 @@ namespace oma {
 
       Params(std::string inputFile, std::string outputFile,
              unsigned int threads, unsigned int minOverlap, double minPart,
-             double threshold);
+             double threshold, unsigned repeats = 0);
 
-      [[nodiscard]] inline unsigned int getThreads() const { return _threads; }
+      [[nodiscard]] inline unsigned getThreads() const { return _threads; }
       [[nodiscard]] inline unsigned getMinOverlap() const {
         return _minOverlap;
       }
@@ -41,6 +41,7 @@ namespace oma {
       [[nodiscard]] inline size_t getMinMapLen() const {
         return 1 + static_cast<size_t>(_minOverlap / _minPart);
       }
+      [[nodiscard]] inline unsigned getRepeats() const { return _repeats; }
 
     private:
       std::string _inputFile;
@@ -49,11 +50,13 @@ namespace oma {
       unsigned _minOverlap;
       double _minPart;
       double _threshold;
+      unsigned _repeats;
     };
 
     explicit AssemblyTask(Params params);
 
     void run(bool verbose = false);
+    double runPerfTest();
 
   protected:
     void loadMaps();
@@ -61,6 +64,8 @@ namespace oma {
     void performConsensus();
     void writeResult();
 
+    void runQuiet();
+    void runVerbose();
   private:
     MapsContainer _maps;
     Params _params;

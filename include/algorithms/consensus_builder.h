@@ -21,6 +21,7 @@ namespace oma {
 
     [[nodiscard]] const std::vector<BinaryMap> &getConsensusMaps() const;
 
+    void reset();
   private:
     void workerThread();
 
