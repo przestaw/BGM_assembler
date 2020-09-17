@@ -24,11 +24,11 @@ AssemblyTask::AssemblyTask(AssemblyTask::Params params)
       _consensus(_maps) {}
 
 void AssemblyTask::run(bool verbose) {
-  if (verbose) {
-    runVerbose();
-  } else {
-    runQuiet();
-  }
+  // if (verbose) {
+  runVerbose();
+  //} else {
+  //  runQuiet();
+  //}
 }
 
 double AssemblyTask::runPerfTest() {
@@ -48,7 +48,9 @@ double AssemblyTask::runPerfTest() {
 
   writeResult();
 
-  return std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() / 1000.0;
+  return std::chrono::duration_cast<std::chrono::milliseconds>(end - begin)
+             .count()
+         / 1000.0;
 }
 
 void AssemblyTask::runQuiet() {
@@ -58,8 +60,8 @@ void AssemblyTask::runQuiet() {
     alignMaps();
     performConsensus();
 
-    _maps.resetAndReplace(_consensus.getConsensusMaps());
-    _consensus.reset();
+    //_maps.resetAndReplace(_consensus.getConsensusMaps());
+    //_consensus.reset();
   }
 
   writeResult();
@@ -78,10 +80,14 @@ void AssemblyTask::runVerbose() {
     print("aligning maps " + std::to_string(i) + " ");
     alignMaps();
     print("performing consensus " + std::to_string(i) + " ");
-    loadMaps();
+    performConsensus();
 
     _maps.resetAndReplace(_consensus.getConsensusMaps());
     _consensus.reset();
+    //    auto tmp = MapsContainer(_consensus.getConsensusMaps());
+    //    std::swap(_maps, tmp);
+    //    _consensus.reset();
+    //    _maps.resetAndReplace(tmp);
   }
 
   print("writing result");
@@ -100,9 +106,9 @@ void AssemblyTask::loadMaps() {
   input.close();
 }
 
-void AssemblyTask::alignMaps() { _aligner.alignMapsSingle(); }
+void AssemblyTask::alignMaps() { _aligner.alignMapsMulti(_params.getThreads()); }
 
-void AssemblyTask::performConsensus() { _consensus.runConsensusSingle(); }
+void AssemblyTask::performConsensus() { _consensus.runMultiConsensus(_params.getThreads()); }
 
 void AssemblyTask::writeResult() {
   /*
@@ -141,48 +147,22 @@ void AssemblyTask::writeResult() {
         output.close();
       };
 
-  // NOTE : draft contig align output
-  std::function<void(const std::string &)> outDrafts =
-      [&](const std::string &outFile) {
-        std::ofstream output;
-        output.open(outFile);
-
-        std::function<std::string(const oma::BinaryMap &)> mapListStr =
-            [&](const oma::BinaryMap &map) {
-              if (map.getRightNeighbour().first >= 0) {
-                return _maps[map.getRightNeighbour().first].getIdentifier()
-                       + "\n"
-                       + mapListStr(_maps[map.getRightNeighbour().first]);
-              } else {
-                return std::string("# --\t-- #\n");
-              }
-            };
-
-        for (const auto &map : _maps) {
-          if (map.getLeftNeighbour().first < 0) {
-            output << _maps[map.getRightNeighbour().first].getIdentifier()
-                          + "\n" + mapListStr(map);
-          }
-        }
-
-        output.close();
-      };
-
   // NOTE : result output
   std::function<void(const std::string &)> outContigs =
       [&](const std::string &outFile) {
         std::ofstream output;
         output.open(outFile);
 
-        for (auto &map : _consensus.getConsensusMaps()) {
-          output << map.toFastaRecord();
-        }
+        for (auto &map : _maps) { output << map.toFastaRecord(); }
 
         output.close();
       };
 
-  // TODO : possible choice for output files
-  outDetails(_params.getOutputFile() + ".details");
-  // outDrafts(_params.getOutputFile() + ".drafts");
+  std::sort(_maps.begin(), _maps.end(),
+            [](const BinaryMap &a, const BinaryMap &b) -> bool {
+              return a.getMap().size() > b.getMap().size();
+            });
+
+  // outDetails(_params.getOutputFile() + ".details");
   outContigs(_params.getOutputFile());
 }
