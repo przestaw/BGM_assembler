@@ -45,13 +45,11 @@ void MapsContainer::interandAddRight(size_t map, size_t neighbour, unsigned shif
       (*this)[rNeighbor.first].setLeftNeighbour(-1, 0);
 
       interandAddRight(neighbour, rNeighbor.first, diff);
-    } else if (rNeighbor.second < shift) {
+    } else {
       auto diff = shift - rNeighbor.second;
 
       // M -> R -> N
       interandAddRight(rNeighbor.first, neighbour, diff);
-    } else { // if ==
-      interandAddRight(rNeighbor.first, neighbour, 0);
     }
   } else if(rFlag) { // rFlag && !lFlag
     auto lNeighbor = (*this)[neighbour].getLeftNeighbour();
@@ -63,11 +61,9 @@ void MapsContainer::interandAddRight(size_t map, size_t neighbour, unsigned shif
       (*this)[lNeighbor.first].setRightNeighbour(-1, 0);
 
       interandAddRight(lNeighbor.first, map, diff);
-    } else if (lNeighbor.second < shift) {
+    } else {
       auto diff = shift - lNeighbor.second;
       interandAddRight(map, lNeighbor.first, diff);
-    } else{ // if ==
-      interandAddRight(map, lNeighbor.first, 0);
     }
   } else { // !rFlag && !lFlag
     auto rNeighbor = (*this)[map].getRightNeighbour();
