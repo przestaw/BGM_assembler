@@ -24,11 +24,11 @@ AssemblyTask::AssemblyTask(AssemblyTask::Params params)
       _consensus(_maps) {}
 
 void AssemblyTask::run(bool verbose) {
-  // if (verbose) {
-  runVerbose();
-  //} else {
-  //  runQuiet();
-  //}
+  if (verbose) {
+    runVerbose();
+  } else {
+    runQuiet();
+  }
 }
 
 double AssemblyTask::runPerfTest() {
@@ -37,11 +37,15 @@ double AssemblyTask::runPerfTest() {
   auto begin = std::chrono::system_clock::now();
 
   for (unsigned i = 1; i <= _params.getRepeats(); ++i) {
-    alignMaps();
-    performConsensus();
+    if (_maps.size() > 1) {
+      alignMaps();
+      performConsensus();
 
-    _maps.resetAndReplace(_consensus.getConsensusMaps());
-    _consensus.reset();
+      _maps.resetAndReplace(_consensus.getConsensusMaps());
+      _consensus.reset();
+    } else {
+      break;
+    }
   }
 
   auto end = std::chrono::system_clock::now();
@@ -57,11 +61,15 @@ void AssemblyTask::runQuiet() {
   loadMaps();
 
   for (unsigned i = 1; i <= _params.getRepeats(); ++i) {
-    alignMaps();
-    performConsensus();
+    if (_maps.size() > 1) {
+      alignMaps();
+      performConsensus();
 
-    //_maps.resetAndReplace(_consensus.getConsensusMaps());
-    //_consensus.reset();
+      _maps.resetAndReplace(_consensus.getConsensusMaps());
+      _consensus.reset();
+    } else {
+      break;
+    }
   }
 
   writeResult();
@@ -77,17 +85,18 @@ void AssemblyTask::runVerbose() {
   loadMaps();
 
   for (unsigned i = 1; i <= _params.getRepeats(); ++i) {
-    print("aligning maps " + std::to_string(i) + " ");
-    alignMaps();
-    print("performing consensus " + std::to_string(i) + " ");
-    performConsensus();
+    if (_maps.size() > 1) {
+      print("aligning maps " + std::to_string(i) + " ");
+      alignMaps();
+      print("performing consensus " + std::to_string(i) + " ");
+      performConsensus();
 
-    _maps.resetAndReplace(_consensus.getConsensusMaps());
-    _consensus.reset();
-    //    auto tmp = MapsContainer(_consensus.getConsensusMaps());
-    //    std::swap(_maps, tmp);
-    //    _consensus.reset();
-    //    _maps.resetAndReplace(tmp);
+      _maps.resetAndReplace(_consensus.getConsensusMaps());
+      _consensus.reset();
+    } else {
+      print("One map left ");
+      break;
+    }
   }
 
   print("writing result");
@@ -106,47 +115,15 @@ void AssemblyTask::loadMaps() {
   input.close();
 }
 
-void AssemblyTask::alignMaps() { _aligner.alignMapsMulti(_params.getThreads()); }
+void AssemblyTask::alignMaps() {
+  _aligner.alignMapsMulti(_params.getThreads());
+}
 
-void AssemblyTask::performConsensus() { _consensus.runMultiConsensus(_params.getThreads()); }
+void AssemblyTask::performConsensus() {
+  _consensus.runMultiConsensus(_params.getThreads());
+}
 
 void AssemblyTask::writeResult() {
-  /*
-   * NOTE : TEMPORARY FOR TESTING
-   * FIXME : REMOVE ADDITIONAL OUTPUT
-   */
-
-  // NOTE : detailed align output
-  std::function<void(const std::string &)> outDetails =
-      [&](const std::string &outFile) {
-        auto lambdaL = [&](const oma::BinaryMap &map) {
-          if (map.getLeftNeighbour().first >= 0) {
-            return "L : " + _maps[map.getLeftNeighbour().first].getIdentifier()
-                   + " " + std::to_string(map.getLeftNeighbour().second);
-          } else {
-            return std::string("L : XX");
-          }
-        };
-        auto lambdaR = [&](const oma::BinaryMap &map) {
-          if (map.getRightNeighbour().first >= 0) {
-            return "R : " + _maps[map.getRightNeighbour().first].getIdentifier()
-                   + " " + std::to_string(map.getRightNeighbour().second);
-          } else {
-            return std::string("R : XX");
-          }
-        };
-
-        std::ofstream output;
-        output.open(outFile);
-
-        for (const auto &it : _maps) {
-          output << it.getIdentifier() << "\n\t" << lambdaL(it) << "\n\t"
-                 << lambdaR(it) << "\n";
-        }
-
-        output.close();
-      };
-
   // NOTE : result output
   std::function<void(const std::string &)> outContigs =
       [&](const std::string &outFile) {
@@ -158,11 +135,11 @@ void AssemblyTask::writeResult() {
         output.close();
       };
 
+  // NOTE : sort contigs before output
   std::sort(_maps.begin(), _maps.end(),
             [](const BinaryMap &a, const BinaryMap &b) -> bool {
               return a.getMap().size() > b.getMap().size();
             });
 
-  // outDetails(_params.getOutputFile() + ".details");
   outContigs(_params.getOutputFile());
 }

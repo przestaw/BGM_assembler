@@ -6,8 +6,8 @@
 #define OMA_MAPS_CONTAINER_H
 
 #include <data/bin_map.h>
-#include <vector>
 #include <mutex>
+#include <vector>
 
 using std::vector;
 
@@ -16,13 +16,13 @@ namespace oma {
   public:
     explicit MapsContainer(
         std::vector<BinaryMap> maps = std::vector<BinaryMap>());
-    /**
-     * Set neighbourhood for 2 maps
-     * @param map map
-     * @param neighbour left map neighbour
-     * @param shift shift between right ends
-     */
-    void addLeftNeighbour(size_t map, size_t neighbour, unsigned shift);
+    //    /**
+    //     * Set neighbourhood for 2 maps
+    //     * @param map map
+    //     * @param neighbour left map neighbour
+    //     * @param shift shift between right ends
+    //     */
+    //    void addLeftNeighbour(size_t map, size_t neighbour, unsigned shift);
     /**
      * Set neighbourhood for 2 maps
      * @param map map
@@ -47,15 +47,6 @@ namespace oma {
      * @param maps new maps
      */
     void resetAndReplace(const std::vector<BinaryMap> &maps);
-
-    /* TODO: - synchronized access to map neighbours
-     *          ? -> in maps (rwlock) or through maps container
-     *       - (?) different access than mc[index].method()
-     *       - get list(s) : null <-> M1 <-> M2 <-> ... <-> null
-     *          ? -> could be handled by 2 bitsets keeping track of empty
-     *              "neighbours"
-     *       - ???
-     */
   private:
     // used to synchronize neighbour addition
     std::mutex additionGuard;
@@ -63,6 +54,8 @@ namespace oma {
     size_t unalignedPivot;
     // used to synchronize unaligned pivot usage
     std::mutex unalignedGuard;
+    // used to lock mutex only once
+    void interandAddRight(size_t map, size_t neighbour, unsigned shift);
   };
 } // namespace oma
 
