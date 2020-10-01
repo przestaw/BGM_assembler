@@ -2,10 +2,10 @@
 // Created by przemek on 8/7/20.
 //
 
-#include <iostream>
-#include <functional>
-#include <thread>
 #include <algorithms/consensus_builder.h>
+#include <functional>
+#include <iostream>
+#include <thread>
 
 using namespace oma;
 
@@ -20,11 +20,11 @@ void ConsensusBuilder::breakCycles() {
     if (map.getRightNeighbour().first < 0) {
       // mark all from acyclic contig
       map.setMark();
-      int tmp  = map.getLeftNeighbour().first;
+      int tmp = map.getLeftNeighbour().first;
       // linear contig - because of neighbours structure
       while (tmp >= 0) {
         conMaps[tmp].setMark();
-        tmp               = conMaps[tmp].getLeftNeighbour().first;
+        tmp = conMaps[tmp].getLeftNeighbour().first;
       }
     }
   }

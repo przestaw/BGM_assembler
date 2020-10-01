@@ -9,7 +9,7 @@ using namespace oma;
 MapsContainer::MapsContainer(std::vector<BinaryMap> maps)
     : std::vector<BinaryMap>(std::move(maps)), unalignedPivot(0) {}
 
-//void MapsContainer::addLeftNeighbour(size_t map, size_t neighbour,
+// void MapsContainer::addLeftNeighbour(size_t map, size_t neighbour,
 //                                     unsigned shift) {
 //  // lock the container
 //  std::unique_lock guard(additionGuard);
@@ -21,12 +21,13 @@ MapsContainer::MapsContainer(std::vector<BinaryMap> maps)
 //  }
 //}
 
-void MapsContainer::interandAddRight(size_t map, size_t neighbour, unsigned shift) {
+void MapsContainer::interandAddRight(size_t map, size_t neighbour,
+                                     unsigned shift) {
   bool rFlag = (*this)[map].getRightNeighbour().first < 0;
   bool lFlag = (*this)[neighbour].getLeftNeighbour().first < 0;
 
-  if(shift == 0){
-    if ((*this)[map].getLeftNeighbour().first == static_cast<int>(neighbour)){
+  if (shift == 0) {
+    if ((*this)[map].getLeftNeighbour().first == static_cast<int>(neighbour)) {
       return;
     }
   }
@@ -51,7 +52,7 @@ void MapsContainer::interandAddRight(size_t map, size_t neighbour, unsigned shif
       // M -> R -> N
       interandAddRight(rNeighbor.first, neighbour, diff);
     }
-  } else if(rFlag) { // rFlag && !lFlag
+  } else if (rFlag) { // rFlag && !lFlag
     auto lNeighbor = (*this)[neighbour].getLeftNeighbour();
     if (lNeighbor.second > shift) {
       auto diff = lNeighbor.second - shift;
@@ -69,7 +70,7 @@ void MapsContainer::interandAddRight(size_t map, size_t neighbour, unsigned shif
     auto rNeighbor = (*this)[map].getRightNeighbour();
     auto lNeighbor = (*this)[neighbour].getLeftNeighbour();
 
-    if( rNeighbor.first != lNeighbor.first){
+    if (rNeighbor.first != lNeighbor.first) {
       std::cout << "M -> A ... B -> N\n";
     } // else : M -> ? -> N [OK]
   }

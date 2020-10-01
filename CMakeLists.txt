@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 # Set naming scheme 
-set(PROJECT_NAME OMA)
+set(PROJECT_NAME BGM-asm)
 project(${PROJECT_NAME})
 
 set(PROJECT_DESCRIPTION "Optical Map Assembly prototype")
@@ -24,6 +24,9 @@ set(CLANG_TIDY_CHECKS "cppcoreguidelines-*,performance-*,portability-*,-clang-an
 
 find_package(CLANG_TIDY)
 # NOTE : set for individual targets
+
+# Add Clang Format
+include(UseClangFormat)
 
 # Add CTest
 include(CTest)
@@ -111,7 +114,8 @@ add_dependencies(${EXECUTABLE} ${LIBRARY})
 target_link_libraries(${EXECUTABLE} ${LIBRARY})
 target_link_libraries(${EXECUTABLE} ${EXTERNAL_LIBS})
 
-add_custom_target(build-all DEPENDS ${PROGRAM} ${LIB} ${CHECK} ${TEST})
+clangformat_setup(${LIB_SRC} ${LIB_INC} ${TEST_SRC} main.cpp)
+add_custom_target(build-all DEPENDS format-project ${PROGRAM} ${LIB} ${CHECK} ${TEST})
 
 if (CLANG_TIDY_FOUND)
     set_target_properties(${EXECUTABLE} ${LIBRARY}

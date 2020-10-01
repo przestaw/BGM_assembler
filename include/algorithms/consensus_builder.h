@@ -6,9 +6,9 @@
 #define OMA_CONSENSUS_BUILDER_H
 
 #include <data/maps_container.h>
-#include <mutex>
 #include <deque>
 #include <list>
+#include <mutex>
 #include <vector>
 
 namespace oma {
@@ -22,6 +22,7 @@ namespace oma {
     [[nodiscard]] const std::vector<BinaryMap> &getConsensusMaps() const;
 
     void reset();
+
   private:
     void workerThread();
 

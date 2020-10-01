@@ -6,9 +6,7 @@ using namespace oma;
 BinaryMap::BinaryMap(std::string c_identifier, Bitset c_map)
     : identifier(std::move(c_identifier)), map(std::move(c_map)),
       leftNeighbour(-1, std::numeric_limits<unsigned>::max()),
-      rightNeighbour(-1, std::numeric_limits<unsigned>::max()),
-      mark(false)
-    {}
+      rightNeighbour(-1, std::numeric_limits<unsigned>::max()), mark(false) {}
 
 void BinaryMap::setLeftNeighbour(int best, unsigned int shift) {
   leftNeighbour = std::make_pair(best, shift);
@@ -51,18 +49,14 @@ std::string BinaryMap::toFastaRecord() const {
   return ret;
 }
 
-//bool BinaryMap::isAligned() const {
+// bool BinaryMap::isAligned() const {
 //  return aligned;
 //}
 //
-//void BinaryMap::setAligned(bool Aligned) {
+// void BinaryMap::setAligned(bool Aligned) {
 //  aligned = Aligned;
 //}
 
-bool BinaryMap::isMark() const {
-  return mark;
-}
+bool BinaryMap::isMark() const { return mark; }
 
-void BinaryMap::setMark(bool Mark) {
-  mark = Mark;
-}
+void BinaryMap::setMark(bool Mark) { mark = Mark; }

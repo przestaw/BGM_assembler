@@ -15,18 +15,18 @@ AlignAlgorithm::AlignAlgorithm(MapsContainer& maps,
       _minOverlapPart(minOverlapPart), _threshold(threshold) {}
 
 void AlignAlgorithm::alignMapsSingle() {
-  //for (size_t iter = 0; iter < _maps.size(); ++iter) { alignOneMap(iter); }
+  // for (size_t iter = 0; iter < _maps.size(); ++iter) { alignOneMap(iter); }
   rangeWorkerThread(0, _maps.size());
 }
 
 void AlignAlgorithm::alignMapsMulti(unsigned int threadsCount) {
   const auto processorCount = std::thread::hardware_concurrency();
 
-  if(threadsCount == 0){
+  if (threadsCount == 0) {
     threadsCount = processorCount;
   }
 
-  if (threadsCount == 1){
+  if (threadsCount == 1) {
     // single thread
     alignMapsSingle();
   } else {
@@ -36,14 +36,12 @@ void AlignAlgorithm::alignMapsMulti(unsigned int threadsCount) {
     // allocate memory for threads
     threads.reserve(threadsCount);
     // create threads
-    for(unsigned i = 0; i < threadsCount; ++i){
+    for (unsigned i = 0; i < threadsCount; ++i) {
       threads.emplace_back(&AlignAlgorithm::workerThread, this);
     }
 
     // join threads
-    for (auto &workerThread : threads) {
-      workerThread.join();
-    }
+    for (auto& workerThread : threads) { workerThread.join(); }
   }
 }
 
@@ -219,7 +217,7 @@ AlignAlgorithm::align(BinaryMap::Bitset ref,
 
 void AlignAlgorithm::workerThread() {
   size_t index = _maps.getUnaligned();
-  while (index < _maps.size()){
+  while (index < _maps.size()) {
     alignOneMap(index);
     index = _maps.getUnaligned();
   }

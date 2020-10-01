@@ -12,8 +12,15 @@
 using std::vector;
 
 namespace oma {
+  /**
+   * Wrapper class for BinaryMap vector with additional features
+   */
   class MapsContainer : public vector<BinaryMap> {
   public:
+    /**
+     * Constructor
+     * @param maps maps to be stored
+     */
     explicit MapsContainer(
         std::vector<BinaryMap> maps = std::vector<BinaryMap>());
     //    /**
@@ -47,6 +54,7 @@ namespace oma {
      * @param maps new maps
      */
     void resetAndReplace(const std::vector<BinaryMap> &maps);
+
   private:
     // used to synchronize neighbour addition
     std::mutex additionGuard;
