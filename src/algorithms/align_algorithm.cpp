@@ -73,52 +73,6 @@ void AlignAlgorithm::alignOneMap(size_t index) {
   if (best.first >= 0) {
     _maps.addRightNeighbour(index, neighbour, best.first);
   }
-
-  //  // Left neighbour
-  //  if (_maps[index].getLeftNeighbour().first < 0) {
-  //    Alignment best   = Alignment(-1, std::numeric_limits<size_t>::max());
-  //    size_t neighbour = 0;
-  //    /* NOTE : iterate from index to max
-  //     *      - if pair with lower position it would be found earlier
-  //     */
-  //    for (size_t iter = index + 1; iter < _maps.size(); ++iter) {
-  //      Alignment result = align(_maps[index].getMap(), _maps[iter].getMap());
-  //      // NOTE : if result of alignment is better save it as new best
-  //      if (result.second < best.second) {
-  //        best      = result;
-  //        neighbour = iter;
-  //      }
-  //    }
-  //    /* NOTE : value different than zero indicates significant alignment
-  //     *        - see notes in align function
-  //     */
-  //    if (best.first >= 0) {
-  //      _maps.addLeftNeighbour(index, neighbour, best.first);
-  //    }
-  //  }
-  //  // Right neighbour [if present - found as best left neighbour]
-  //  if (_maps[index].getRightNeighbour().first < 0) {
-  //    Alignment best   = Alignment(-1, std::numeric_limits<size_t>::max());
-  //    size_t neighbour = 0;
-  //    /* NOTE : iterate from index to max
-  //     *      - if pair with lower position it would be found earlier
-  //     */
-  //    for (size_t iter = index + 1; iter < _maps.size(); ++iter) {
-  //      // reuse align fun by switching arguments
-  //      Alignment result = align(_maps[iter].getMap(), _maps[index].getMap());
-  //      // NOTE : if result of alignment is better save it as new best
-  //      if (result.second < best.second) {
-  //        best      = result;
-  //        neighbour = iter;
-  //      }
-  //    }
-  //    /* NOTE : value different than zero indicates significant alignment
-  //     *        - see notes in align function
-  //     */
-  //    if (best.first >= 0) {
-  //      _maps.addRightNeighbour(index, neighbour, best.first);
-  //    }
-  //  }
 }
 
 AlignAlgorithm::Alignment

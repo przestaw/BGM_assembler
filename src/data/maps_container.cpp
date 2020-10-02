@@ -27,9 +27,17 @@ void MapsContainer::interandAddRight(size_t map, size_t neighbour,
   bool lFlag = (*this)[neighbour].getLeftNeighbour().first < 0;
 
   if (shift == 0) {
-    if ((*this)[map].getLeftNeighbour().first == static_cast<int>(neighbour)) {
-      return;
-    }
+    /* NOTE : Code below is used to avoid creation of 0's length cycles
+     * TODO : test cases for [NOT] adding cycles ??
+     * TODO : test cases for cyclic add [add to cycle ? break cycle ?]
+     */
+    auto lNeighbour = (*this)[map].getLeftNeighbour();
+    do{
+      if (lNeighbour.first == static_cast<int>(neighbour)) {
+        return;
+      }
+      lNeighbour = (*this)[lNeighbour.first].getLeftNeighbour();
+    } while (lNeighbour.second == 0);
   }
 
   if (rFlag && lFlag) {
@@ -71,7 +79,7 @@ void MapsContainer::interandAddRight(size_t map, size_t neighbour,
     auto lNeighbor = (*this)[neighbour].getLeftNeighbour();
 
     if (rNeighbor.first != lNeighbor.first) {
-      std::cout << "M -> A ... B -> N\n";
+      std::cerr << "M -> A ... B -> N\n";
     } // else : M -> ? -> N [OK]
   }
 }

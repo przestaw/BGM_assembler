@@ -114,7 +114,7 @@ add_dependencies(${EXECUTABLE} ${LIBRARY})
 target_link_libraries(${EXECUTABLE} ${LIBRARY})
 target_link_libraries(${EXECUTABLE} ${EXTERNAL_LIBS})
 
-clangformat_setup(${LIB_SRC} ${LIB_INC} ${TEST_SRC} main.cpp)
+clangformat_setup(${LIB_SRC} ${LIB_INC} main.cpp) # ${TEST_SRC}
 add_custom_target(build-all DEPENDS format-project ${PROGRAM} ${LIB} ${CHECK} ${TEST})
 
 if (CLANG_TIDY_FOUND)
