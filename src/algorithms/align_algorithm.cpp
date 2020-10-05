@@ -93,22 +93,9 @@ AlignAlgorithm::align(BinaryMap::Bitset ref,
                static_cast<size_t>(smallerLen * (1 - _minOverlapPart)));
 
   // init best as worst numerically possible
-  size_t best        = std::numeric_limits<size_t>::max();
-  int64_t best_shift = -1;
-  /* NOTE : assuming variance as in binominal distribution
-   *  var = n * p * (1 - p)
-   *  n = no of bits
-   *  p = probability of 1 = 1/2
-   *  var = n * 1/4
-   *  3 sigma rule
-   *  var * 3 = 3 * n / 4
-   *  E(x) = n * p = n/2
-   *  treshold = n/2 - 3n/4 = - n/4
-   *
-   * For p = 1/5
-   * threshold = -0.32*n
-   */
-  // FIXME : temporary - 10% 1's as threshold
+  size_t best         = std::numeric_limits<size_t>::max();
+  double best_quality = this->_threshold;
+  int64_t best_shift  = -1;
 
   auto performXorAndUpdate = [&](oma::BinaryMap::Bitset shiftedTest,
                                  const size_t shift) {
@@ -119,13 +106,15 @@ AlignAlgorithm::align(BinaryMap::Bitset ref,
 
     shiftedTest ^= ref;
     const size_t xor_result = shiftedTest.count();
-    const size_t margin     = shiftedTest.size() * _threshold;
+    const double q = static_cast<double>(xor_result) / shiftedTest.size();
 
-    if (xor_result < margin) {
+    // above threshold or better 'quality' alignment
+    if (q < best_quality) {
       // TODO : SCORE ???
       if (best > xor_result) {
-        best       = xor_result;
-        best_shift = shift;
+        best         = xor_result;
+        best_shift   = shift;
+        best_quality = q;
       }
     }
   };

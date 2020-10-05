@@ -25,7 +25,7 @@ namespace oma {
      * @param threshold max no of diffrences for overlap to be meaningful
      */
     explicit AlignAlgorithm(MapsContainer &maps,
-                            unsigned minOverlapQuants = 300,
+                            unsigned minOverlapQuants = 100,
                             double minOverlapPart     = 0.5,
                             double threshold          = 0.1);
     /**
@@ -69,7 +69,10 @@ namespace oma {
     // helper function taking range of maps to align
     void rangeWorkerThread(size_t begin, size_t end);
 
+    // maps
     MapsContainer &_maps;
+
+    // params
     unsigned _minOverlapQuants;
     double _minOverlapPart;
     double _threshold;

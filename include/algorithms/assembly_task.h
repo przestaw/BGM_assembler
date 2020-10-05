@@ -126,16 +126,23 @@ namespace oma {
     double runPerfTest();
 
   protected:
+    // worker functions
+    void runQuiet();
+    void runVerbose();
+
+    // internal stages
     void loadMaps();
     void alignMaps();
     void performConsensus();
     void writeResult();
 
-    void runQuiet();
-    void runVerbose();
-
-    MapsContainer _maps;
+    // params
     Params _params;
+
+    // maps
+    MapsContainer _maps;
+
+    // algorithms
     Aligner _aligner;
     Consensus _consensus;
   };

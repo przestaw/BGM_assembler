@@ -65,13 +65,6 @@ void ConsensusBuilder::runConsensusSingle() {
   detectContigs();
 
   for (const auto &i : contigs) { makeConsensus(i); }
-
-  // NOTE: temporary way of iterate over "contigs"
-  //  for (size_t map = 0; map < conMaps.size(); ++map) {
-  //    if (conMaps[map].getRightNeighbour().first < 0) {
-  //      makeConsensus(map);
-  //    }
-  //  }
 }
 
 void ConsensusBuilder::runMultiConsensus(unsigned int threadsCount) {
@@ -145,7 +138,8 @@ bool ConsensusBuilder::votePosition(
   // incremented inside loop
   for (auto iter = voters.begin(); iter != voters.end();) {
     // decrement and test position
-    if (conMaps[iter->second].getMap().test(--iter->first)) {
+    --(iter->first);
+    if (conMaps[iter->second].getMap().test(iter->first)) {
       ++ones;
     }
 
