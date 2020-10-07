@@ -155,7 +155,7 @@ AlignAlgorithm::align(BinaryMap::Bitset ref,
     }
   }
 
-  return std::make_pair(best_shift, best);
+  return AlignAlgorithm::Alignment(best_shift, best);
 }
 
 void AlignAlgorithm::workerThread() {

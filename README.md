@@ -1,8 +1,9 @@
-# OMA prototype
-## Optical Map Assembly
+# BGM-asm prototype
+## Binary Genome Map Assembly
 
 ### Program Usage
 
+*TODO*
 
 ### Build instructions
 
@@ -47,7 +48,7 @@
 - Project targets :
 
     - **build-all** - builds all available targets
-    - **OMA-test** - UnitTest made with *boost*
-    - **OMA-check** - dummy target for test run during library compilation
-    - **OMA-library** - library containing all classes excluding parameters
-    - **OMA-program** - program available for command line usage
+    - **BGM-asm-test** - UnitTest made with *boost*
+    - **BGM-asm-check** - dummy target for test run during library compilation
+    - **BGM-asm-library** - library containing all classes excluding parameters
+    - **BGM-asm-program** - program available for command line usage

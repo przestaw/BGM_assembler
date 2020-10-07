@@ -76,6 +76,21 @@ namespace oma {
     unsigned _minOverlapQuants;
     double _minOverlapPart;
     double _threshold;
+
+    // scoring function
+    double score(uint64_t diff, uint64_t ovlpLen, uint64_t mapLen1, uint64_t mapLen2){
+      // diff compared to overlap
+      const double diffP = static_cast<double>(diff) / static_cast<double>(ovlpLen);
+
+      if(diffP >= _threshold){
+        return 0.;
+      } else {
+        // diff compared to whole (smaller) map len
+        const double diffA = static_cast<double>(diff) / static_cast<double>(std::min(mapLen1, mapLen2));
+        // TODO
+        return diffP + diffA;
+      }
+    }
   };
 } // namespace oma
 
