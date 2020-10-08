@@ -16,6 +16,20 @@ namespace oma {
      *   -> [as shift 0 would mean duplicate this should not affect results]
      */
     using Alignment = std::pair<int64_t, size_t>;
+    class MapAlignment { // NOTE: WIP Alignment -> MapAlignment
+    public:
+      MapAlignment(int64_t map, size_t shift, double quality = 0.0)
+          : map_(map), shift_(shift), quality_(quality) {}
+
+      [[nodiscard]] int64_t getMap() const { return map_; }
+      [[nodiscard]] size_t getShift() const { return shift_; }
+      [[nodiscard]] double getQuality() const { return quality_; }
+
+    private:
+      const int64_t map_;
+      const size_t shift_;
+      const double quality_;
+    };
 
     /**
      * Constructor
@@ -43,6 +57,13 @@ namespace oma {
 
     /**
      * Aligns two maps
+     * @param ref reference map
+     * @param tested shifted map
+     * @return offset between right maps ends, 0 means no meaningful alignment
+     */
+    [[nodiscard]] Alignment align(const BinaryMap::Bitset &ref,
+                                  const BinaryMap::Bitset &tested) const;
+    /*
      *
      * NOTE :     1.            2.                3.
      *  ref    :  [_________X],    [________XX],     [_______XXX]
@@ -53,13 +74,7 @@ namespace oma {
      *            1.            2.                3.
      *  ref    :    [_________X],    [________XX],       [_______XXX]
      *  tested : [YYY_________] ,   [Y________]  , [YYYYYY_______]
-     *
-     * @param ref reference map
-     * @param tested shifted map
-     * @return offset between right maps ends, 0 means no meaningful alignment
      */
-    [[nodiscard]] Alignment align(BinaryMap::Bitset ref,
-                                  const BinaryMap::Bitset &tested) const;
 
   private:
     // helper function aligning one neighbour of one map
@@ -70,23 +85,31 @@ namespace oma {
     void rangeWorkerThread(size_t begin, size_t end);
 
     // maps
-    MapsContainer &_maps;
+    MapsContainer &maps_;
 
     // params
-    unsigned _minOverlapQuants;
-    double _minOverlapPart;
-    double _threshold;
+    const unsigned minOverlapQuants_;
+    const double minOverlapPart_;
+    const double threshold_;
 
     // scoring function
-    double score(uint64_t diff, uint64_t ovlpLen, uint64_t mapLen1, uint64_t mapLen2){
-      // diff compared to overlap
-      const double diffP = static_cast<double>(diff) / static_cast<double>(ovlpLen);
+    std::function<double(uint64_t, uint64_t, uint64_t, uint64_t)>
+        scoringFunction_;
+    // default scoring function
+    [[nodiscard]] double defaultScore(uint64_t diff,
+                                      uint64_t ovlpLen,
+                                      uint64_t mapLen1,
+                                      uint64_t mapLen2) const {
+      // diff compared to overlap : diff Proportional
+      const double diffP =
+          static_cast<double>(diff) / static_cast<double>(ovlpLen);
 
-      if(diffP >= _threshold){
+      if (diffP >= threshold_) {
         return 0.;
       } else {
-        // diff compared to whole (smaller) map len
-        const double diffA = static_cast<double>(diff) / static_cast<double>(std::min(mapLen1, mapLen2));
+        // diff compared to whole (smaller) map len : diff All
+        const double diffA = static_cast<double>(diff)
+                             / static_cast<double>(std::min(mapLen1, mapLen2));
         // TODO
         return diffP + diffA;
       }

@@ -8,15 +8,13 @@
 #include <boost/dynamic_bitset.hpp>
 #include <cstdint>
 
-using boost::dynamic_bitset;
-
 namespace oma {
   /**
    * Wraper for binary map sequence
    */
   class BinaryMap {
   public:
-    using Bitset    = dynamic_bitset<uint64_t>;
+    using Bitset    = boost::dynamic_bitset<uint64_t>;
     using Neighbour = std::pair<int, unsigned>; // NOTE : pair <index, shift>
     /**
      * Constructor
@@ -80,14 +78,15 @@ namespace oma {
     void setMark(bool mark = true);
 
   private:
-    std::string identifier;
-    Bitset map;
+    // data
+    std::string identifier_;
+    Bitset map_;
     // Left best aligned map -> TODO maybe index/id instead of pointer
-    Neighbour leftNeighbour;
+    Neighbour leftNeighbour_;
     // Right best aligned map
-    Neighbour rightNeighbour;
+    Neighbour rightNeighbour_;
     // flag for cycle breaking
-    bool mark;
+    bool mark_;
   };
 } // namespace oma
 

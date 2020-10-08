@@ -57,11 +57,11 @@ namespace oma {
 
   private:
     // used to synchronize neighbour addition
-    std::mutex additionGuard;
+    std::mutex additionGuard_;
     // points next unaligned map
-    size_t unalignedPivot;
+    size_t unalignedPivot_;
     // used to synchronize unaligned pivot usage
-    std::mutex unalignedGuard;
+    std::mutex unalignedGuard_;
     // used to lock mutex only once
     void interandAddRight(size_t map, size_t neighbour, unsigned shift);
   };

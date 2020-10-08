@@ -10,14 +10,22 @@ using namespace oma;
 
 AlignAlgorithm::AlignAlgorithm(MapsContainer& maps,
                                unsigned int minOverlapQuants,
-                               double minOverlapPart, double threshold)
-    : _maps(maps), _minOverlapQuants(minOverlapQuants),
-      _minOverlapPart(minOverlapPart), _threshold(threshold) {}
+                               double minOverlapPart,
+                               double threshold)
+    : maps_(maps), minOverlapQuants_(minOverlapQuants),
+      minOverlapPart_(minOverlapPart), threshold_(threshold),
+      scoringFunction_([&](uint64_t diff,
+                           uint64_t ovlpLen,
+                           uint64_t mapLen1,
+                           uint64_t mapLen2) {
+        return defaultScore(diff, ovlpLen, mapLen1, mapLen2);
+      }) {}
+//      scoringFunction(std::bind(&AlignAlgorithm::defaultScore, this,
+//                                std::placeholders::_1, std::placeholders::_2,
+//                                std::placeholders::_3, std::placeholders::_4))
+//                                {}
 
-void AlignAlgorithm::alignMapsSingle() {
-  // for (size_t iter = 0; iter < _maps.size(); ++iter) { alignOneMap(iter); }
-  rangeWorkerThread(0, _maps.size());
-}
+void AlignAlgorithm::alignMapsSingle() { rangeWorkerThread(0, maps_.size()); }
 
 void AlignAlgorithm::alignMapsMulti(unsigned int threadsCount) {
   const auto processorCount = std::thread::hardware_concurrency();
@@ -56,10 +64,10 @@ void AlignAlgorithm::alignOneMap(size_t index) {
   /* NOTE : iterate from index to max
    *      - if pair with lower position it would be found earlier
    */
-  for (size_t iter = 0; iter < _maps.size(); ++iter) {
+  for (size_t iter = 0; iter < maps_.size(); ++iter) {
     if (iter != index) {
       // reuse align fun by switching arguments
-      Alignment result = align(_maps[iter].getMap(), _maps[index].getMap());
+      Alignment result = align(maps_[iter].getMap(), maps_[index].getMap());
       // NOTE : if result of alignment is better save it as new best
       if (result.second < best.second) {
         best      = result;
@@ -71,30 +79,34 @@ void AlignAlgorithm::alignOneMap(size_t index) {
    *        - see notes in align function
    */
   if (best.first >= 0) {
-    _maps.addRightNeighbour(index, neighbour, best.first);
+    maps_.addRightNeighbour(index, neighbour, best.first);
   }
 }
 
 AlignAlgorithm::Alignment
-AlignAlgorithm::align(BinaryMap::Bitset ref,
+AlignAlgorithm::align(const BinaryMap::Bitset& ref_,
                       const BinaryMap::Bitset& tested) const {
-  // TODO : check or assure that maps are longer than minOverlap
-  //        i.e. filter too short maps
-
+  // TODO  : check or assure that maps are longer than minOverlap
+  //         i.e. filter too short maps
   // FIXME : filter maps by len
-  if (std::min(ref.size(), tested.size()) <= _minOverlapQuants) {
+
+  // copy as it will be resized
+  BinaryMap::Bitset ref(ref_);
+
+  if (std::min(ref.size(), tested.size()) <= minOverlapQuants_) {
     return std::make_pair(-1, std::numeric_limits<size_t>::max());
   }
 
   // calc max shift
-  const size_t smallerLen = std::min(ref.size(), tested.size());
-  const size_t max_shift =
-      std::min(1 + smallerLen - _minOverlapQuants,
-               static_cast<size_t>(smallerLen * (1 - _minOverlapPart)));
+  const size_t refLen = ref.size();
+  const size_t testedLen = tested.size();
+  const size_t smallerLen = std::min(refLen, testedLen);
+  const size_t max_shift = std::min(1 + smallerLen - minOverlapQuants_,
+                                    static_cast<size_t>(smallerLen * (1 - minOverlapPart_)));
 
   // init best as worst numerically possible
   size_t best         = std::numeric_limits<size_t>::max();
-  double best_quality = this->_threshold;
+  double best_quality = this->threshold_;
   int64_t best_shift  = -1;
 
   auto performXorAndUpdate = [&](oma::BinaryMap::Bitset shiftedTest,
@@ -107,6 +119,8 @@ AlignAlgorithm::align(BinaryMap::Bitset ref,
     shiftedTest ^= ref;
     const size_t xor_result = shiftedTest.count();
     const double q = static_cast<double>(xor_result) / shiftedTest.size();
+
+    //this->scoringFunction_(shiftedTest.count(), shiftedTest.size(), refLen, testedLen);
 
     // above threshold or better 'quality' alignment
     if (q < best_quality) {
@@ -147,9 +161,10 @@ AlignAlgorithm::align(BinaryMap::Bitset ref,
       // resize to correct value
       shiftedTest.resize(tested.size() - shift);
 
-      /* resize to equal lengths
-       * perform xor
-       * count diffrences and compare with margin & best
+      /* Note :
+       *     - resize to equal lengths
+       *     - perform xor
+       *     - count diffrences and compare with margin & best
        */
       performXorAndUpdate(shiftedTest, shift);
     }
@@ -159,10 +174,10 @@ AlignAlgorithm::align(BinaryMap::Bitset ref,
 }
 
 void AlignAlgorithm::workerThread() {
-  size_t index = _maps.getUnaligned();
-  while (index < _maps.size()) {
+  size_t index = maps_.getUnaligned();
+  while (index < maps_.size()) {
     alignOneMap(index);
-    index = _maps.getUnaligned();
+    index = maps_.getUnaligned();
   }
 }
 

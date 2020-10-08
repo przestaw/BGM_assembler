@@ -12,16 +12,20 @@
 
 using namespace oma;
 
-AssemblyTask::Params::Params(std::string inputFile, std::string outputFile,
-                             unsigned int threads, unsigned int minOverlap,
-                             double minPart, double threshold, unsigned repeats)
-    : _inputFile(std::move(inputFile)), _outputFile(std::move(outputFile)),
-      _threads(threads), _minOverlap(minOverlap), _minPart(minPart),
-      _threshold(threshold), _repeats(repeats) {}
+AssemblyTask::Params::Params(std::string inputFile,
+                             std::string outputFile,
+                             unsigned int threads,
+                             unsigned int minOverlap,
+                             double minPart,
+                             double threshold,
+                             unsigned repeats)
+    : inputFile_(std::move(inputFile)), outputFile_(std::move(outputFile)),
+      threads_(threads), minOverlap_(minOverlap), minPart_(minPart),
+      threshold_(threshold), repeats_(repeats) {}
 
 AssemblyTask::AssemblyTask(AssemblyTask::Params params)
-    : _params(std::move(params)), _aligner(_maps, _params.getMinOverlap()),
-      _consensus(_maps) {}
+    : params_(std::move(params)), aligner_(maps_, params_.getMinOverlap()),
+      consensus_(maps_) {}
 
 void AssemblyTask::run(bool verbose) {
   if (verbose) {
@@ -36,13 +40,13 @@ double AssemblyTask::runPerfTest() {
 
   auto begin = std::chrono::system_clock::now();
 
-  for (unsigned i = 1; i <= _params.getRepeats(); ++i) {
-    if (_maps.size() > 1) {
+  for (unsigned i = 1; i <= params_.getRepeats(); ++i) {
+    if (maps_.size() > 1) {
       alignMaps();
       performConsensus();
 
-      _maps.resetAndReplace(_consensus.getConsensusMaps());
-      _consensus.reset();
+      maps_.resetAndReplace(consensus_.getConsensusMaps());
+      consensus_.reset();
     } else {
       break;
     }
@@ -60,13 +64,13 @@ double AssemblyTask::runPerfTest() {
 void AssemblyTask::runQuiet() {
   loadMaps();
 
-  for (unsigned i = 1; i <= _params.getRepeats(); ++i) {
-    if (_maps.size() > 1) {
+  for (unsigned i = 1; i <= params_.getRepeats(); ++i) {
+    if (maps_.size() > 1) {
       alignMaps();
       performConsensus();
 
-      _maps.resetAndReplace(_consensus.getConsensusMaps());
-      _consensus.reset();
+      maps_.resetAndReplace(consensus_.getConsensusMaps());
+      consensus_.reset();
     } else {
       break;
     }
@@ -84,15 +88,15 @@ void AssemblyTask::runVerbose() {
   print("loading maps");
   loadMaps();
 
-  for (unsigned i = 1; i <= _params.getRepeats(); ++i) {
-    if (_maps.size() > 1) {
+  for (unsigned i = 1; i <= params_.getRepeats(); ++i) {
+    if (maps_.size() > 1) {
       print("aligning maps " + std::to_string(i) + " ");
       alignMaps();
       print("performing consensus " + std::to_string(i) + " ");
       performConsensus();
 
-      _maps.resetAndReplace(_consensus.getConsensusMaps());
-      _consensus.reset();
+      maps_.resetAndReplace(consensus_.getConsensusMaps());
+      consensus_.reset();
     } else {
       print("One map left ");
       break;
@@ -105,22 +109,22 @@ void AssemblyTask::runVerbose() {
 
 void AssemblyTask::loadMaps() {
   std::ifstream input;
-  input.open(_params.getInputFile());
+  input.open(params_.getInputFile());
 
   auto loaded =
-      MapsContainer(FileLoader::loadFile(input, _params.getMinMapLen()));
+      MapsContainer(FileLoader::loadFile(input, params_.getMinMapLen()));
   // change container to loaded maps
-  std::swap(_maps, loaded);
+  std::swap(maps_, loaded);
 
   input.close();
 }
 
 void AssemblyTask::alignMaps() {
-  _aligner.alignMapsMulti(_params.getThreads());
+  aligner_.alignMapsMulti(params_.getThreads());
 }
 
 void AssemblyTask::performConsensus() {
-  _consensus.runMultiConsensus(_params.getThreads());
+  consensus_.runMultiConsensus(params_.getThreads());
 }
 
 void AssemblyTask::writeResult() {
@@ -130,16 +134,17 @@ void AssemblyTask::writeResult() {
         std::ofstream output;
         output.open(outFile);
 
-        for (auto &map : _maps) { output << map.toFastaRecord(); }
+        for (auto &map : maps_) { output << map.toFastaRecord(); }
 
         output.close();
       };
 
   // NOTE : sort contigs before output
-  std::sort(_maps.begin(), _maps.end(),
+  std::sort(maps_.begin(),
+            maps_.end(),
             [](const BinaryMap &a, const BinaryMap &b) -> bool {
               return a.getMap().size() > b.getMap().size();
             });
 
-  outContigs(_params.getOutputFile());
+  outContigs(params_.getOutputFile());
 }

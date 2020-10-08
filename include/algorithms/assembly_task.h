@@ -29,7 +29,11 @@ namespace oma {
        * @param outputFile output file
        */
       Params(std::string inputFile, std::string outputFile)
-          : Params(std::move(inputFile), std::move(outputFile), 1, 200, 0.5,
+          : Params(std::move(inputFile),
+                   std::move(outputFile),
+                   1,
+                   200,
+                   0.5,
                    0.1) {}
 
       /**
@@ -43,67 +47,71 @@ namespace oma {
        * @param threshold threshold of differences for overlap to be meaningful
        * @param repeats no of folds to perform before output
        */
-      Params(std::string inputFile, std::string outputFile,
-             unsigned int threads, unsigned int minOverlap, double minPart,
-             double threshold, unsigned repeats = 0);
+      Params(std::string inputFile,
+             std::string outputFile,
+             unsigned int threads,
+             unsigned int minOverlap,
+             double minPart,
+             double threshold,
+             unsigned repeats = 0);
 
       /**
        * Getter for desired no of threads
        * @return desired no of threads
        */
-      [[nodiscard]] inline unsigned getThreads() const { return _threads; }
+      [[nodiscard]] inline unsigned getThreads() const { return threads_; }
       /**
        * Getter for threshold for overlap to be meaningful
        * @return threshold
        */
-      [[nodiscard]] inline double getThreshold() const { return _threshold; }
+      [[nodiscard]] inline double getThreshold() const { return threshold_; }
       /**
        * Getter for input filename
        * @return input filename
        */
       [[nodiscard]] inline const std::string& getInputFile() const {
-        return _inputFile;
+        return inputFile_;
       }
       /**
        * Getter for output filename
        * @return output filename
        */
       [[nodiscard]] inline const std::string& getOutputFile() const {
-        return _outputFile;
+        return outputFile_;
       }
       /**
        * Getter for minimum map overlap length
        * @return minimum map overlap length
        */
       [[nodiscard]] inline unsigned getMinOverlap() const {
-        return _minOverlap;
+        return minOverlap_;
       }
       /**
        * Getter for minimum map overlap part
        * @return minimum map overlap part
        */
-      [[nodiscard]] inline double getMinPart() const { return _minPart; }
+      [[nodiscard]] inline double getMinPart() const { return minPart_; }
       /**
        * Getter for minimum map length for map filtering
        * @return minimum map length
        */
       [[nodiscard]] inline size_t getMinMapLen() const {
-        return 1 + static_cast<size_t>(_minOverlap / _minPart);
+        return 1 + static_cast<size_t>(minOverlap_ / minPart_);
       }
       /**
        * Getter for no of repeats
        * @return no of repeats
        */
-      [[nodiscard]] inline unsigned getRepeats() const { return _repeats; }
+      [[nodiscard]] inline unsigned getRepeats() const { return repeats_; }
 
     private:
-      std::string _inputFile;
-      std::string _outputFile;
-      unsigned _threads;
-      unsigned _minOverlap;
-      double _minPart;
-      double _threshold;
-      unsigned _repeats;
+      std::string inputFile_;
+      std::string outputFile_;
+      unsigned threads_;
+      unsigned minOverlap_;
+      double minPart_;
+      double threshold_;
+      unsigned repeats_;
     };
 
     /**
@@ -137,14 +145,14 @@ namespace oma {
     void writeResult();
 
     // params
-    Params _params;
+    Params params_;
 
     // maps
-    MapsContainer _maps;
+    MapsContainer maps_;
 
     // algorithms
-    Aligner _aligner;
-    Consensus _consensus;
+    Aligner aligner_;
+    Consensus consensus_;
   };
 } // namespace oma
 

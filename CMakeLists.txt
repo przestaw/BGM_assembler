@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.10)
 set(PROJECT_NAME BGM-asm)
 project(${PROJECT_NAME})
 
-set(PROJECT_DESCRIPTION "Optical Map Assembly prototype")
+set(PROJECT_DESCRIPTION "Binary Maps Assembly prototype")
 
 set(EXECUTABLE ${PROJECT_NAME}-program)
 set(LIBRARY ${PROJECT_NAME}-lib)
@@ -20,10 +20,9 @@ find_package(LATEX)
 find_package(Doxygen)
 
 # Configure Clang-tidy
-set(CLANG_TIDY_CHECKS "cppcoreguidelines-*,performance-*,portability-*,-clang-analyzer-*,readability-*,cert-*,bugprone-*")
-
 find_package(CLANG_TIDY)
-# NOTE : set for individual targets
+# NOTE : checking is set for individual targets
+set(CLANG_TIDY_CHECKS "cppcoreguidelines-*,performance-*,portability-*,-clang-analyzer-*,readability-*,cert-*,bugprone-*")
 
 # Add Clang Format
 include(UseClangFormat)
@@ -81,6 +80,7 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     include(GNUtoolchain)
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     # TODO test
+    message("MSVC support is not tested")
 
     # using MSVC (experimental)
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /std:c++latest /W4 /Wall")
@@ -96,12 +96,17 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
 
+# include dirs
 include_directories(${PROJECT_SOURCE_DIR}/include)
 include_directories(${BOOST_INCLUDE_DIR})
 
+# find source files
+file(GLOB_RECURSE LIB_SRC ${PROJECT_SOURCE_DIR}/src/*.cpp)
+file(GLOB_RECURSE LIB_INC ${PROJECT_SOURCE_DIR}/include/*.h)
+#file(GLOB_RECURSE LIB_TMP ${PROJECT_SOURCE_DIR}/include/*.hpp)
+file(GLOB_RECURSE TEST_SRC "${PROJECT_SOURCE_DIR}/test/*.cpp")
+
 # Include src and test for library and test-check
-add_subdirectory("include")
-add_subdirectory("src")
 add_subdirectory("test")
 
 # library
@@ -114,9 +119,11 @@ add_dependencies(${EXECUTABLE} ${LIBRARY})
 target_link_libraries(${EXECUTABLE} ${LIBRARY})
 target_link_libraries(${EXECUTABLE} ${EXTERNAL_LIBS})
 
-clangformat_setup(${LIB_SRC} ${LIB_INC} main.cpp) # ${TEST_SRC}
+# Clang Format
+clangformat_setup(${LIB_SRC} ${LIB_INC} ${TEST_SRC} main.cpp)
 add_custom_target(build-all DEPENDS format-project ${PROGRAM} ${LIB} ${CHECK} ${TEST})
 
+# Clang Tidy
 if (CLANG_TIDY_FOUND)
     set_target_properties(${EXECUTABLE} ${LIBRARY}
             PROPERTIES

@@ -9,29 +9,29 @@
 
 using namespace oma;
 
-ConsensusBuilder::ConsensusBuilder(MapsContainer &maps) : conMaps(maps) {}
+ConsensusBuilder::ConsensusBuilder(MapsContainer &maps) : conMaps_(maps) {}
 
 const std::vector<BinaryMap> &ConsensusBuilder::getConsensusMaps() const {
-  return consensusMaps;
+  return consensusMaps_;
 }
 
 void ConsensusBuilder::breakCycles() {
-  for (auto &map : conMaps) {
+  for (auto &map : conMaps_) {
     if (map.getRightNeighbour().first < 0) {
       // mark all from acyclic contig
       map.setMark();
       int tmp = map.getLeftNeighbour().first;
       // linear contig - because of neighbours structure
       while (tmp >= 0) {
-        conMaps[tmp].setMark();
-        tmp = conMaps[tmp].getLeftNeighbour().first;
+        conMaps_[tmp].setMark();
+        tmp = conMaps_[tmp].getLeftNeighbour().first;
       }
     }
   }
 
-  for (size_t i = 0; i < conMaps.size(); ++i) {
+  for (size_t i = 0; i < conMaps_.size(); ++i) {
     // if not marked
-    if (!conMaps[i].isMark()) {
+    if (!conMaps_[i].isMark()) {
       breakOneCycle(i);
     }
   }
@@ -43,20 +43,20 @@ void ConsensusBuilder::breakOneCycle(int map) {
   int right        = -1;
   // find largest shift
   do {
-    conMaps[tmp].setMark();
+    conMaps_[tmp].setMark();
 
-    if (lenOvlp < conMaps[map].getLeftNeighbour().second) {
-      lenOvlp = conMaps[map].getLeftNeighbour().second;
-      right   = conMaps[map].getLeftNeighbour().first;
+    if (lenOvlp < conMaps_[map].getLeftNeighbour().second) {
+      lenOvlp = conMaps_[map].getLeftNeighbour().second;
+      right   = conMaps_[map].getLeftNeighbour().first;
     }
 
-    tmp = conMaps[tmp].getLeftNeighbour().first;
+    tmp = conMaps_[tmp].getLeftNeighbour().first;
   } while (tmp != map);
 
   // break cycle
   // FIXME : there should be no need for that
   if (right != -1) {
-    conMaps.breakLink(conMaps[right].getLeftNeighbour().first, right);
+    conMaps_.breakLink(conMaps_[right].getLeftNeighbour().first, right);
   }
 }
 
@@ -64,7 +64,7 @@ void ConsensusBuilder::runConsensusSingle() {
   breakCycles(); // break cycles before finding contigs
   detectContigs();
 
-  for (const auto &i : contigs) { makeConsensus(i); }
+  for (const auto &i : contigs_) { makeConsensus(i); }
 }
 
 void ConsensusBuilder::runMultiConsensus(unsigned int threadsCount) {
@@ -100,10 +100,10 @@ void ConsensusBuilder::workerThread() {
   bool flag = true;
 
   auto getContig = [&]() {
-    std::unique_lock guard(congigLock);
-    if (!contigs.empty()) {
-      const auto ret = contigs.back();
-      contigs.pop_back();
+    std::unique_lock guard(congigLock_);
+    if (!contigs_.empty()) {
+      const auto ret = contigs_.back();
+      contigs_.pop_back();
       return ret;
     } else {
       flag = false;
@@ -120,12 +120,12 @@ void ConsensusBuilder::workerThread() {
 }
 
 void ConsensusBuilder::detectContigs() {
-  for (size_t map = 0; map < conMaps.size(); ++map) {
-    if (conMaps[map].getRightNeighbour().first < 0) {
+  for (size_t map = 0; map < conMaps_.size(); ++map) {
+    if (conMaps_[map].getRightNeighbour().first < 0) {
       // "create" contig -> for consensus
       // NOTE : could be list of most right maps or special structure for faster
       //        consensus
-      contigs.emplace_back(map);
+      contigs_.emplace_back(map);
     }
   }
 }
@@ -139,7 +139,7 @@ bool ConsensusBuilder::votePosition(
   for (auto iter = voters.begin(); iter != voters.end();) {
     // decrement and test position
     --(iter->first);
-    if (conMaps[iter->second].getMap().test(iter->first)) {
+    if (conMaps_[iter->second].getMap().test(iter->first)) {
       ++ones;
     }
 
@@ -161,19 +161,19 @@ void ConsensusBuilder::makeConsensus(int lastMap) {
   // voters for consensus
   std::list<std::pair<std::size_t, int>> voters;
   // add first voter
-  voters.emplace_back(conMaps[lastMap].getMap().size(), lastMap);
+  voters.emplace_back(conMaps_[lastMap].getMap().size(), lastMap);
   // set counter to next voter
-  std::size_t dist = conMaps[lastMap].getLeftNeighbour().second;
+  std::size_t dist = conMaps_[lastMap].getLeftNeighbour().second;
 
   // run till no voter left
   while (!voters.empty()) {
 
     if (dist == 0) {
       // add next map 'voter'
-      while (dist == 0 && conMaps[lastMap].getLeftNeighbour().first >= 0) {
-        lastMap = conMaps[lastMap].getLeftNeighbour().first;
-        dist    = conMaps[lastMap].getLeftNeighbour().second;
-        voters.emplace_back(conMaps[lastMap].getMap().size(), lastMap);
+      while (dist == 0 && conMaps_[lastMap].getLeftNeighbour().first >= 0) {
+        lastMap = conMaps_[lastMap].getLeftNeighbour().first;
+        dist    = conMaps_[lastMap].getLeftNeighbour().second;
+        voters.emplace_back(conMaps_[lastMap].getMap().size(), lastMap);
       }
     }
     // decrement distance to next voter
@@ -189,11 +189,11 @@ void ConsensusBuilder::makeConsensus(int lastMap) {
 
 void ConsensusBuilder::addReadyMap(const BinaryMap::Bitset &readyMap) {
   std::unique_lock lock(consensusLock);
-  consensusMaps.emplace_back("Contig " + std::to_string(consensusMaps.size()),
-                             readyMap);
+  consensusMaps_.emplace_back("Contig " + std::to_string(consensusMaps_.size()),
+                              readyMap);
 }
 
 void ConsensusBuilder::reset() {
-  this->consensusMaps.clear();
-  this->contigs.clear();
+  this->consensusMaps_.clear();
+  this->contigs_.clear();
 }

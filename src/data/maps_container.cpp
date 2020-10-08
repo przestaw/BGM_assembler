@@ -7,7 +7,7 @@
 using namespace oma;
 
 MapsContainer::MapsContainer(std::vector<BinaryMap> maps)
-    : std::vector<BinaryMap>(std::move(maps)), unalignedPivot(0) {}
+    : std::vector<BinaryMap>(std::move(maps)), unalignedPivot_(0) {}
 
 // void MapsContainer::addLeftNeighbour(size_t map, size_t neighbour,
 //                                     unsigned shift) {
@@ -21,7 +21,8 @@ MapsContainer::MapsContainer(std::vector<BinaryMap> maps)
 //  }
 //}
 
-void MapsContainer::interandAddRight(size_t map, size_t neighbour,
+void MapsContainer::interandAddRight(size_t map,
+                                     size_t neighbour,
                                      unsigned shift) {
   bool rFlag = (*this)[map].getRightNeighbour().first < 0;
   bool lFlag = (*this)[neighbour].getLeftNeighbour().first < 0;
@@ -33,7 +34,7 @@ void MapsContainer::interandAddRight(size_t map, size_t neighbour,
      * TODO : test cases for cyclic add [add to cycle ? break cycle ?]
      */
     auto lNeighbour = (*this)[map].getLeftNeighbour();
-    while (lNeighbour.second == 0 && lNeighbour.first >= 0){
+    while (lNeighbour.second == 0 && lNeighbour.first >= 0) {
       if (lNeighbour.first == static_cast<int>(neighbour)) {
         return;
       }
@@ -85,10 +86,11 @@ void MapsContainer::interandAddRight(size_t map, size_t neighbour,
   }
 }
 
-void MapsContainer::addRightNeighbour(size_t map, size_t neighbour,
+void MapsContainer::addRightNeighbour(size_t map,
+                                      size_t neighbour,
                                       unsigned shift) {
   // lock the container
-  std::unique_lock guard(additionGuard);
+  std::unique_lock guard(additionGuard_);
 
   /*
   if ((*this)[map].getRightNeighbour().first < 0
@@ -103,17 +105,17 @@ void MapsContainer::addRightNeighbour(size_t map, size_t neighbour,
 
 void MapsContainer::breakLink(size_t left, size_t right) {
   // lock the container
-  std::unique_lock guard(additionGuard);
+  std::unique_lock guard(additionGuard_);
   (*this)[left].setRightNeighbour(-1, std::numeric_limits<unsigned>::max());
   (*this)[right].setLeftNeighbour(-1, std::numeric_limits<unsigned>::max());
 }
 
 size_t MapsContainer::getUnaligned() {
   // lock pivot
-  std::unique_lock guard(unalignedGuard);
+  std::unique_lock guard(unalignedGuard_);
   // check if reached end
-  if (unalignedPivot < size()) {
-    return unalignedPivot++;
+  if (unalignedPivot_ < size()) {
+    return unalignedPivot_++;
   } else {
     return size();
   }
@@ -122,5 +124,5 @@ size_t MapsContainer::getUnaligned() {
 void MapsContainer::resetAndReplace(const std::vector<BinaryMap>& maps) {
   vector<BinaryMap>* myMap = this;
   *myMap                   = maps;
-  unalignedPivot           = 0;
+  unalignedPivot_          = 0;
 }

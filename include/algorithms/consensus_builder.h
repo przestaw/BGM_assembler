@@ -58,18 +58,18 @@ namespace oma {
     bool votePosition(std::list<std::pair<std::size_t, int>> &voters);
 
     // contigs
-    std::mutex congigLock;
-    std::deque<size_t> contigs;
+    std::mutex congigLock_;
+    std::deque<size_t> contigs_;
 
     // consensus maps;
-    std::vector<BinaryMap> consensusMaps;
+    std::vector<BinaryMap> consensusMaps_;
 
     // output
     std::mutex consensusLock;
     void addReadyMap(const BinaryMap::Bitset &readyMap);
 
     // input
-    MapsContainer &conMaps;
+    MapsContainer &conMaps_;
   };
 } // namespace oma
 
