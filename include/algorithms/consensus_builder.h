@@ -17,8 +17,10 @@ namespace oma {
     /**
      * Constructor
      * @param maps maps container reference
+     * @param markerPreference prefer marker or blank place
      */
-    explicit ConsensusBuilder(MapsContainer &maps);
+    explicit ConsensusBuilder(MapsContainer &maps,
+                              bool markerPreference = true);
 
     /**
      * Runs consensus in single thread
@@ -70,6 +72,14 @@ namespace oma {
 
     // input
     MapsContainer &conMaps_;
+
+    // lambda for marker deduction
+    std::function<bool(size_t, size_t)> deductMarker_;
+
+    constexpr static const auto markerPreference_ =
+        [](size_t count, size_t ones) { return (count - ones) <= ones; };
+    constexpr static const auto noMarkerPreference_ =
+        [](size_t count, size_t ones) { return (count - ones) < ones; };
   };
 } // namespace oma
 

@@ -29,6 +29,7 @@ ProgramParams::ProgramParams(variables_map vm) {
   checkPresence("thresh");
   // threads has default value
   // folds has default value
+  // marker_preference has default value
 
   // folds cannot be less than 1
   unsigned folds = 1;
@@ -42,7 +43,8 @@ ProgramParams::ProgramParams(variables_map vm) {
                                             vm["margin_quant"].as<unsigned>(),
                                             vm["margin_part"].as<double>(),
                                             vm["thresh"].as<double>(),
-                                            folds);
+                                            folds,
+                                            vm["marker_preference"].as<bool>());
   this->verbose_ = vm.count("verbose");
 }
 
@@ -77,6 +79,10 @@ inline std::optional<ProgramParams> parseParams(int argc, char *argv[]) {
     desc.add_options()("folds,f",
                        value<unsigned>()->default_value(1),
                        "No of folds [repeated assemblies]");
+    desc.add_options()("marker_preference",
+                       value<bool>()->default_value(true),
+                       "preference of marker (true) or empty place (false) "
+                       "during consensus when 50% of maps has 1 and 50% has 0");
     desc.add_options()("verbose,v", "Verbose output [current state]");
 
     variables_map vm;
@@ -88,8 +94,9 @@ inline std::optional<ProgramParams> parseParams(int argc, char *argv[]) {
       std::cout << desc << '\n';
       return std::optional<ProgramParams>();
     } else {
-      // NOTE : constructor can throw, as RAII
-      //        isocpp.org/wiki/faq/big-picture
+      /* NOTE : constructor can throw, as RAII
+       *        isocpp.org/wiki/faq/big-picture
+       */
       return std::optional<ProgramParams>(ProgramParams(vm));
     }
   } catch (const boost::program_options::error &ex) {

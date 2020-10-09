@@ -9,7 +9,12 @@
 
 using namespace oma;
 
-ConsensusBuilder::ConsensusBuilder(MapsContainer &maps) : conMaps_(maps) {}
+ConsensusBuilder::ConsensusBuilder(MapsContainer &maps,
+                                   bool markerPreference)
+    : conMaps_(maps),
+      deductMarker_((markerPreference
+                         ? ConsensusBuilder::markerPreference_
+                         : ConsensusBuilder::noMarkerPreference_)) {}
 
 const std::vector<BinaryMap> &ConsensusBuilder::getConsensusMaps() const {
   return consensusMaps_;
@@ -152,7 +157,7 @@ bool ConsensusBuilder::votePosition(
   }
 
   // 1's priority, true = 1, false = 0
-  return (count - ones) <= ones;
+  return deductMarker_(count, ones);
 }
 
 void ConsensusBuilder::makeConsensus(int lastMap) {

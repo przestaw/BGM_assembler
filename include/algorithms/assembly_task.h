@@ -46,6 +46,7 @@ namespace oma {
        * @param minPart minimum overlap part of smaller map
        * @param threshold threshold of differences for overlap to be meaningful
        * @param repeats no of folds to perform before output
+       * @param markerPreference preference of marker or
        */
       Params(std::string inputFile,
              std::string outputFile,
@@ -53,7 +54,8 @@ namespace oma {
              unsigned int minOverlap,
              double minPart,
              double threshold,
-             unsigned repeats = 0);
+             unsigned repeats = 0,
+             bool markerPreference = true);
 
       /**
        * Getter for desired no of threads
@@ -112,6 +114,7 @@ namespace oma {
       double minPart_;
       double threshold_;
       unsigned repeats_;
+      bool markerPreference_;
     };
 
     /**

@@ -18,10 +18,11 @@ AssemblyTask::Params::Params(std::string inputFile,
                              unsigned int minOverlap,
                              double minPart,
                              double threshold,
-                             unsigned repeats)
+                             unsigned repeats,
+                             bool markerPreference)
     : inputFile_(std::move(inputFile)), outputFile_(std::move(outputFile)),
       threads_(threads), minOverlap_(minOverlap), minPart_(minPart),
-      threshold_(threshold), repeats_(repeats) {}
+      threshold_(threshold), repeats_(repeats), markerPreference_(markerPreference) {}
 
 AssemblyTask::AssemblyTask(AssemblyTask::Params params)
     : params_(std::move(params)), aligner_(maps_, params_.getMinOverlap()),
