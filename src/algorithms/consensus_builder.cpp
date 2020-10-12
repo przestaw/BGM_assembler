@@ -9,8 +9,7 @@
 
 using namespace oma;
 
-ConsensusBuilder::ConsensusBuilder(MapsContainer &maps,
-                                   bool markerPreference)
+ConsensusBuilder::ConsensusBuilder(MapsContainer &maps, bool markerPreference)
     : conMaps_(maps),
       deductMarker_((markerPreference
                          ? ConsensusBuilder::markerPreference_
@@ -130,7 +129,9 @@ void ConsensusBuilder::detectContigs() {
       // "create" contig -> for consensus
       // NOTE : could be list of most right maps or special structure for faster
       //        consensus
-      contigs_.emplace_back(map);
+      if (countLenL(map) > 1){
+        contigs_.emplace_back(map);
+      }
     }
   }
 }
@@ -194,11 +195,20 @@ void ConsensusBuilder::makeConsensus(int lastMap) {
 
 void ConsensusBuilder::addReadyMap(const BinaryMap::Bitset &readyMap) {
   std::unique_lock lock(consensusLock);
-  consensusMaps_.emplace_back("Contig " + std::to_string(consensusMaps_.size()),
-                              readyMap);
+  BinaryMap contig = BinaryMap("Contig " + std::to_string(consensusMaps_.size()),
+                               readyMap);
+  contig.setContig(); // mark as contig
+  consensusMaps_.push_back(std::move(contig));
 }
 
 void ConsensusBuilder::reset() {
   this->consensusMaps_.clear();
   this->contigs_.clear();
+}
+
+std::vector<BinaryMap> ConsensusBuilder::getConsensusMapsAndReset() {
+  vector<BinaryMap> retConsensusMaps; // empty consensusMaps
+  std::swap(retConsensusMaps, this->consensusMaps_);
+  this->contigs_.clear();
+  return retConsensusMaps;
 }

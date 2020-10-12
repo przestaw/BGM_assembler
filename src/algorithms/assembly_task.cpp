@@ -22,7 +22,8 @@ AssemblyTask::Params::Params(std::string inputFile,
                              bool markerPreference)
     : inputFile_(std::move(inputFile)), outputFile_(std::move(outputFile)),
       threads_(threads), minOverlap_(minOverlap), minPart_(minPart),
-      threshold_(threshold), repeats_(repeats), markerPreference_(markerPreference) {}
+      threshold_(threshold), repeats_(repeats),
+      markerPreference_(markerPreference) {}
 
 AssemblyTask::AssemblyTask(AssemblyTask::Params params)
     : params_(std::move(params)), aligner_(maps_, params_.getMinOverlap()),
@@ -96,8 +97,14 @@ void AssemblyTask::runVerbose() {
       print("performing consensus " + std::to_string(i) + " ");
       performConsensus();
 
-      maps_.resetAndReplace(consensus_.getConsensusMaps());
-      consensus_.reset();
+      // maps_.resetAndReplace(consensus_.getConsensusMaps());
+      // consensus_.reset();
+
+      // take result
+      auto newMaps = consensus_.getConsensusMapsAndReset();
+      maps_.insert(maps_.end(),
+                   std::make_move_iterator(newMaps.begin()),
+                   std::make_move_iterator(newMaps.end()));
     } else {
       print("One map left ");
       break;
@@ -129,17 +136,6 @@ void AssemblyTask::performConsensus() {
 }
 
 void AssemblyTask::writeResult() {
-  // NOTE : result output
-  std::function<void(const std::string &)> outContigs =
-      [&](const std::string &outFile) {
-        std::ofstream output;
-        output.open(outFile);
-
-        for (auto &map : maps_) { output << map.toFastaRecord(); }
-
-        output.close();
-      };
-
   // NOTE : sort contigs before output
   std::sort(maps_.begin(),
             maps_.end(),
@@ -147,5 +143,15 @@ void AssemblyTask::writeResult() {
               return a.getMap().size() > b.getMap().size();
             });
 
-  outContigs(params_.getOutputFile());
+  // NOTE : result output
+  std::ofstream output;
+  output.open(params_.getOutputFile());
+
+  for (auto &map : maps_) {
+    if (map.isContig()) {
+      output << map.toFastaRecord();
+    }
+  }
+
+  output.close();
 }

@@ -9,26 +9,26 @@ BOOST_AUTO_TEST_SUITE(OMA_Test_Suite)
 
 BOOST_AUTO_TEST_SUITE(Consensus_Test_Suite)
 
-BOOST_AUTO_TEST_CASE(OneMap_CreatesValidMap) {
-  oma::MapsContainer mapsContainer;
-  std::string test   = "1010111100001101010001110101";
-  std::string mapStr = "1010111100001101010001110101";
-
-  // reversed string to account for direction od constructor
-  std::reverse(mapStr.begin(), mapStr.end());
-
-  mapsContainer.emplace_back("map",
-                             oma::BinaryMap::Bitset(std::string(mapStr)));
-  oma::ConsensusBuilder testFixture(mapsContainer);
-
-  testFixture.runConsensusSingle();
-
-  BOOST_REQUIRE_EQUAL(1, testFixture.getConsensusMaps().size());
-  std::string res;
-  boost::to_string(testFixture.getConsensusMaps()[0].getMap(), res);
-
-  BOOST_CHECK_EQUAL(res, test);
-}
+//BOOST_AUTO_TEST_CASE(OneMap_CreatesValidMap) {
+//  oma::MapsContainer mapsContainer;
+//  std::string test   = "1010111100001101010001110101";
+//  std::string mapStr = "1010111100001101010001110101";
+//
+//  // reversed string to account for direction od constructor
+//  std::reverse(mapStr.begin(), mapStr.end());
+//
+//  mapsContainer.emplace_back("map",
+//                             oma::BinaryMap::Bitset(std::string(mapStr)));
+//  oma::ConsensusBuilder testFixture(mapsContainer);
+//
+//  testFixture.runConsensusSingle();
+//
+//  BOOST_REQUIRE_EQUAL(1, testFixture.getConsensusMaps().size());
+//  std::string res;
+//  boost::to_string(testFixture.getConsensusMaps()[0].getMap(), res);
+//
+//  BOOST_CHECK_EQUAL(res, test);
+//}
 
 BOOST_AUTO_TEST_CASE(TwoMaps_CreatesValidMap) {
   oma::MapsContainer mapsContainer;

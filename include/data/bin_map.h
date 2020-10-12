@@ -77,6 +77,17 @@ namespace oma {
      */
     void setMark(bool mark = true);
 
+    /**
+     * Provides information is map a contig or input map
+     * @return tru if map is consensus result
+     */
+    bool isContig() const;
+
+    /**
+     * Marks map as contig
+     */
+    void setContig();
+
   private:
     // data
     std::string identifier_;
@@ -87,6 +98,8 @@ namespace oma {
     Neighbour rightNeighbour_;
     // flag for cycle breaking
     bool mark_;
+    // flag to indicate contig
+    bool contig_;
   };
 } // namespace oma
 

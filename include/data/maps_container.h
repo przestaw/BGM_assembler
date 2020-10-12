@@ -50,6 +50,11 @@ namespace oma {
     size_t getUnaligned();
 
     /**
+     * Resets container to allow next iteration. Sets unaligned pivot back to the beginning.
+     */
+    void reset();
+
+    /**
      * Resets container and replaces content
      * @param maps new maps
      */

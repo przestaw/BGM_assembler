@@ -46,6 +46,8 @@ namespace oma {
      */
     void reset();
 
+    [[nodiscard]] std::vector<BinaryMap> getConsensusMapsAndReset();
+
   private:
     // worker thread
     void workerThread();
@@ -76,10 +78,21 @@ namespace oma {
     // lambda for marker deduction
     std::function<bool(size_t, size_t)> deductMarker_;
 
+    // lambdas for marker deduction
     constexpr static const auto markerPreference_ =
         [](size_t count, size_t ones) { return (count - ones) <= ones; };
     constexpr static const auto noMarkerPreference_ =
         [](size_t count, size_t ones) { return (count - ones) < ones; };
+
+    // lambdas for contig map count deduction
+    const std::function<size_t(size_t)> countLenL = [&](size_t mapId) {
+      size_t len;
+      for (len = 1; conMaps_[mapId].getLeftNeighbour().first >= 0;
+           mapId  = conMaps_[mapId].getLeftNeighbour().first) {
+        ++len;
+      }
+      return len;
+    };
   };
 } // namespace oma
 
