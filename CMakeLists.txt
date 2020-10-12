@@ -99,18 +99,20 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}
 # include dirs
 include_directories(${PROJECT_SOURCE_DIR}/include)
 include_directories(${BOOST_INCLUDE_DIR})
+include_directories(${PROJECT_SOURCE_DIR}/external) # for mt4cpp
 
 # find source files
+file(GLOB_RECURSE EXT_SRC "${PROJECT_SOURCE_DIR}/external/*.hpp")
 file(GLOB_RECURSE LIB_SRC ${PROJECT_SOURCE_DIR}/src/*.cpp)
 file(GLOB_RECURSE LIB_INC ${PROJECT_SOURCE_DIR}/include/*.h)
-#file(GLOB_RECURSE LIB_TMP ${PROJECT_SOURCE_DIR}/include/*.hpp)
+file(GLOB_RECURSE LIB_TMP ${PROJECT_SOURCE_DIR}/include/*.hpp)
 file(GLOB_RECURSE TEST_SRC "${PROJECT_SOURCE_DIR}/test/*.cpp")
 
 # Include src and test for library and test-check
 add_subdirectory("test")
 
 # library
-add_library(${LIBRARY} ${LIB_SRC} ${LIB_INC})
+add_library(${LIBRARY} ${LIB_SRC} ${LIB_INC} ${LIB_TMP})
 add_dependencies(${LIBRARY} ${CHECK})
 
 # Program executable
@@ -120,7 +122,7 @@ target_link_libraries(${EXECUTABLE} ${LIBRARY})
 target_link_libraries(${EXECUTABLE} ${EXTERNAL_LIBS})
 
 # Clang Format
-clangformat_setup(${LIB_SRC} ${LIB_INC} ${TEST_SRC} main.cpp)
+clangformat_setup(${LIB_SRC} ${LIB_INC} ${TEST_SRC} ${LIB_TMP} ${EXT_SRC} main.cpp)
 add_custom_target(build-all DEPENDS format-project ${PROGRAM} ${LIB} ${CHECK} ${TEST})
 
 # Clang Tidy

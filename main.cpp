@@ -11,8 +11,8 @@ using namespace boost::program_options;
 struct ProgramParams {
   explicit ProgramParams(variables_map vm);
 
-  bool verbose_                     = false;
-  oma::AssemblyTask::Params params_ = oma::AssemblyTask::Params("", "");
+  bool verbose_               = false;
+  oma::AssemblyParams params_ = oma::AssemblyParams("", "");
 };
 
 ProgramParams::ProgramParams(variables_map vm) {

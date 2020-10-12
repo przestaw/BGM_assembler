@@ -16,20 +16,6 @@ namespace oma {
      *   -> [as shift 0 would mean duplicate this should not affect results]
      */
     using Alignment = std::pair<int64_t, size_t>;
-    class MapAlignment { // NOTE: WIP Alignment -> MapAlignment
-    public:
-      MapAlignment(int64_t map, size_t shift, double quality = 0.0)
-          : map_(map), shift_(shift), quality_(quality) {}
-
-      [[nodiscard]] int64_t getMap() const { return map_; }
-      [[nodiscard]] size_t getShift() const { return shift_; }
-      [[nodiscard]] double getQuality() const { return quality_; }
-
-    private:
-      const int64_t map_;
-      const size_t shift_;
-      const double quality_;
-    };
 
     /**
      * Constructor

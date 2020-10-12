@@ -98,11 +98,12 @@ AlignAlgorithm::align(const BinaryMap::Bitset& ref_,
   }
 
   // calc max shift
-  const size_t refLen = ref.size();
-  const size_t testedLen = tested.size();
+  const size_t refLen     = ref.size();
+  const size_t testedLen  = tested.size();
   const size_t smallerLen = std::min(refLen, testedLen);
-  const size_t max_shift = std::min(1 + smallerLen - minOverlapQuants_,
-                                    static_cast<size_t>(smallerLen * (1 - minOverlapPart_)));
+  const size_t max_shift =
+      std::min(1 + smallerLen - minOverlapQuants_,
+               static_cast<size_t>(smallerLen * (1 - minOverlapPart_)));
 
   // init best as worst numerically possible
   size_t best         = std::numeric_limits<size_t>::max();
@@ -120,7 +121,8 @@ AlignAlgorithm::align(const BinaryMap::Bitset& ref_,
     const size_t xor_result = shiftedTest.count();
     const double q = static_cast<double>(xor_result) / shiftedTest.size();
 
-    //this->scoringFunction_(shiftedTest.count(), shiftedTest.size(), refLen, testedLen);
+    // this->scoringFunction_(shiftedTest.count(), shiftedTest.size(), refLen,
+    // testedLen);
 
     // above threshold or better 'quality' alignment
     if (q < best_quality) {

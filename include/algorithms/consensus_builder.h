@@ -18,9 +18,12 @@ namespace oma {
      * Constructor
      * @param maps maps container reference
      * @param markerPreference prefer marker or blank place
+     * @param processAll process all sequences or only containing more than 1
+     * map
      */
     explicit ConsensusBuilder(MapsContainer &maps,
-                              bool markerPreference = true);
+                              bool markerPreference = true,
+                              bool processAll       = false);
 
     /**
      * Runs consensus in single thread
@@ -75,6 +78,9 @@ namespace oma {
     // input
     MapsContainer &conMaps_;
 
+    // marker deduction
+    bool markerPreferenceFlag_;
+
     // lambda for marker deduction
     std::function<bool(size_t, size_t)> deductMarker_;
 
@@ -84,11 +90,14 @@ namespace oma {
     constexpr static const auto noMarkerPreference_ =
         [](size_t count, size_t ones) { return (count - ones) < ones; };
 
+    // process all or contigs
+    bool processAll_;
+
     // lambdas for contig map count deduction
     const std::function<size_t(size_t)> countLenL = [&](size_t mapId) {
       size_t len;
-      for (len = 1; conMaps_[mapId].getLeftNeighbour().first >= 0;
-           mapId  = conMaps_[mapId].getLeftNeighbour().first) {
+      for (len   = 1; conMaps_[mapId].getLeftNeighbour().first >= 0;
+           mapId = conMaps_[mapId].getLeftNeighbour().first) {
         ++len;
       }
       return len;

@@ -9,7 +9,7 @@ BOOST_AUTO_TEST_SUITE(OMA_Test_Suite)
 
 BOOST_AUTO_TEST_SUITE(Consensus_Test_Suite)
 
-//BOOST_AUTO_TEST_CASE(OneMap_CreatesValidMap) {
+// BOOST_AUTO_TEST_CASE(OneMap_CreatesValidMap) {
 //  oma::MapsContainer mapsContainer;
 //  std::string test   = "1010111100001101010001110101";
 //  std::string mapStr = "1010111100001101010001110101";

@@ -3,7 +3,21 @@
 
 ### Program Usage
 
-*TODO*
+##### Options:
+
+| command               | type                  | description |
+| :---                  | :----:                | :---  |
+| -h [ --help ]         | flag                  | Help screen |
+| -i [ --input ]        | arg                   | Input file |
+| -o [ --output ]       | arg                   | Output file |
+| --margin_quant        | arg                   | Margin of maps overlap in quants [min no of symbols for overlap to be meaningful] |
+| --margin_part         | arg                   | Margin of maps part overlap[min part of map overlap to be meaningful] |
+| --thresh              | arg                   | Max part of differences between two maps to be considered meaningful |
+| -t [ --threads ]      | arg  (default = 1)    | No of threads used for parallel algorithm parts[0 will force to use max detected threads, higher values will create desired threads count] |
+| -f [ --folds ]        | arg  (default = 1)    | No of folds [repeated assemblies] |
+| --marker_preference   | arg  (default = 1)    | preference of marker (true) or empty place (false) during consensus when 50% of maps has 1 and 50% has 0 |
+| -v [ --verbose ]      | flag                  | Verbose output [current state] |
+
 
 ### Build instructions
 

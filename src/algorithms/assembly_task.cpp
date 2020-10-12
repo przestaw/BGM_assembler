@@ -12,22 +12,21 @@
 
 using namespace oma;
 
-AssemblyTask::Params::Params(std::string inputFile,
-                             std::string outputFile,
-                             unsigned int threads,
-                             unsigned int minOverlap,
-                             double minPart,
-                             double threshold,
-                             unsigned repeats,
-                             bool markerPreference)
-    : inputFile_(std::move(inputFile)), outputFile_(std::move(outputFile)),
-      threads_(threads), minOverlap_(minOverlap), minPart_(minPart),
-      threshold_(threshold), repeats_(repeats),
-      markerPreference_(markerPreference) {}
-
 AssemblyTask::AssemblyTask(AssemblyTask::Params params)
     : params_(std::move(params)), aligner_(maps_, params_.getMinOverlap()),
-      consensus_(maps_) {}
+      consensus_(maps_, params_.isMarkerPreference()) {
+  prepareNextFold = [&](bool reuseMaps) {
+    if (reuseMaps) {
+      auto newMaps = consensus_.getConsensusMapsAndReset();
+      maps_.insert(maps_.end(),
+                   std::make_move_iterator(newMaps.begin()),
+                   std::make_move_iterator(newMaps.end()));
+    } else {
+      maps_.resetAndReplace(consensus_.getConsensusMaps());
+      consensus_.reset();
+    }
+  };
+}
 
 void AssemblyTask::run(bool verbose) {
   if (verbose) {
@@ -154,4 +153,28 @@ void AssemblyTask::writeResult() {
   }
 
   output.close();
+}
+
+void AssemblyTask::operator()(mt4cpp::Progress &p) {
+  const auto repeats = params_.getRepeats();
+  const auto step    = 0.8 / repeats;
+  loadMaps();
+
+  p.setProgress(0.1);
+
+  for (unsigned i = 1; i <= repeats; ++i) {
+    if (maps_.size() > 1) {
+      alignMaps();
+      p.setProgress(0.1 + step * i);
+
+      performConsensus();
+      prepareNextFold(params_.isReuseMaps());
+    } else {
+      break;
+    }
+  }
+
+  p.setProgress(0.9);
+  writeResult();
+  p.setProgress(1.);
 }

@@ -9,11 +9,13 @@
 
 using namespace oma;
 
-ConsensusBuilder::ConsensusBuilder(MapsContainer &maps, bool markerPreference)
-    : conMaps_(maps),
-      deductMarker_((markerPreference
-                         ? ConsensusBuilder::markerPreference_
-                         : ConsensusBuilder::noMarkerPreference_)) {}
+ConsensusBuilder::ConsensusBuilder(MapsContainer &maps,
+                                   bool markerPreference,
+                                   bool reuseMaps)
+    : conMaps_(maps), markerPreferenceFlag_(markerPreference),
+      deductMarker_((markerPreference ? ConsensusBuilder::markerPreference_
+                                      : ConsensusBuilder::noMarkerPreference_)),
+      processAll_(reuseMaps) {}
 
 const std::vector<BinaryMap> &ConsensusBuilder::getConsensusMaps() const {
   return consensusMaps_;
@@ -124,13 +126,20 @@ void ConsensusBuilder::workerThread() {
 }
 
 void ConsensusBuilder::detectContigs() {
-  for (size_t map = 0; map < conMaps_.size(); ++map) {
-    if (conMaps_[map].getRightNeighbour().first < 0) {
-      // "create" contig -> for consensus
-      // NOTE : could be list of most right maps or special structure for faster
-      //        consensus
-      if (countLenL(map) > 1){
+  // NOTE : if on top to branch once !
+  if (processAll_) {
+    for (size_t map = 0; map < conMaps_.size(); ++map) {
+      if (conMaps_[map].getRightNeighbour().first < 0) {
         contigs_.emplace_back(map);
+      }
+    }
+  } else {
+    // filter to contain only sequences of 2 or more maps
+    for (size_t map = 0; map < conMaps_.size(); ++map) {
+      if (conMaps_[map].getRightNeighbour().first < 0) {
+        if (countLenL(map) > 1) {
+          contigs_.emplace_back(map);
+        }
       }
     }
   }
@@ -195,8 +204,8 @@ void ConsensusBuilder::makeConsensus(int lastMap) {
 
 void ConsensusBuilder::addReadyMap(const BinaryMap::Bitset &readyMap) {
   std::unique_lock lock(consensusLock);
-  BinaryMap contig = BinaryMap("Contig " + std::to_string(consensusMaps_.size()),
-                               readyMap);
+  BinaryMap contig =
+      BinaryMap("Contig " + std::to_string(consensusMaps_.size()), readyMap);
   contig.setContig(); // mark as contig
   consensusMaps_.push_back(std::move(contig));
 }
