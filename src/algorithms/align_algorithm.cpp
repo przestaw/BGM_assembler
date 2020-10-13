@@ -86,13 +86,10 @@ void AlignAlgorithm::alignOneMap(size_t index) {
 AlignAlgorithm::Alignment
 AlignAlgorithm::align(const BinaryMap::Bitset& ref_,
                       const BinaryMap::Bitset& tested) const {
-  // TODO  : check or assure that maps are longer than minOverlap
-  //         i.e. filter too short maps
-  // FIXME : filter maps by len
-
   // copy as it will be resized
   BinaryMap::Bitset ref(ref_);
 
+  // sanity check
   if (std::min(ref.size(), tested.size()) <= minOverlapQuants_) {
     return std::make_pair(-1, std::numeric_limits<size_t>::max());
   }

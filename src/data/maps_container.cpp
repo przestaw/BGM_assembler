@@ -29,10 +29,7 @@ void MapsContainer::interandAddRight(size_t map,
 
   // avoid 0-shift cycles
   if (shift == 0) {
-    /* NOTE : Code below is used to avoid creation of 0's length cycles
-     * TODO : test cases for [NOT] adding cycles ??
-     * TODO : test cases for cyclic add [add to cycle ? break cycle ?]
-     */
+    // NOTE : Code below is used to avoid creation of 0's length cycles
     auto lNeighbour = (*this)[map].getLeftNeighbour();
     while (lNeighbour.second == 0 && lNeighbour.first >= 0) {
       if (lNeighbour.first == static_cast<int>(neighbour)) {

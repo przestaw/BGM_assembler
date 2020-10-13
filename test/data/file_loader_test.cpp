@@ -51,7 +51,5 @@ BOOST_AUTO_TEST_CASE(StreamFileTest_ReturnsCorrectCount) {
   BOOST_CHECK_EQUAL(result.size(), 2);
 }
 
-// FIXME : 2 maps from 1 input + check bits
-
 BOOST_AUTO_TEST_SUITE_END()
 BOOST_AUTO_TEST_SUITE_END()

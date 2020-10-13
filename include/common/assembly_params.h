@@ -23,7 +23,10 @@ namespace oma {
                          1,
                          200,
                          0.5,
-                         0.1) {}
+                         0.1,
+                         0,
+                         true,
+                         false) {}
 
     /**
      * Constructor
@@ -45,9 +48,9 @@ namespace oma {
                    unsigned int minOverlap,
                    double minPart,
                    double threshold,
-                   unsigned repeats      = 0,
-                   bool markerPreference = true,
-                   bool reuseMaps        = false)
+                   unsigned repeats,
+                   bool markerPreference,
+                   bool reuseMaps)
         : inputFile_(std::move(inputFile)), outputFile_(std::move(outputFile)),
           threads_(threads), minOverlap_(minOverlap), minPart_(minPart),
           threshold_(threshold), repeats_(repeats),
@@ -113,15 +116,15 @@ namespace oma {
     [[nodiscard]] bool isReuseMaps() const { return reuseMaps_; }
 
   private:
-    std::string inputFile_;
-    std::string outputFile_;
-    unsigned threads_;
-    unsigned minOverlap_;
-    double minPart_;
-    double threshold_;
-    unsigned repeats_;
-    bool markerPreference_;
-    bool reuseMaps_;
+    const std::string inputFile_;
+    const std::string outputFile_;
+    const unsigned threads_;
+    const unsigned minOverlap_;
+    const double minPart_;
+    const double threshold_;
+    const unsigned repeats_;
+    const bool markerPreference_;
+    const bool reuseMaps_;
   };
 } // namespace oma
 #endif // BGM_ASM_ASSEMBLYPARAMS_H

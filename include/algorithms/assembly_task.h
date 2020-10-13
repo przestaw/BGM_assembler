@@ -50,12 +50,11 @@ namespace oma {
 
     // internal stages
     void loadMaps();
-    void alignMaps();
-    void performConsensus();
-    void writeResult();
+    void writeResultToFile();
 
-    // internal phase
-    std::function<void(bool)> prepareNextFold;
+    // internal phases
+    std::function<void(bool)> prepareNextFold_;
+    std::function<void()> fold_;
 
     // params
     Params params_;

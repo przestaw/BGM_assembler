@@ -44,6 +44,8 @@ void ConsensusBuilder::breakCycles() {
 }
 
 void ConsensusBuilder::breakOneCycle(int map) {
+  // TODO : use quality
+  // TODO : init with conMaps_[map].getLeftNeighbour()
   int tmp          = map;
   unsigned lenOvlp = 0;
   int right        = -1;
@@ -60,8 +62,7 @@ void ConsensusBuilder::breakOneCycle(int map) {
   } while (tmp != map);
 
   // break cycle
-  // FIXME : there should be no need for that
-  if (right != -1) {
+  if (right < 0) {
     conMaps_.breakLink(conMaps_[right].getLeftNeighbour().first, right);
   }
 }

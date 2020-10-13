@@ -15,7 +15,8 @@ using namespace oma;
 AssemblyTask::AssemblyTask(AssemblyTask::Params params)
     : params_(std::move(params)), aligner_(maps_, params_.getMinOverlap()),
       consensus_(maps_, params_.isMarkerPreference()) {
-  prepareNextFold = [&](bool reuseMaps) {
+  // preapre fold - so maps contain what is desired for next iteration
+  prepareNextFold_ = [&](bool reuseMaps) {
     if (reuseMaps) {
       auto newMaps = consensus_.getConsensusMapsAndReset();
       maps_.insert(maps_.end(),
@@ -26,6 +27,12 @@ AssemblyTask::AssemblyTask(AssemblyTask::Params params)
       consensus_.reset();
     }
   };
+  // perform fold
+  fold_ = [&](){
+    aligner_.alignMapsMulti(params_.getThreads());
+    consensus_.runMultiConsensus(params_.getThreads());
+  };
+
 }
 
 void AssemblyTask::run(bool verbose) {
@@ -43,8 +50,8 @@ double AssemblyTask::runPerfTest() {
 
   for (unsigned i = 1; i <= params_.getRepeats(); ++i) {
     if (maps_.size() > 1) {
-      alignMaps();
-      performConsensus();
+      aligner_.alignMapsMulti(params_.getThreads());
+      consensus_.runMultiConsensus(params_.getThreads());
 
       maps_.resetAndReplace(consensus_.getConsensusMaps());
       consensus_.reset();
@@ -55,7 +62,7 @@ double AssemblyTask::runPerfTest() {
 
   auto end = std::chrono::system_clock::now();
 
-  writeResult();
+  writeResultToFile();
 
   return std::chrono::duration_cast<std::chrono::milliseconds>(end - begin)
              .count()
@@ -67,8 +74,8 @@ void AssemblyTask::runQuiet() {
 
   for (unsigned i = 1; i <= params_.getRepeats(); ++i) {
     if (maps_.size() > 1) {
-      alignMaps();
-      performConsensus();
+      aligner_.alignMapsMulti(params_.getThreads());
+      consensus_.runMultiConsensus(params_.getThreads());
 
       maps_.resetAndReplace(consensus_.getConsensusMaps());
       consensus_.reset();
@@ -77,7 +84,7 @@ void AssemblyTask::runQuiet() {
     }
   }
 
-  writeResult();
+  writeResultToFile();
 }
 
 void AssemblyTask::runVerbose() {
@@ -92,9 +99,9 @@ void AssemblyTask::runVerbose() {
   for (unsigned i = 1; i <= params_.getRepeats(); ++i) {
     if (maps_.size() > 1) {
       print("aligning maps " + std::to_string(i) + " ");
-      alignMaps();
+      aligner_.alignMapsMulti(params_.getThreads());
       print("performing consensus " + std::to_string(i) + " ");
-      performConsensus();
+      consensus_.runMultiConsensus(params_.getThreads());
 
       // maps_.resetAndReplace(consensus_.getConsensusMaps());
       // consensus_.reset();
@@ -111,7 +118,7 @@ void AssemblyTask::runVerbose() {
   }
 
   print("writing result");
-  writeResult();
+  writeResultToFile();
 }
 
 void AssemblyTask::loadMaps() {
@@ -126,15 +133,7 @@ void AssemblyTask::loadMaps() {
   input.close();
 }
 
-void AssemblyTask::alignMaps() {
-  aligner_.alignMapsMulti(params_.getThreads());
-}
-
-void AssemblyTask::performConsensus() {
-  consensus_.runMultiConsensus(params_.getThreads());
-}
-
-void AssemblyTask::writeResult() {
+void AssemblyTask::writeResultToFile() {
   // NOTE : sort contigs before output
   std::sort(maps_.begin(),
             maps_.end(),
@@ -164,17 +163,16 @@ void AssemblyTask::operator()(mt4cpp::Progress &p) {
 
   for (unsigned i = 1; i <= repeats; ++i) {
     if (maps_.size() > 1) {
-      alignMaps();
+      fold_();
       p.setProgress(0.1 + step * i);
-
-      performConsensus();
-      prepareNextFold(params_.isReuseMaps());
+      prepareNextFold_(params_.isReuseMaps());
     } else {
       break;
     }
+
   }
 
   p.setProgress(0.9);
-  writeResult();
+  writeResultToFile();
   p.setProgress(1.);
 }

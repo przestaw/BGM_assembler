@@ -92,7 +92,7 @@ namespace oma {
     // data
     std::string identifier_;
     Bitset map_;
-    // Left best aligned map -> TODO maybe index/id instead of pointer
+    // Left best aligned map
     Neighbour leftNeighbour_;
     // Right best aligned map
     Neighbour rightNeighbour_;

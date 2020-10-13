@@ -2,51 +2,24 @@
 #include <boost/program_options.hpp>
 #include <error/exeception.h>
 #include <iostream>
+#include <utility>
 
 using namespace boost::program_options;
+using namespace oma;
 
 /**
  * ProgramParams struct for storing runtime params
  */
-struct ProgramParams {
-  explicit ProgramParams(variables_map vm);
+class ProgramParams : public AssemblyParams {
+public:
+  ProgramParams(bool verbose, AssemblyParams params)
+      : AssemblyParams(std::move(params)), verbose_(verbose) {}
 
-  bool verbose_               = false;
-  oma::AssemblyParams params_ = oma::AssemblyParams("", "");
+  [[nodiscard]] bool isVerbose() const { return verbose_; }
+
+private:
+  bool verbose_;
 };
-
-ProgramParams::ProgramParams(variables_map vm) {
-  auto checkPresence = [&vm](const std::string &name) {
-    if (!vm.count(name)) {
-      throw oma::error::missing_argument(name);
-    }
-  };
-
-  checkPresence("input");
-  checkPresence("output");
-  checkPresence("margin_quant");
-  checkPresence("margin_part");
-  checkPresence("thresh");
-  // threads has default value
-  // folds has default value
-  // marker_preference has default value
-
-  // folds cannot be less than 1
-  unsigned folds = 1;
-  if (vm["folds"].as<unsigned>() > folds) {
-    folds = vm["folds"].as<unsigned>();
-  }
-
-  this->params_  = oma::AssemblyTask::Params(vm["input"].as<std::string>(),
-                                            vm["output"].as<std::string>(),
-                                            vm["threads"].as<unsigned>(),
-                                            vm["margin_quant"].as<unsigned>(),
-                                            vm["margin_part"].as<double>(),
-                                            vm["thresh"].as<double>(),
-                                            folds,
-                                            vm["marker_preference"].as<bool>());
-  this->verbose_ = vm.count("verbose");
-}
 
 /**
  * Function for arguments parsing
@@ -83,7 +56,14 @@ inline std::optional<ProgramParams> parseParams(int argc, char *argv[]) {
                        value<bool>()->default_value(true),
                        "preference of marker (true) or empty place (false) "
                        "during consensus when 50% of maps has 1 and 50% has 0");
-    desc.add_options()("verbose,v", "Verbose output [current state]");
+    desc.add_options()("marker_preference",
+                       value<bool>()->default_value(true),
+                       "preference of marker (true) or empty place (false) "
+                       "during consensus when 50% of maps has 1 and 50% has 0");
+    desc.add_options()(
+        "reuse_maps",
+        "Reuse rmaps with contigs [from at least 2 rmaps] in each fold");
+    desc.add_options()("verbose,v", "Verbose output");
 
     variables_map vm;
     store(parse_command_line(argc, argv, desc), vm);
@@ -97,7 +77,40 @@ inline std::optional<ProgramParams> parseParams(int argc, char *argv[]) {
       /* NOTE : constructor can throw, as RAII
        *        isocpp.org/wiki/faq/big-picture
        */
-      return std::optional<ProgramParams>(ProgramParams(vm));
+      auto checkPresence = [&vm](const std::string &name) {
+        if (!vm.count(name)) {
+          throw error::missing_argument(name);
+        }
+      };
+
+      checkPresence("input");
+      checkPresence("output");
+      checkPresence("margin_quant");
+      checkPresence("margin_part");
+      checkPresence("thresh");
+      // threads has default value
+      // folds has default value
+      // marker_preference has default value
+
+      // folds cannot be less than 1
+      unsigned folds = 1;
+      if (vm["folds"].as<unsigned>() > folds) {
+        folds = vm["folds"].as<unsigned>();
+      }
+
+      auto params =
+          AssemblyTask::Params(vm["input"].as<std::string>(),
+                                    vm["output"].as<std::string>(),
+                                    vm["threads"].as<unsigned>(),
+                                    vm["margin_quant"].as<unsigned>(),
+                                    vm["margin_part"].as<double>(),
+                                    vm["thresh"].as<double>(),
+                                    folds,
+                                    vm["marker_preference"].as<bool>(),
+                                    static_cast<bool>(vm.count("reuse_maps")));
+      bool verbose = vm.count("verbose");
+
+      return ProgramParams(verbose, params);
     }
   } catch (const boost::program_options::error &ex) {
     std::cerr << ex.what() << " !\n";
@@ -117,9 +130,13 @@ int main(int argc, char *argv[]) {
   if (params.has_value()) {
     std::cout << "RUNNING\n";
 
-    oma::AssemblyTask assemblyTask(params.value().params_);
+    // slice ProgramParams to assembly params
+    // NOLINTNEXTLINE(cppcoreguidelines-slicing) - slicing is intended
+    AssemblyTask assemblyTask(static_cast<AssemblyParams>(params.value()));
 
-    assemblyTask.run(params.value().verbose_);
+    // reason why ProgramParams
+    assemblyTask.run(params.value().isVerbose());
+    // TODO : use mt4cpp and utilize verbosity outside assembly task
   }
 
   return 0;
