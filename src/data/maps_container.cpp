@@ -4,7 +4,7 @@
 #include <data/maps_container.h>
 #include <iostream>
 
-using namespace oma;
+using namespace bgm;
 
 MapsContainer::MapsContainer(std::vector<BinaryMap> maps)
     : std::vector<BinaryMap>(std::move(maps)), unalignedPivot_(0) {}

@@ -6,7 +6,7 @@
 #define BGM_ASM_ASSEMBLYPARAMS_H
 
 #include <string>
-namespace oma {
+namespace bgm {
   /**
    * Params for assembly task
    */
@@ -126,5 +126,5 @@ namespace oma {
     const bool markerPreference_;
     const bool reuseMaps_;
   };
-} // namespace oma
+} // namespace bgm
 #endif // BGM_ASM_ASSEMBLYPARAMS_H

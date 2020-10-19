@@ -5,7 +5,7 @@
 #include <data/file_loader.h>
 #include <fstream>
 
-using namespace oma;
+using namespace bgm;
 
 std::vector<BinaryMap> FileLoader::loadFile(std::istream& input,
                                             size_t minLen) {

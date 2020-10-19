@@ -11,7 +11,7 @@
 
 using std::vector;
 
-namespace oma {
+namespace bgm {
   /**
    * Wrapper class for BinaryMap vector with additional features
    */
@@ -71,6 +71,6 @@ namespace oma {
     // used to lock mutex only once
     void interandAddRight(size_t map, size_t neighbour, unsigned shift);
   };
-} // namespace oma
+} // namespace bgm
 
 #endif // OMA_MAPS_CONTAINER_H

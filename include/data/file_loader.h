@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-namespace oma {
+namespace bgm {
   class FileLoader {
   private:
     using SingleRecord = std::tuple<bool, std::string, BinaryMap::Bitset>;
@@ -31,6 +31,6 @@ namespace oma {
     static inline ParsedRecord parseBinMaps(std::istream& in);
     static inline SequencePair getSequences(std::istream& in);
   };
-} // namespace oma
+} // namespace bgm
 
 #endif // OMA_FILE_LOADER_H

@@ -24,13 +24,13 @@ BOOST_AUTO_TEST_CASE(TwoPerfectlyMatchedMaps_AreAligned) {
   std::reverse(oneStr.begin(), oneStr.end());
   std::reverse(twoStr.begin(), twoStr.end());
 
-  oma::BinaryMap::Bitset one(oneStr);
-  oma::BinaryMap::Bitset two(twoStr);
+  bgm::BinaryMap::Bitset one(oneStr);
+  bgm::BinaryMap::Bitset two(twoStr);
 
-  oma::MapsContainer maps; // for compatibility
-  oma::AlignAlgorithm aligner(maps, 40);
+  bgm::MapsContainer maps; // for compatibility
+  bgm::AlignAlgorithm aligner(maps, 40);
 
-  oma::AlignAlgorithm::Alignment res = aligner.align(two, one);
+  bgm::AlignAlgorithm::Alignment res = aligner.align(two, one);
 
   // shift
   BOOST_CHECK_EQUAL(res.first, 50);
@@ -39,18 +39,18 @@ BOOST_AUTO_TEST_CASE(TwoPerfectlyMatchedMaps_AreAligned) {
 }
 
 BOOST_AUTO_TEST_CASE(TwoAllDifferentMaps_AreNotAligned) {
-  oma::BinaryMap::Bitset one(
+  bgm::BinaryMap::Bitset one(
       std::string("1111111111"
                   "111111111111111111111111111111111111111111111111111111111111"
                   "1111111111111111111111111111111111111111"));
-  oma::BinaryMap::Bitset two(
+  bgm::BinaryMap::Bitset two(
       std::string("000000000000000000000000000000000000000000000000000000000000"
                   "0000000000000000000000000000000000000000"));
 
-  oma::MapsContainer maps; // for compatibility
-  oma::AlignAlgorithm aligner(maps, 10);
+  bgm::MapsContainer maps; // for compatibility
+  bgm::AlignAlgorithm aligner(maps, 10);
 
-  oma::AlignAlgorithm::Alignment res = aligner.align(two, one);
+  bgm::AlignAlgorithm::Alignment res = aligner.align(two, one);
 
   // shift 0 means no match
   BOOST_CHECK_EQUAL(res.first, -1);
@@ -67,12 +67,12 @@ BOOST_AUTO_TEST_CASE(TwoDiffrentlySizedMaps_AreAligned_1) {
   std::reverse(oneStr.begin(), oneStr.end());
   std::reverse(twoStr.begin(), twoStr.end());
 
-  oma::BinaryMap::Bitset one(oneStr);
-  oma::BinaryMap::Bitset two(twoStr);
-  oma::MapsContainer maps; // for compatibility
-  oma::AlignAlgorithm aligner(maps, 40);
+  bgm::BinaryMap::Bitset one(oneStr);
+  bgm::BinaryMap::Bitset two(twoStr);
+  bgm::MapsContainer maps; // for compatibility
+  bgm::AlignAlgorithm aligner(maps, 40);
 
-  oma::AlignAlgorithm::Alignment res1 = aligner.align(two, one);
+  bgm::AlignAlgorithm::Alignment res1 = aligner.align(two, one);
 
   // shift
   BOOST_CHECK_EQUAL(res1.first, 50);
@@ -94,12 +94,12 @@ BOOST_AUTO_TEST_CASE(TwoDiffrentlySizedMaps_AreAligned_2) {
   std::reverse(oneStr.begin(), oneStr.end());
   std::reverse(twoStr.begin(), twoStr.end());
 
-  oma::BinaryMap::Bitset one(oneStr);
-  oma::BinaryMap::Bitset two(twoStr);
-  oma::MapsContainer maps; // for compatibility
-  oma::AlignAlgorithm aligner(maps, 40);
+  bgm::BinaryMap::Bitset one(oneStr);
+  bgm::BinaryMap::Bitset two(twoStr);
+  bgm::MapsContainer maps; // for compatibility
+  bgm::AlignAlgorithm aligner(maps, 40);
 
-  oma::AlignAlgorithm::Alignment res1 = aligner.align(one, two);
+  bgm::AlignAlgorithm::Alignment res1 = aligner.align(one, two);
 
   // shift
   BOOST_CHECK_EQUAL(res1.first, 1);

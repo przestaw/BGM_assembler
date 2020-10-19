@@ -7,7 +7,7 @@
 #include <iostream>
 #include <thread>
 
-using namespace oma;
+using namespace bgm;
 
 ConsensusBuilder::ConsensusBuilder(MapsContainer &maps,
                                    bool markerPreference,

@@ -9,7 +9,7 @@
 #include <iostream>
 #include <stdexcept>
 
-namespace oma {
+namespace bgm {
   namespace error {
     class exception : public std::runtime_error {
     public:
@@ -22,16 +22,16 @@ namespace oma {
     };
 
     class missing_argument : public boost::program_options::error,
-                             public oma::error::exception {
+                             public bgm::error::exception {
     public:
       explicit missing_argument(const std::string &desc)
           : boost::program_options::error(
               "Missing required argument " + desc
               + "\nPlease include argument with value"),
-            oma::error::exception("Missing required argument " + desc
+            bgm::error::exception("Missing required argument " + desc
                                   + "\nPlease include argument with value") {}
     };
   } // namespace error
-} // namespace oma
+} // namespace bgm
 
 #endif // TEMPLATE_EXECEPTION_H

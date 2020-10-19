@@ -6,20 +6,19 @@
 #include <functional>
 #include <thread>
 
-using namespace oma;
+using namespace bgm;
 
 AlignAlgorithm::AlignAlgorithm(MapsContainer& maps,
                                unsigned int minOverlapQuants,
                                double minOverlapPart,
                                double threshold)
-    : maps_(maps), minOverlapQuants_(minOverlapQuants),
-      minOverlapPart_(minOverlapPart), threshold_(threshold),
-      scoringFunction_([&](uint64_t diff,
-                           uint64_t ovlpLen,
-                           uint64_t mapLen1,
-                           uint64_t mapLen2) {
-        return defaultScore(diff, ovlpLen, mapLen1, mapLen2);
-      }) {}
+    : minOverlapQuants_(minOverlapQuants), minOverlapPart_(minOverlapPart),
+      threshold_(threshold), maps_(maps) {
+  scoringFunction_ =
+      [&](uint64_t diff, uint64_t ovlpLen, uint64_t mapLen1, uint64_t mapLen2) {
+        return diffScore(diff, ovlpLen, mapLen1, mapLen2);
+      };
+}
 //      scoringFunction(std::bind(&AlignAlgorithm::defaultScore, this,
 //                                std::placeholders::_1, std::placeholders::_2,
 //                                std::placeholders::_3, std::placeholders::_4))
@@ -107,7 +106,7 @@ AlignAlgorithm::align(const BinaryMap::Bitset& ref_,
   double best_quality = this->threshold_;
   int64_t best_shift  = -1;
 
-  auto performXorAndUpdate = [&](oma::BinaryMap::Bitset shiftedTest,
+  auto performXorAndUpdate = [&](bgm::BinaryMap::Bitset shiftedTest,
                                  const size_t shift) {
     // resize to equal lengths
     if (shiftedTest.size() < ref.size()) {
@@ -116,10 +115,10 @@ AlignAlgorithm::align(const BinaryMap::Bitset& ref_,
 
     shiftedTest ^= ref;
     const size_t xor_result = shiftedTest.count();
-    const double q = static_cast<double>(xor_result) / shiftedTest.size();
+    // const double q = static_cast<double>(xor_result) / shiftedTest.size();
 
-    // this->scoringFunction_(shiftedTest.count(), shiftedTest.size(), refLen,
-    // testedLen);
+    const double q = this->scoringFunction_(
+        shiftedTest.count(), shiftedTest.size(), refLen, testedLen);
 
     // above threshold or better 'quality' alignment
     if (q < best_quality) {
@@ -138,7 +137,7 @@ AlignAlgorithm::align(const BinaryMap::Bitset& ref_,
     for (size_t shift = 0; shift < max_shift; ++shift) {
       // NOTE : bitset has different direction -> lowest & highest position
       // NOTE : use diff to move R ends together
-      oma::BinaryMap::Bitset shiftedTest = tested >> (shift + diff);
+      bgm::BinaryMap::Bitset shiftedTest = tested >> (shift + diff);
       // resize to correct value
       shiftedTest.resize(tested.size() - (shift + diff));
 
@@ -156,7 +155,7 @@ AlignAlgorithm::align(const BinaryMap::Bitset& ref_,
 
     for (size_t shift = 0; shift < max_shift; ++shift) {
       // NOTE : bitset has different direction -> lowest & highest position
-      oma::BinaryMap::Bitset shiftedTest = tested >> shift;
+      bgm::BinaryMap::Bitset shiftedTest = tested >> shift;
       // resize to correct value
       shiftedTest.resize(tested.size() - shift);
 

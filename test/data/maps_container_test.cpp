@@ -15,10 +15,10 @@ BOOST_AUTO_TEST_CASE(TestReset_NonEmptyVectorAndEmptyContainer) {
       "111111111111111111111111111111111111111111111111110000000000"
       "0000000000000000000000000000000000000000";
 
-  oma::BinaryMap two("two", oma::BinaryMap::Bitset(twoStr));
+  bgm::BinaryMap two("two", bgm::BinaryMap::Bitset(twoStr));
 
-  oma::MapsContainer maps;
-  std::vector<oma::BinaryMap> vec = {two, two};
+  bgm::MapsContainer maps;
+  std::vector<bgm::BinaryMap> vec = {two, two};
 
   BOOST_CHECK_EQUAL(maps.size(), 0);
 
@@ -35,10 +35,10 @@ BOOST_AUTO_TEST_CASE(TestReset_EmptyVectorAndNonEmptyContainer) {
       "111111111111111111111111111111111111111111111111111111111111"
       "1111111111111111111111111111111111111111";
 
-  oma::BinaryMap one("one", oma::BinaryMap::Bitset(oneStr));
+  bgm::BinaryMap one("one", bgm::BinaryMap::Bitset(oneStr));
 
-  oma::MapsContainer maps;
-  std::vector<oma::BinaryMap> vec;
+  bgm::MapsContainer maps;
+  std::vector<bgm::BinaryMap> vec;
 
   maps.push_back(one);
 
@@ -61,11 +61,11 @@ BOOST_AUTO_TEST_CASE(TestReset_NonEmptyVectorAndNonEmptyContainer) {
       "111111111111111111111111111111111111111111111111110000000000"
       "0000000000000000000000000000000000000000";
 
-  oma::BinaryMap one("one", oma::BinaryMap::Bitset(oneStr));
-  oma::BinaryMap two("two", oma::BinaryMap::Bitset(twoStr));
+  bgm::BinaryMap one("one", bgm::BinaryMap::Bitset(oneStr));
+  bgm::BinaryMap two("two", bgm::BinaryMap::Bitset(twoStr));
 
-  oma::MapsContainer maps;
-  std::vector<oma::BinaryMap> vec = {two, two};
+  bgm::MapsContainer maps;
+  std::vector<bgm::BinaryMap> vec = {two, two};
 
   maps.push_back(one);
 

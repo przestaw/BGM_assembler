@@ -39,14 +39,14 @@ const std::string testFile =
 
 BOOST_AUTO_TEST_CASE(EmptyStreamTest_ReturnsEmpty) {
   std::stringstream stream("\n");
-  auto result = oma::FileLoader::loadFile(stream);
+  auto result = bgm::FileLoader::loadFile(stream);
 
   BOOST_CHECK_EQUAL(result.size(), 0);
 }
 
 BOOST_AUTO_TEST_CASE(StreamFileTest_ReturnsCorrectCount) {
   std::stringstream stream(testFile);
-  auto result = oma::FileLoader::loadFile(stream);
+  auto result = bgm::FileLoader::loadFile(stream);
 
   BOOST_CHECK_EQUAL(result.size(), 2);
 }

@@ -11,7 +11,7 @@
 #include <mutex>
 #include <vector>
 
-namespace oma {
+namespace bgm {
   class ConsensusBuilder {
   public:
     /**
@@ -103,6 +103,6 @@ namespace oma {
       return len;
     };
   };
-} // namespace oma
+} // namespace bgm
 
 #endif // OMA_CONSENSUS_BUILDER_H

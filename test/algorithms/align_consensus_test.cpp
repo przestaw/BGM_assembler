@@ -11,7 +11,7 @@ BOOST_AUTO_TEST_SUITE(OMA_Test_Suite)
 BOOST_AUTO_TEST_SUITE(Align_Consensus_Test_Suite)
 
 BOOST_AUTO_TEST_CASE(TwoMaps_CreatesValidMap) {
-  oma::MapsContainer mapsContainer;
+  bgm::MapsContainer mapsContainer;
   std::string mapStr  = "1010111100001101010001110101";
   std::string mapStr1 = "10101111000011010100011";
   std::string mapStr2 = "11100001101010001110101";
@@ -20,14 +20,14 @@ BOOST_AUTO_TEST_CASE(TwoMaps_CreatesValidMap) {
   std::reverse(mapStr2.begin(), mapStr2.end());
 
   mapsContainer.emplace_back("map1",
-                             oma::BinaryMap::Bitset(std::string(mapStr1)));
+                             bgm::BinaryMap::Bitset(std::string(mapStr1)));
   mapsContainer.emplace_back("map2",
-                             oma::BinaryMap::Bitset(std::string(mapStr2)));
+                             bgm::BinaryMap::Bitset(std::string(mapStr2)));
 
-  oma::AlignAlgorithm testAligner(mapsContainer, 10);
+  bgm::AlignAlgorithm testAligner(mapsContainer, 10);
   testAligner.alignMapsSingle();
 
-  oma::ConsensusBuilder testConsensus(mapsContainer);
+  bgm::ConsensusBuilder testConsensus(mapsContainer);
   testConsensus.runConsensusSingle();
 
   BOOST_REQUIRE_EQUAL(1, testConsensus.getConsensusMaps().size());
@@ -38,7 +38,7 @@ BOOST_AUTO_TEST_CASE(TwoMaps_CreatesValidMap) {
 }
 
 BOOST_AUTO_TEST_CASE(Single_ThreeMapsSameDist_CreatesValidMap) {
-  oma::MapsContainer mapsContainer;
+  bgm::MapsContainer mapsContainer;
 
   std::string mapStr  = "10101111000011010100011101010";
   std::string mapStr1 = "10101111000011010100011";
@@ -50,16 +50,16 @@ BOOST_AUTO_TEST_CASE(Single_ThreeMapsSameDist_CreatesValidMap) {
   std::reverse(mapStr3.begin(), mapStr3.end());
 
   mapsContainer.emplace_back("map1",
-                             oma::BinaryMap::Bitset(std::string(mapStr1)));
+                             bgm::BinaryMap::Bitset(std::string(mapStr1)));
   mapsContainer.emplace_back("map2",
-                             oma::BinaryMap::Bitset(std::string(mapStr2)));
+                             bgm::BinaryMap::Bitset(std::string(mapStr2)));
   mapsContainer.emplace_back("map3",
-                             oma::BinaryMap::Bitset(std::string(mapStr3)));
+                             bgm::BinaryMap::Bitset(std::string(mapStr3)));
 
-  oma::AlignAlgorithm testAligner(mapsContainer, 10);
+  bgm::AlignAlgorithm testAligner(mapsContainer, 10);
   testAligner.alignMapsSingle();
 
-  oma::ConsensusBuilder testConsensus(mapsContainer);
+  bgm::ConsensusBuilder testConsensus(mapsContainer);
   testConsensus.runConsensusSingle();
 
   BOOST_REQUIRE_EQUAL(1, testConsensus.getConsensusMaps().size());
@@ -70,7 +70,7 @@ BOOST_AUTO_TEST_CASE(Single_ThreeMapsSameDist_CreatesValidMap) {
 }
 
 BOOST_AUTO_TEST_CASE(Single_ThreeMapsDiffDist_CreatesValidMap_3) {
-  oma::MapsContainer mapsContainer;
+  bgm::MapsContainer mapsContainer;
 
   std::string mapStr  = "1010111100001101010001110101";
   std::string mapStr1 = "10101111000011010100011";
@@ -82,16 +82,16 @@ BOOST_AUTO_TEST_CASE(Single_ThreeMapsDiffDist_CreatesValidMap_3) {
   std::reverse(mapStr3.begin(), mapStr3.end());
 
   mapsContainer.emplace_back("map1",
-                             oma::BinaryMap::Bitset(std::string(mapStr1)));
+                             bgm::BinaryMap::Bitset(std::string(mapStr1)));
   mapsContainer.emplace_back("map2",
-                             oma::BinaryMap::Bitset(std::string(mapStr2)));
+                             bgm::BinaryMap::Bitset(std::string(mapStr2)));
   mapsContainer.emplace_back("map3",
-                             oma::BinaryMap::Bitset(std::string(mapStr3)));
+                             bgm::BinaryMap::Bitset(std::string(mapStr3)));
 
-  oma::AlignAlgorithm testAligner(mapsContainer, 10);
+  bgm::AlignAlgorithm testAligner(mapsContainer, 10);
   testAligner.alignMapsSingle();
 
-  oma::ConsensusBuilder testConsensus(mapsContainer);
+  bgm::ConsensusBuilder testConsensus(mapsContainer);
   testConsensus.runConsensusSingle();
 
   BOOST_REQUIRE_EQUAL(1, testConsensus.getConsensusMaps().size());
@@ -102,7 +102,7 @@ BOOST_AUTO_TEST_CASE(Single_ThreeMapsDiffDist_CreatesValidMap_3) {
 }
 
 BOOST_AUTO_TEST_CASE(Single_FourMapsSameDist_CreatesValidMap) {
-  oma::MapsContainer mapsContainer;
+  bgm::MapsContainer mapsContainer;
 
   std::string mapStr =
       "100000100001110100010111000000010111100000011101000110001010000000000100"
@@ -130,18 +130,18 @@ BOOST_AUTO_TEST_CASE(Single_FourMapsSameDist_CreatesValidMap) {
   std::reverse(mapStr4.begin(), mapStr4.end());
 
   mapsContainer.emplace_back("map1",
-                             oma::BinaryMap::Bitset(std::string(mapStr1)));
+                             bgm::BinaryMap::Bitset(std::string(mapStr1)));
   mapsContainer.emplace_back("map2",
-                             oma::BinaryMap::Bitset(std::string(mapStr2)));
+                             bgm::BinaryMap::Bitset(std::string(mapStr2)));
   mapsContainer.emplace_back("map3",
-                             oma::BinaryMap::Bitset(std::string(mapStr3)));
+                             bgm::BinaryMap::Bitset(std::string(mapStr3)));
   mapsContainer.emplace_back("map4",
-                             oma::BinaryMap::Bitset(std::string(mapStr4)));
+                             bgm::BinaryMap::Bitset(std::string(mapStr4)));
 
-  oma::AlignAlgorithm testAligner(mapsContainer, 40, 0.4, 0.1);
+  bgm::AlignAlgorithm testAligner(mapsContainer, 40, 0.4, 0.1);
   testAligner.alignMapsSingle();
 
-  oma::ConsensusBuilder testConsensus(mapsContainer);
+  bgm::ConsensusBuilder testConsensus(mapsContainer);
   testConsensus.runConsensusSingle();
 
   BOOST_REQUIRE_EQUAL(1, testConsensus.getConsensusMaps().size());
@@ -152,7 +152,7 @@ BOOST_AUTO_TEST_CASE(Single_FourMapsSameDist_CreatesValidMap) {
 }
 
 BOOST_AUTO_TEST_CASE(Single_FourMapsDiffDist_CreatesValidMap) {
-  oma::MapsContainer mapsContainer;
+  bgm::MapsContainer mapsContainer;
 
   std::string mapStr =
       "100000100001110100010111000000010111100000011101000110001010000000000100"
@@ -180,18 +180,18 @@ BOOST_AUTO_TEST_CASE(Single_FourMapsDiffDist_CreatesValidMap) {
   std::reverse(mapStr4.begin(), mapStr4.end());
 
   mapsContainer.emplace_back("map1",
-                             oma::BinaryMap::Bitset(std::string(mapStr1)));
+                             bgm::BinaryMap::Bitset(std::string(mapStr1)));
   mapsContainer.emplace_back("map2",
-                             oma::BinaryMap::Bitset(std::string(mapStr2)));
+                             bgm::BinaryMap::Bitset(std::string(mapStr2)));
   mapsContainer.emplace_back("map3",
-                             oma::BinaryMap::Bitset(std::string(mapStr3)));
+                             bgm::BinaryMap::Bitset(std::string(mapStr3)));
   mapsContainer.emplace_back("map4",
-                             oma::BinaryMap::Bitset(std::string(mapStr4)));
+                             bgm::BinaryMap::Bitset(std::string(mapStr4)));
 
-  oma::AlignAlgorithm testAligner(mapsContainer, 40, 0.4, 0.1);
+  bgm::AlignAlgorithm testAligner(mapsContainer, 40, 0.4, 0.1);
   testAligner.alignMapsSingle();
 
-  oma::ConsensusBuilder testConsensus(mapsContainer);
+  bgm::ConsensusBuilder testConsensus(mapsContainer);
   testConsensus.runConsensusSingle();
 
   BOOST_REQUIRE_EQUAL(1, testConsensus.getConsensusMaps().size());
@@ -202,7 +202,7 @@ BOOST_AUTO_TEST_CASE(Single_FourMapsDiffDist_CreatesValidMap) {
 }
 
 BOOST_AUTO_TEST_CASE(Multi_ThreeMapsSameDist_CreatesValidMap) {
-  oma::MapsContainer mapsContainer;
+  bgm::MapsContainer mapsContainer;
 
   std::string mapStr  = "10101111000011010100011101010";
   std::string mapStr1 = "10101111000011010100011";
@@ -214,16 +214,16 @@ BOOST_AUTO_TEST_CASE(Multi_ThreeMapsSameDist_CreatesValidMap) {
   std::reverse(mapStr3.begin(), mapStr3.end());
 
   mapsContainer.emplace_back("map1",
-                             oma::BinaryMap::Bitset(std::string(mapStr1)));
+                             bgm::BinaryMap::Bitset(std::string(mapStr1)));
   mapsContainer.emplace_back("map2",
-                             oma::BinaryMap::Bitset(std::string(mapStr2)));
+                             bgm::BinaryMap::Bitset(std::string(mapStr2)));
   mapsContainer.emplace_back("map3",
-                             oma::BinaryMap::Bitset(std::string(mapStr3)));
+                             bgm::BinaryMap::Bitset(std::string(mapStr3)));
 
-  oma::AlignAlgorithm testAligner(mapsContainer, 10);
+  bgm::AlignAlgorithm testAligner(mapsContainer, 10);
   testAligner.alignMapsMulti(0);
 
-  oma::ConsensusBuilder testConsensus(mapsContainer);
+  bgm::ConsensusBuilder testConsensus(mapsContainer);
   testConsensus.runMultiConsensus(0);
 
   BOOST_REQUIRE_EQUAL(1, testConsensus.getConsensusMaps().size());
@@ -234,7 +234,7 @@ BOOST_AUTO_TEST_CASE(Multi_ThreeMapsSameDist_CreatesValidMap) {
 }
 
 BOOST_AUTO_TEST_CASE(Multi_ThreeMapsDiffDist_CreatesValidMap_3) {
-  oma::MapsContainer mapsContainer;
+  bgm::MapsContainer mapsContainer;
 
   std::string mapStr  = "1010111100001101010001110101";
   std::string mapStr1 = "10101111000011010100011";
@@ -246,16 +246,16 @@ BOOST_AUTO_TEST_CASE(Multi_ThreeMapsDiffDist_CreatesValidMap_3) {
   std::reverse(mapStr3.begin(), mapStr3.end());
 
   mapsContainer.emplace_back("map1",
-                             oma::BinaryMap::Bitset(std::string(mapStr1)));
+                             bgm::BinaryMap::Bitset(std::string(mapStr1)));
   mapsContainer.emplace_back("map2",
-                             oma::BinaryMap::Bitset(std::string(mapStr2)));
+                             bgm::BinaryMap::Bitset(std::string(mapStr2)));
   mapsContainer.emplace_back("map3",
-                             oma::BinaryMap::Bitset(std::string(mapStr3)));
+                             bgm::BinaryMap::Bitset(std::string(mapStr3)));
 
-  oma::AlignAlgorithm testAligner(mapsContainer, 10);
+  bgm::AlignAlgorithm testAligner(mapsContainer, 10);
   testAligner.alignMapsMulti(0);
 
-  oma::ConsensusBuilder testConsensus(mapsContainer);
+  bgm::ConsensusBuilder testConsensus(mapsContainer);
   testConsensus.runMultiConsensus(0);
 
   BOOST_REQUIRE_EQUAL(1, testConsensus.getConsensusMaps().size());
@@ -266,7 +266,7 @@ BOOST_AUTO_TEST_CASE(Multi_ThreeMapsDiffDist_CreatesValidMap_3) {
 }
 
 BOOST_AUTO_TEST_CASE(Multi_FourMapsSameDist_CreatesValidMap) {
-  oma::MapsContainer mapsContainer;
+  bgm::MapsContainer mapsContainer;
 
   std::string mapStr =
       "100000100001110100010111000000010111100000011101000110001010000000000100"
@@ -294,18 +294,18 @@ BOOST_AUTO_TEST_CASE(Multi_FourMapsSameDist_CreatesValidMap) {
   std::reverse(mapStr4.begin(), mapStr4.end());
 
   mapsContainer.emplace_back("map1",
-                             oma::BinaryMap::Bitset(std::string(mapStr1)));
+                             bgm::BinaryMap::Bitset(std::string(mapStr1)));
   mapsContainer.emplace_back("map2",
-                             oma::BinaryMap::Bitset(std::string(mapStr2)));
+                             bgm::BinaryMap::Bitset(std::string(mapStr2)));
   mapsContainer.emplace_back("map3",
-                             oma::BinaryMap::Bitset(std::string(mapStr3)));
+                             bgm::BinaryMap::Bitset(std::string(mapStr3)));
   mapsContainer.emplace_back("map4",
-                             oma::BinaryMap::Bitset(std::string(mapStr4)));
+                             bgm::BinaryMap::Bitset(std::string(mapStr4)));
 
-  oma::AlignAlgorithm testAligner(mapsContainer, 40, 0.4, 0.1);
+  bgm::AlignAlgorithm testAligner(mapsContainer, 40, 0.4, 0.1);
   testAligner.alignMapsMulti(0);
 
-  oma::ConsensusBuilder testConsensus(mapsContainer);
+  bgm::ConsensusBuilder testConsensus(mapsContainer);
   testConsensus.runMultiConsensus(0);
 
   BOOST_REQUIRE_EQUAL(1, testConsensus.getConsensusMaps().size());
@@ -316,7 +316,7 @@ BOOST_AUTO_TEST_CASE(Multi_FourMapsSameDist_CreatesValidMap) {
 }
 
 BOOST_AUTO_TEST_CASE(Multi_FourMapsDiffDist_CreatesValidMap) {
-  oma::MapsContainer mapsContainer;
+  bgm::MapsContainer mapsContainer;
 
   std::string mapStr =
       "100000100001110100010111000000010111100000011101000110001010000000000100"
@@ -344,18 +344,18 @@ BOOST_AUTO_TEST_CASE(Multi_FourMapsDiffDist_CreatesValidMap) {
   std::reverse(mapStr4.begin(), mapStr4.end());
 
   mapsContainer.emplace_back("map1",
-                             oma::BinaryMap::Bitset(std::string(mapStr1)));
+                             bgm::BinaryMap::Bitset(std::string(mapStr1)));
   mapsContainer.emplace_back("map2",
-                             oma::BinaryMap::Bitset(std::string(mapStr2)));
+                             bgm::BinaryMap::Bitset(std::string(mapStr2)));
   mapsContainer.emplace_back("map3",
-                             oma::BinaryMap::Bitset(std::string(mapStr3)));
+                             bgm::BinaryMap::Bitset(std::string(mapStr3)));
   mapsContainer.emplace_back("map4",
-                             oma::BinaryMap::Bitset(std::string(mapStr4)));
+                             bgm::BinaryMap::Bitset(std::string(mapStr4)));
 
-  oma::AlignAlgorithm testAligner(mapsContainer, 40, 0.4, 0.1);
+  bgm::AlignAlgorithm testAligner(mapsContainer, 40, 0.4, 0.1);
   testAligner.alignMapsMulti(0);
 
-  oma::ConsensusBuilder testConsensus(mapsContainer);
+  bgm::ConsensusBuilder testConsensus(mapsContainer);
   testConsensus.runMultiConsensus(0);
 
   BOOST_REQUIRE_EQUAL(1, testConsensus.getConsensusMaps().size());

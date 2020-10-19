@@ -8,7 +8,7 @@
 #include <boost/dynamic_bitset.hpp>
 #include <cstdint>
 
-namespace oma {
+namespace bgm {
   /**
    * Wraper for binary map sequence
    */
@@ -91,6 +91,10 @@ namespace oma {
   private:
     // data
     std::string identifier_;
+
+  public:
+    void setIdentifier(const std::string &identifier);
+  private:
     Bitset map_;
     // Left best aligned map
     Neighbour leftNeighbour_;
@@ -101,6 +105,6 @@ namespace oma {
     // flag to indicate contig
     bool contig_;
   };
-} // namespace oma
+} // namespace bgm
 
 #endif // BIN_MAP_H

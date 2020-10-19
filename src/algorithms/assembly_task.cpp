@@ -10,7 +10,7 @@
 #include <iostream>
 #include <utility>
 
-using namespace oma;
+using namespace bgm;
 
 AssemblyTask::AssemblyTask(AssemblyTask::Params params)
     : params_(std::move(params)), aligner_(maps_, params_.getMinOverlap()),
@@ -28,11 +28,10 @@ AssemblyTask::AssemblyTask(AssemblyTask::Params params)
     }
   };
   // perform fold
-  fold_ = [&](){
+  fold_ = [&]() {
     aligner_.alignMapsMulti(params_.getThreads());
     consensus_.runMultiConsensus(params_.getThreads());
   };
-
 }
 
 void AssemblyTask::run(bool verbose) {
@@ -107,10 +106,21 @@ void AssemblyTask::runVerbose() {
       // consensus_.reset();
 
       // take result
-      auto newMaps = consensus_.getConsensusMapsAndReset();
-      maps_.insert(maps_.end(),
-                   std::make_move_iterator(newMaps.begin()),
-                   std::make_move_iterator(newMaps.end()));
+      if (params_.isReuseMaps()) {
+        auto newMaps = consensus_.getConsensusMapsAndReset();
+
+        for (auto &refMap : newMaps) {
+          refMap.setIdentifier("No " + std::to_string(i) + " "
+                               + refMap.getIdentifier());
+          maps_.push_back(std::move(refMap));
+        }
+      } else {
+        maps_.resetAndReplace(consensus_.getConsensusMaps());
+        consensus_.reset();
+      }
+      //      maps_.insert(maps_.end(),
+      //                   std::make_move_iterator(newMaps.begin()),
+      //                   std::make_move_iterator(newMaps.end()));
     } else {
       print("One map left ");
       break;
@@ -169,7 +179,6 @@ void AssemblyTask::operator()(mt4cpp::Progress &p) {
     } else {
       break;
     }
-
   }
 
   p.setProgress(0.9);

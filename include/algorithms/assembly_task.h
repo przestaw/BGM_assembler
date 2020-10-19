@@ -11,7 +11,7 @@
 #include <mt4cpp.h>
 #include <utility>
 
-namespace oma {
+namespace bgm {
   /**
    * Wrapper for assembly pipeline
    */
@@ -66,6 +66,6 @@ namespace oma {
     Aligner aligner_;
     Consensus consensus_;
   };
-} // namespace oma
+} // namespace bgm
 
 #endif // OMA_ASSEMBLY_TASK_H

@@ -5,7 +5,7 @@
 #include <utility>
 
 using namespace boost::program_options;
-using namespace oma;
+using namespace bgm;
 
 /**
  * ProgramParams struct for storing runtime params
@@ -56,10 +56,6 @@ inline std::optional<ProgramParams> parseParams(int argc, char *argv[]) {
                        value<bool>()->default_value(true),
                        "preference of marker (true) or empty place (false) "
                        "during consensus when 50% of maps has 1 and 50% has 0");
-    desc.add_options()("marker_preference",
-                       value<bool>()->default_value(true),
-                       "preference of marker (true) or empty place (false) "
-                       "during consensus when 50% of maps has 1 and 50% has 0");
     desc.add_options()(
         "reuse_maps",
         "Reuse rmaps with contigs [from at least 2 rmaps] in each fold");
@@ -79,7 +75,7 @@ inline std::optional<ProgramParams> parseParams(int argc, char *argv[]) {
        */
       auto checkPresence = [&vm](const std::string &name) {
         if (!vm.count(name)) {
-          throw error::missing_argument(name);
+          throw bgm::error::missing_argument(name);
         }
       };
 

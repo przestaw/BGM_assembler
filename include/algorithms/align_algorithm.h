@@ -6,8 +6,9 @@
 #define OMA_ALIGN_ALGORITHM_H
 
 #include <data/maps_container.h>
+#include <project_defines.h>
 
-namespace oma {
+namespace bgm {
   class AlignAlgorithm {
   public:
     /* NOTE :
@@ -62,17 +63,7 @@ namespace oma {
      *  tested : [YYY_________] ,   [Y________]  , [YYYYYY_______]
      */
 
-  private:
-    // helper function aligning one neighbour of one map
-    void alignOneMap(size_t index);
-    // helper function taking next map after finishing previous
-    void workerThread();
-    // helper function taking range of maps to align
-    void rangeWorkerThread(size_t begin, size_t end);
-
-    // maps
-    MapsContainer &maps_;
-
+  protected:
     // params
     const unsigned minOverlapQuants_;
     const double minOverlapPart_;
@@ -81,11 +72,26 @@ namespace oma {
     // scoring function
     std::function<double(uint64_t, uint64_t, uint64_t, uint64_t)>
         scoringFunction_;
+
+  private:
+    // maps
+    MapsContainer &maps_;
+
+    // helper function aligning one neighbour of one map
+    void alignOneMap(size_t index);
+    // helper function taking next map after finishing previous
+    void workerThread();
+    // helper function taking range of maps to align
+    void rangeWorkerThread(size_t begin, size_t end);
+
     // default scoring function
     [[nodiscard]] double defaultScore(uint64_t diff,
                                       uint64_t ovlpLen,
                                       uint64_t mapLen1,
                                       uint64_t mapLen2) const {
+      const double mP  = 3.;
+      const double mLA = 1.;
+
       // diff compared to overlap : diff Proportional
       const double diffP =
           static_cast<double>(diff) / static_cast<double>(ovlpLen);
@@ -93,14 +99,48 @@ namespace oma {
       if (diffP >= threshold_) {
         return 0.;
       } else {
-        // diff compared to whole (smaller) map len : diff All
+        // diff compared to whole (smaller) map length : diff All
         const double diffA = static_cast<double>(diff)
                              / static_cast<double>(std::min(mapLen1, mapLen2));
-        // TODO
-        return diffP + diffA;
-      }
-    }
-  };
-} // namespace oma
+        // overlap length compared to whole (smaller) map length
+        const double lenA = static_cast<double>(ovlpLen)
+                            / static_cast<double>(std::min(mapLen1, mapLen2));
+        // overlap length compared to whole (smaller) map length
+        const double lenB = static_cast<double>(ovlpLen)
+                            / static_cast<double>(std::max(mapLen1, mapLen2));
+        // TODO : params/equation
+        /* NOTE:
+         *       - diffP  # 0.0[ perfect ] - threshold[margin] - 1.0[worst case]
+         *       - lenA   # 1.0[ submap ]  - 0.(0)1["one bit overlap"]
+         *       - diff   # no of differences
+         */
+
+        UNUSED_VAL(diffA);
+        return diffP * mP + ((lenA - 0.5) * (lenB - 0.5) * mLA);
+      } // if
+
+    } // defaultScore
+
+    // TODO : remove
+    [[nodiscard]] static double proportionalScore(uint64_t diff,
+                                                  uint64_t ovlpLen,
+                                                  uint64_t mapLen1,
+                                                  uint64_t mapLen2) {
+      UNUSED_VAL(mapLen1); UNUSED_VAL(mapLen2);
+      return static_cast<double>(diff) / static_cast<double>(ovlpLen);
+    } // proportionalScore
+
+    // TODO : remove
+    [[nodiscard]] static double diffScore(uint64_t diff,
+                                          uint64_t ovlpLen,
+                                          uint64_t mapLen1,
+                                          uint64_t mapLen2) {
+      UNUSED_VAL(ovlpLen); UNUSED_VAL(mapLen1); UNUSED_VAL(mapLen2);
+      return static_cast<double>(diff);
+    } // diffScore
+
+  }; // class AlignAlgorithm
+
+} // namespace bgm
 
 #endif // OMA_ALIGN_ALGORITHM_H

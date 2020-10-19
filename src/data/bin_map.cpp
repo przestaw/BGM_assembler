@@ -1,7 +1,7 @@
 #include <data/bin_map.h>
 #include <utility>
 
-using namespace oma;
+using namespace bgm;
 
 BinaryMap::BinaryMap(std::string c_identifier, Bitset c_map)
     : identifier_(std::move(c_identifier)), map_(std::move(c_map)),
@@ -23,11 +23,15 @@ BinaryMap::Bitset BinaryMap::getMap() { return Bitset(map_); }
 
 const std::string &BinaryMap::getIdentifier() const { return identifier_; }
 
-const BinaryMap::Neighbour &oma::BinaryMap::getLeftNeighbour() const {
+void BinaryMap::setIdentifier(const std::string &identifier) {
+  identifier_ = identifier;
+}
+
+const BinaryMap::Neighbour &bgm::BinaryMap::getLeftNeighbour() const {
   return leftNeighbour_;
 }
 
-const BinaryMap::Neighbour &oma::BinaryMap::getRightNeighbour() const {
+const BinaryMap::Neighbour &bgm::BinaryMap::getRightNeighbour() const {
   return rightNeighbour_;
 }
 
