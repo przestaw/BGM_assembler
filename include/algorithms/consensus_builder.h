@@ -23,7 +23,7 @@ namespace bgm {
      */
     explicit ConsensusBuilder(MapsContainer &maps,
                               bool markerPreference = true,
-                              bool processAll       = false);
+                              bool processAll       = true);
 
     /**
      * Runs consensus in single thread

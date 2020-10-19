@@ -14,7 +14,7 @@ using namespace bgm;
 
 AssemblyTask::AssemblyTask(AssemblyTask::Params params)
     : params_(std::move(params)), aligner_(maps_, params_.getMinOverlap()),
-      consensus_(maps_, params_.isMarkerPreference()) {
+      consensus_(maps_, params_.isMarkerPreference(), !params_.isReuseMaps()) {
   // preapre fold - so maps contain what is desired for next iteration
   prepareNextFold_ = [&](bool reuseMaps) {
     if (reuseMaps) {

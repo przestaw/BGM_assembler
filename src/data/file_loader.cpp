@@ -13,7 +13,7 @@ std::vector<BinaryMap> FileLoader::loadFile(std::istream& input,
 
   for (auto temp = parseBinMap(input); std::get<0>(temp);
        temp      = parseBinMap(input)) {
-    if (minLen < std::get<2>(temp).size()){
+    if (minLen < std::get<2>(temp).size()) {
       ret.emplace_back(std::get<1>(temp), std::get<2>(temp));
     } // else too small
   }

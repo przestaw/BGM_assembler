@@ -96,14 +96,14 @@ inline std::optional<ProgramParams> parseParams(int argc, char *argv[]) {
 
       auto params =
           AssemblyTask::Params(vm["input"].as<std::string>(),
-                                    vm["output"].as<std::string>(),
-                                    vm["threads"].as<unsigned>(),
-                                    vm["margin_quant"].as<unsigned>(),
-                                    vm["margin_part"].as<double>(),
-                                    vm["thresh"].as<double>(),
-                                    folds,
-                                    vm["marker_preference"].as<bool>(),
-                                    static_cast<bool>(vm.count("reuse_maps")));
+                               vm["output"].as<std::string>(),
+                               vm["threads"].as<unsigned>(),
+                               vm["margin_quant"].as<unsigned>(),
+                               vm["margin_part"].as<double>(),
+                               vm["thresh"].as<double>(),
+                               folds,
+                               vm["marker_preference"].as<bool>(),
+                               static_cast<bool>(vm.count("reuse_maps")));
       bool verbose = vm.count("verbose");
 
       return ProgramParams(verbose, params);

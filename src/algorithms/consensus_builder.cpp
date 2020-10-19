@@ -11,11 +11,11 @@ using namespace bgm;
 
 ConsensusBuilder::ConsensusBuilder(MapsContainer &maps,
                                    bool markerPreference,
-                                   bool reuseMaps)
+                                   bool processAll)
     : conMaps_(maps), markerPreferenceFlag_(markerPreference),
       deductMarker_((markerPreference ? ConsensusBuilder::markerPreference_
                                       : ConsensusBuilder::noMarkerPreference_)),
-      processAll_(reuseMaps) {}
+      processAll_(processAll) {}
 
 const std::vector<BinaryMap> &ConsensusBuilder::getConsensusMaps() const {
   return consensusMaps_;

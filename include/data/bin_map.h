@@ -94,6 +94,7 @@ namespace bgm {
 
   public:
     void setIdentifier(const std::string &identifier);
+
   private:
     Bitset map_;
     // Left best aligned map

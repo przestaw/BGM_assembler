@@ -70,7 +70,7 @@ namespace bgm {
     const double threshold_;
 
     // scoring function
-    std::function<double(uint64_t, uint64_t, uint64_t, uint64_t)>
+    const std::function<double(uint64_t, uint64_t, uint64_t, uint64_t)>
         scoringFunction_;
 
   private:
@@ -89,54 +89,76 @@ namespace bgm {
                                       uint64_t ovlpLen,
                                       uint64_t mapLen1,
                                       uint64_t mapLen2) const {
-      const double mP  = 3.;
-      const double mLA = 1.;
+      const double mP  = 4;
+      const double mLA = 1;
 
       // diff compared to overlap : diff Proportional
       const double diffP =
           static_cast<double>(diff) / static_cast<double>(ovlpLen);
 
       if (diffP >= threshold_) {
-        return 0.;
+        return std::numeric_limits<double>::max();
       } else {
         // diff compared to whole (smaller) map length : diff All
         const double diffA = static_cast<double>(diff)
                              / static_cast<double>(std::min(mapLen1, mapLen2));
         // overlap length compared to whole (smaller) map length
-        const double lenA = static_cast<double>(ovlpLen)
-                            / static_cast<double>(std::min(mapLen1, mapLen2));
+        double lenA = static_cast<double>(ovlpLen)
+                      / static_cast<double>(std::min(mapLen1, mapLen2));
         // overlap length compared to whole (smaller) map length
-        const double lenB = static_cast<double>(ovlpLen)
-                            / static_cast<double>(std::max(mapLen1, mapLen2));
-        // TODO : params/equation
+        double lenB = static_cast<double>(ovlpLen)
+                      / static_cast<double>(std::max(mapLen1, mapLen2));
+        // TODO : params/equation - possible?
         /* NOTE:
          *       - diffP  # 0.0[ perfect ] - threshold[margin] - 1.0[worst case]
          *       - lenA   # 1.0[ submap ]  - 0.(0)1["one bit overlap"]
          *       - diff   # no of differences
          */
 
-        UNUSED_VAL(diffA);
-        return diffP * mP + ((lenA - 0.5) * (lenB - 0.5) * mLA);
+        lenA -= 0.5;
+        lenB -= 0.5;
+        lenA = lenA * lenA;
+        lenB = lenB * lenB;
+
+        return diffP * mP + (lenA * lenB * mLA);
       } // if
 
     } // defaultScore
 
     // TODO : remove
-    [[nodiscard]] static double proportionalScore(uint64_t diff,
-                                                  uint64_t ovlpLen,
-                                                  uint64_t mapLen1,
-                                                  uint64_t mapLen2) {
-      UNUSED_VAL(mapLen1); UNUSED_VAL(mapLen2);
-      return static_cast<double>(diff) / static_cast<double>(ovlpLen);
+    [[nodiscard]] double proportionalScore(uint64_t diff,
+                                           uint64_t ovlpLen,
+                                           uint64_t mapLen1,
+                                           uint64_t mapLen2) {
+      UNUSED_VAL(mapLen1);
+      UNUSED_VAL(mapLen2);
+
+      // diff compared to overlap : diff Proportional
+      const double diffP =
+          static_cast<double>(diff) / static_cast<double>(ovlpLen);
+
+      if (diffP >= threshold_) {
+        return std::numeric_limits<double>::max();
+      } else {
+        return diffP;
+      }
     } // proportionalScore
 
     // TODO : remove
-    [[nodiscard]] static double diffScore(uint64_t diff,
-                                          uint64_t ovlpLen,
-                                          uint64_t mapLen1,
-                                          uint64_t mapLen2) {
-      UNUSED_VAL(ovlpLen); UNUSED_VAL(mapLen1); UNUSED_VAL(mapLen2);
-      return static_cast<double>(diff);
+    [[nodiscard]] double diffScore(uint64_t diff,
+                                   uint64_t ovlpLen,
+                                   uint64_t mapLen1,
+                                   uint64_t mapLen2) {
+      UNUSED_VAL(mapLen1);
+      UNUSED_VAL(mapLen2);
+      const double diffP =
+          static_cast<double>(diff) / static_cast<double>(ovlpLen);
+
+      if (diffP >= threshold_) {
+        return std::numeric_limits<double>::max();
+      } else {
+        return static_cast<double>(diff);
+      }
     } // diffScore
 
   }; // class AlignAlgorithm
