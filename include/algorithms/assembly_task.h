@@ -15,7 +15,7 @@ namespace bgm {
   /**
    * Wrapper for assembly pipeline
    */
-  class AssemblyTask : mt4cpp::Command {
+  class AssemblyTask : protected mt4cpp::Command {
   public:
     using Aligner   = AlignAlgorithm;
     using Consensus = ConsensusBuilder;
@@ -39,6 +39,12 @@ namespace bgm {
      * @return time of task run
      */
     double runPerfTest();
+
+    void attachObserver(mt4cpp::PCommandObserver observer) {
+      this->attach(std::move(observer));
+    }
+
+    void execute() { mt4cpp::Command::execute(); }
 
   private:
     void operator()(mt4cpp::Progress& p) override;

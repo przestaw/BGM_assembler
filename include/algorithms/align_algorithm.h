@@ -99,9 +99,9 @@ namespace bgm {
       if (diffP >= threshold_) {
         return std::numeric_limits<double>::max();
       } else {
-        // diff compared to whole (smaller) map length : diff All
-        const double diffA = static_cast<double>(diff)
-                             / static_cast<double>(std::min(mapLen1, mapLen2));
+//        // diff compared to whole (smaller) map length : diff All
+//        const double diffA = static_cast<double>(diff)
+//                             / static_cast<double>(std::min(mapLen1, mapLen2));
         // overlap length compared to whole (smaller) map length
         double lenA = static_cast<double>(ovlpLen)
                       / static_cast<double>(std::min(mapLen1, mapLen2));

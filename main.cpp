@@ -1,5 +1,6 @@
 #include <algorithms/assembly_task.h>
 #include <boost/program_options.hpp>
+#include <common/observer.h>
 #include <error/exeception.h>
 #include <iostream>
 #include <utility>
@@ -124,15 +125,23 @@ int main(int argc, char *argv[]) {
 
   auto params = parseParams(argc, argv);
   if (params.has_value()) {
-    std::cout << "RUNNING\n";
-
     // slice ProgramParams to assembly params
     // NOLINTNEXTLINE(cppcoreguidelines-slicing) - slicing is intended
     AssemblyTask assemblyTask(static_cast<AssemblyParams>(params.value()));
 
-    // reason why ProgramParams
-    assemblyTask.run(params.value().isVerbose());
-    // TODO : use mt4cpp and utilize verbosity outside assembly task
+    if (params->isVerbose()) {
+      // attach progress bar
+      assemblyTask.attachObserver(boost::make_shared<bgm::Observer>());
+
+      std::cout << "RUNNING" << std::endl; // std::endl to flush stream
+    }
+
+    // run command
+    assemblyTask.execute();
+
+    if (params->isVerbose()) {
+      std::cout << "\nDONE" << std::endl;
+    }
   }
 
   return 0;
