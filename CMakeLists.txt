@@ -32,7 +32,7 @@ include(CTest)
 enable_testing()
 
 # Add external libs : boost
-find_package(Boost COMPONENTS program_options unit_test_framework REQUIRED)
+find_package(Boost COMPONENTS program_options unit_test_framework python REQUIRED)
 find_package(Threads REQUIRED)
 set(EXTERNAL_LIBS "Boost::program_options" "Boost::unit_test_framework" "Threads::Threads")
 
@@ -136,3 +136,13 @@ if (CLANG_TIDY_FOUND)
     #            ${CLANG_TIDY_EXE}
     #            -checks=${CLANG_TIDY_CHECKS} )
 endif ()
+
+# Python3 interface
+
+#find_package(PythonLibs 3.6 REQUIRED)
+
+add_library(BGM_python MODULE ${LIB_SRC} ${LIB_INC} ${LIB_TMP} python_interface.cpp)
+
+# Set up the libraries and header search paths for python3 interface
+target_link_libraries(BGM_python ${EXTERNAL_LIBS} "Boost::python" ${PYTHON_LIBRARIES})
+target_include_directories(BGM_python PRIVATE ${PYTHON_INCLUDE_DIRS})
