@@ -21,6 +21,7 @@ AllowShortLoopsOnASingleLine: true
 BreakBeforeBinaryOperators: NonAssignment
 BreakConstructorInitializers: BeforeColon
 BreakStringLiterals: true
+ColumnLimit: 90
 CompactNamespaces: false
 Cpp11BracedListStyle: true
 DerivePointerAlignment: true

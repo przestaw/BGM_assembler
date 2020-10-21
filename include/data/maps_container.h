@@ -21,8 +21,7 @@ namespace bgm {
      * Constructor
      * @param maps maps to be stored
      */
-    explicit MapsContainer(
-        std::vector<BinaryMap> maps = std::vector<BinaryMap>());
+    explicit MapsContainer(std::vector<BinaryMap> maps = std::vector<BinaryMap>());
     //    /**
     //     * Set neighbourhood for 2 maps
     //     * @param map map

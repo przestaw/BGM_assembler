@@ -70,8 +70,7 @@ namespace bgm {
     const double threshold_;
 
     // scoring function
-    const std::function<double(uint64_t, uint64_t, uint64_t, uint64_t)>
-        scoringFunction_;
+    const std::function<double(uint64_t, uint64_t, uint64_t, uint64_t)> scoringFunction_;
 
   private:
     // maps
@@ -93,15 +92,14 @@ namespace bgm {
       const double mLA = 1;
 
       // diff compared to overlap : diff Proportional
-      const double diffP =
-          static_cast<double>(diff) / static_cast<double>(ovlpLen);
+      const double diffP = static_cast<double>(diff) / static_cast<double>(ovlpLen);
 
       if (diffP >= threshold_) {
         return std::numeric_limits<double>::max();
       } else {
-//        // diff compared to whole (smaller) map length : diff All
-//        const double diffA = static_cast<double>(diff)
-//                             / static_cast<double>(std::min(mapLen1, mapLen2));
+        //        // diff compared to whole (smaller) map length : diff All
+        //        const double diffA = static_cast<double>(diff)
+        //                             / static_cast<double>(std::min(mapLen1, mapLen2));
         // overlap length compared to whole (smaller) map length
         double lenA = static_cast<double>(ovlpLen)
                       / static_cast<double>(std::min(mapLen1, mapLen2));
@@ -134,8 +132,7 @@ namespace bgm {
       UNUSED_VAL(mapLen2);
 
       // diff compared to overlap : diff Proportional
-      const double diffP =
-          static_cast<double>(diff) / static_cast<double>(ovlpLen);
+      const double diffP = static_cast<double>(diff) / static_cast<double>(ovlpLen);
 
       if (diffP >= threshold_) {
         return std::numeric_limits<double>::max();
@@ -145,14 +142,11 @@ namespace bgm {
     } // proportionalScore
 
     // TODO : remove
-    [[nodiscard]] double diffScore(uint64_t diff,
-                                   uint64_t ovlpLen,
-                                   uint64_t mapLen1,
-                                   uint64_t mapLen2) {
+    [[nodiscard]] double
+    diffScore(uint64_t diff, uint64_t ovlpLen, uint64_t mapLen1, uint64_t mapLen2) {
       UNUSED_VAL(mapLen1);
       UNUSED_VAL(mapLen2);
-      const double diffP =
-          static_cast<double>(diff) / static_cast<double>(ovlpLen);
+      const double diffP = static_cast<double>(diff) / static_cast<double>(ovlpLen);
 
       if (diffP >= threshold_) {
         return std::numeric_limits<double>::max();

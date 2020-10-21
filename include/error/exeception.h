@@ -25,9 +25,8 @@ namespace bgm {
                              public bgm::error::exception {
     public:
       explicit missing_argument(const std::string &desc)
-          : boost::program_options::error(
-              "Missing required argument " + desc
-              + "\nPlease include argument with value"),
+          : boost::program_options::error("Missing required argument " + desc
+                                          + "\nPlease include argument with value"),
             bgm::error::exception("Missing required argument " + desc
                                   + "\nPlease include argument with value") {}
     };

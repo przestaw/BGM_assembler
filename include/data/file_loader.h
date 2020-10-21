@@ -20,8 +20,7 @@ namespace bgm {
   public:
     // FIXME : use 2 maps [with reverse map] function variants
     // FIXME : filter maps
-    static std::vector<BinaryMap> loadFile(std::istream& input,
-                                           size_t minLen = 1);
+    static std::vector<BinaryMap> loadFile(std::istream& input, size_t minLen = 1);
 
   private:
     // FIXME : remove single maps variants

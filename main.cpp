@@ -57,9 +57,8 @@ inline std::optional<ProgramParams> parseParams(int argc, char *argv[]) {
                        value<bool>()->default_value(true),
                        "preference of marker (true) or empty place (false) "
                        "during consensus when 50% of maps has 1 and 50% has 0");
-    desc.add_options()(
-        "reuse_maps",
-        "Reuse rmaps with contigs [from at least 2 rmaps] in each fold");
+    desc.add_options()("reuse_maps",
+                       "Reuse rmaps with contigs [from at least 2 rmaps] in each fold");
     desc.add_options()("verbose,v", "Verbose output");
 
     variables_map vm;
@@ -95,16 +94,15 @@ inline std::optional<ProgramParams> parseParams(int argc, char *argv[]) {
         folds = vm["folds"].as<unsigned>();
       }
 
-      auto params =
-          AssemblyTask::Params(vm["input"].as<std::string>(),
-                               vm["output"].as<std::string>(),
-                               vm["threads"].as<unsigned>(),
-                               vm["margin_quant"].as<unsigned>(),
-                               vm["margin_part"].as<double>(),
-                               vm["thresh"].as<double>(),
-                               folds,
-                               vm["marker_preference"].as<bool>(),
-                               static_cast<bool>(vm.count("reuse_maps")));
+      auto params  = AssemblyTask::Params(vm["input"].as<std::string>(),
+                                         vm["output"].as<std::string>(),
+                                         vm["threads"].as<unsigned>(),
+                                         vm["margin_quant"].as<unsigned>(),
+                                         vm["margin_part"].as<double>(),
+                                         vm["thresh"].as<double>(),
+                                         folds,
+                                         vm["marker_preference"].as<bool>(),
+                                         static_cast<bool>(vm.count("reuse_maps")));
       bool verbose = vm.count("verbose");
 
       return ProgramParams(verbose, params);

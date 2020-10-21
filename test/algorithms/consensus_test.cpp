@@ -39,10 +39,8 @@ BOOST_AUTO_TEST_CASE(TwoMaps_CreatesValidMap) {
   std::reverse(mapStr1.begin(), mapStr1.end());
   std::reverse(mapStr2.begin(), mapStr2.end());
 
-  mapsContainer.emplace_back("map1",
-                             bgm::BinaryMap::Bitset(std::string(mapStr1)));
-  mapsContainer.emplace_back("map2",
-                             bgm::BinaryMap::Bitset(std::string(mapStr2)));
+  mapsContainer.emplace_back("map1", bgm::BinaryMap::Bitset(std::string(mapStr1)));
+  mapsContainer.emplace_back("map2", bgm::BinaryMap::Bitset(std::string(mapStr2)));
   mapsContainer.addRightNeighbour(0, 1, 5);
   bgm::ConsensusBuilder testFixture(mapsContainer);
 
@@ -67,12 +65,9 @@ BOOST_AUTO_TEST_CASE(ThreeMapsSameDist_CreatesValidMap) {
   std::reverse(mapStr2.begin(), mapStr2.end());
   std::reverse(mapStr3.begin(), mapStr3.end());
 
-  mapsContainer.emplace_back("map1",
-                             bgm::BinaryMap::Bitset(std::string(mapStr1)));
-  mapsContainer.emplace_back("map2",
-                             bgm::BinaryMap::Bitset(std::string(mapStr2)));
-  mapsContainer.emplace_back("map3",
-                             bgm::BinaryMap::Bitset(std::string(mapStr3)));
+  mapsContainer.emplace_back("map1", bgm::BinaryMap::Bitset(std::string(mapStr1)));
+  mapsContainer.emplace_back("map2", bgm::BinaryMap::Bitset(std::string(mapStr2)));
+  mapsContainer.emplace_back("map3", bgm::BinaryMap::Bitset(std::string(mapStr3)));
 
   mapsContainer.addRightNeighbour(0, 1, 3);
   mapsContainer.addRightNeighbour(1, 2, 3);
@@ -99,12 +94,9 @@ BOOST_AUTO_TEST_CASE(ThreeMapsDiffDist_CreatesValidMap_3) {
   std::reverse(mapStr2.begin(), mapStr2.end());
   std::reverse(mapStr3.begin(), mapStr3.end());
 
-  mapsContainer.emplace_back("map1",
-                             bgm::BinaryMap::Bitset(std::string(mapStr1)));
-  mapsContainer.emplace_back("map2",
-                             bgm::BinaryMap::Bitset(std::string(mapStr2)));
-  mapsContainer.emplace_back("map3",
-                             bgm::BinaryMap::Bitset(std::string(mapStr3)));
+  mapsContainer.emplace_back("map1", bgm::BinaryMap::Bitset(std::string(mapStr1)));
+  mapsContainer.emplace_back("map2", bgm::BinaryMap::Bitset(std::string(mapStr2)));
+  mapsContainer.emplace_back("map3", bgm::BinaryMap::Bitset(std::string(mapStr3)));
 
   mapsContainer.addRightNeighbour(0, 1, 3);
   mapsContainer.addRightNeighbour(1, 2, 2);
@@ -147,14 +139,10 @@ BOOST_AUTO_TEST_CASE(FourMapsSameDist_CreatesValidMap) {
   std::reverse(mapStr3.begin(), mapStr3.end());
   std::reverse(mapStr4.begin(), mapStr4.end());
 
-  mapsContainer.emplace_back("map1",
-                             bgm::BinaryMap::Bitset(std::string(mapStr1)));
-  mapsContainer.emplace_back("map2",
-                             bgm::BinaryMap::Bitset(std::string(mapStr2)));
-  mapsContainer.emplace_back("map3",
-                             bgm::BinaryMap::Bitset(std::string(mapStr3)));
-  mapsContainer.emplace_back("map4",
-                             bgm::BinaryMap::Bitset(std::string(mapStr4)));
+  mapsContainer.emplace_back("map1", bgm::BinaryMap::Bitset(std::string(mapStr1)));
+  mapsContainer.emplace_back("map2", bgm::BinaryMap::Bitset(std::string(mapStr2)));
+  mapsContainer.emplace_back("map3", bgm::BinaryMap::Bitset(std::string(mapStr3)));
+  mapsContainer.emplace_back("map4", bgm::BinaryMap::Bitset(std::string(mapStr4)));
   mapsContainer.addRightNeighbour(0, 1, 80);
   mapsContainer.addRightNeighbour(1, 2, 80);
   mapsContainer.addRightNeighbour(2, 3, 80);
@@ -197,14 +185,10 @@ BOOST_AUTO_TEST_CASE(FourMapsDiffDist_CreatesValidMap) {
   std::reverse(mapStr3.begin(), mapStr3.end());
   std::reverse(mapStr4.begin(), mapStr4.end());
 
-  mapsContainer.emplace_back("map1",
-                             bgm::BinaryMap::Bitset(std::string(mapStr1)));
-  mapsContainer.emplace_back("map2",
-                             bgm::BinaryMap::Bitset(std::string(mapStr2)));
-  mapsContainer.emplace_back("map3",
-                             bgm::BinaryMap::Bitset(std::string(mapStr3)));
-  mapsContainer.emplace_back("map4",
-                             bgm::BinaryMap::Bitset(std::string(mapStr4)));
+  mapsContainer.emplace_back("map1", bgm::BinaryMap::Bitset(std::string(mapStr1)));
+  mapsContainer.emplace_back("map2", bgm::BinaryMap::Bitset(std::string(mapStr2)));
+  mapsContainer.emplace_back("map3", bgm::BinaryMap::Bitset(std::string(mapStr3)));
+  mapsContainer.emplace_back("map4", bgm::BinaryMap::Bitset(std::string(mapStr4)));
 
   mapsContainer.addRightNeighbour(0, 1, 71);
   mapsContainer.addRightNeighbour(1, 2, 87);

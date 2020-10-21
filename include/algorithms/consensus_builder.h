@@ -85,10 +85,12 @@ namespace bgm {
     std::function<bool(size_t, size_t)> deductMarker_;
 
     // lambdas for marker deduction
-    constexpr static const auto markerPreference_ =
-        [](size_t count, size_t ones) { return (count - ones) <= ones; };
-    constexpr static const auto noMarkerPreference_ =
-        [](size_t count, size_t ones) { return (count - ones) < ones; };
+    constexpr static const auto markerPreference_ = [](size_t count, size_t ones) {
+      return (count - ones) <= ones;
+    };
+    constexpr static const auto noMarkerPreference_ = [](size_t count, size_t ones) {
+      return (count - ones) < ones;
+    };
 
     // process all or contigs
     bool processAll_;

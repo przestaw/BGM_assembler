@@ -146,8 +146,7 @@ void ConsensusBuilder::detectContigs() {
   }
 }
 
-bool ConsensusBuilder::votePosition(
-    std::list<std::pair<std::size_t, int>> &voters) {
+bool ConsensusBuilder::votePosition(std::list<std::pair<std::size_t, int>> &voters) {
   std::size_t count = voters.size();
   std::size_t ones  = 0;
 

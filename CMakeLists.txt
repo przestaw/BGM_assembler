@@ -121,8 +121,17 @@ add_dependencies(${EXECUTABLE} ${LIBRARY})
 target_link_libraries(${EXECUTABLE} ${LIBRARY})
 target_link_libraries(${EXECUTABLE} ${EXTERNAL_LIBS})
 
+# Python3 interface
+find_package(PythonLibs 3.6 REQUIRED)
+
+add_library(BGM_python MODULE ${LIB_SRC} ${LIB_INC} ${LIB_TMP} python_interface.cpp)
+
+# Set up the libraries and header search paths for python3 interface
+target_link_libraries(BGM_python ${EXTERNAL_LIBS} "Boost::python" ${PYTHON_LIBRARIES})
+target_include_directories(BGM_python PRIVATE ${PYTHON_INCLUDE_DIRS})
+
 # Clang Format
-clangformat_setup(${LIB_SRC} ${LIB_INC} ${TEST_SRC} ${LIB_TMP} ${EXT_SRC} main.cpp)
+clangformat_setup(${LIB_SRC} ${LIB_INC} ${TEST_SRC} ${LIB_TMP} ${EXT_SRC} main.cpp python_interface.cpp)
 add_custom_target(build-all DEPENDS format-project ${PROGRAM} ${LIB} ${CHECK} ${TEST})
 
 # Clang Tidy
@@ -136,13 +145,3 @@ if (CLANG_TIDY_FOUND)
     #            ${CLANG_TIDY_EXE}
     #            -checks=${CLANG_TIDY_CHECKS} )
 endif ()
-
-# Python3 interface
-
-#find_package(PythonLibs 3.6 REQUIRED)
-
-add_library(BGM_python MODULE ${LIB_SRC} ${LIB_INC} ${LIB_TMP} python_interface.cpp)
-
-# Set up the libraries and header search paths for python3 interface
-target_link_libraries(BGM_python ${EXTERNAL_LIBS} "Boost::python" ${PYTHON_LIBRARIES})
-target_include_directories(BGM_python PRIVATE ${PYTHON_INCLUDE_DIRS})

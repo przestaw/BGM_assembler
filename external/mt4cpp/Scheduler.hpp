@@ -144,8 +144,7 @@ namespace mt4cpp {
        one of them. When quitFlag is set in queue finish the execution
     */
     void threadFunction(CommandQueue& queue) {
-      while (
-          !queue.getQuitFlag()) { // check if the thread should finish execution
+      while (!queue.getQuitFlag()) { // check if the thread should finish execution
         PCommand cmd = queue.read(); // reads command from queue,
         // it can block the thread until the queue is not empty or until the
         // queue is destroyed
@@ -174,9 +173,7 @@ namespace mt4cpp {
   inline Scheduler::~Scheduler() {
     finishAndJoin(); // signal to finish all threads and wait (join) fo them
     boost::lock_guard<boost::mutex> guard(m_);
-    for (Threads::iterator it = threads_.begin(), end = threads_.end();
-         it != end;
-         ++it) {
+    for (Threads::iterator it = threads_.begin(), end = threads_.end(); it != end; ++it) {
       delete *it;
     }
   }
@@ -232,9 +229,7 @@ namespace mt4cpp {
   /** wait for ending threads in pool */
   inline void Scheduler::join() {
     boost::lock_guard<boost::mutex> guard(m_);
-    for (Threads::iterator it = threads_.begin(), end = threads_.end();
-         it != end;
-         ++it) {
+    for (Threads::iterator it = threads_.begin(), end = threads_.end(); it != end; ++it) {
       if ((*it)->joinable())
         (*it)->join();
     }

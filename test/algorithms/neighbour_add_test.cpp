@@ -27,8 +27,7 @@ BOOST_AUTO_TEST_SUITE(OMA_Test_Suite)
 BOOST_AUTO_TEST_SUITE(Neighbour_Add_Suite)
 
 BOOST_AUTO_TEST_CASE(MisedAlignTest_Circle_1) {
-  std::vector<bgm::BinaryMap> vec(7,
-                                  bgm::BinaryMap("", bgm::BinaryMap::Bitset()));
+  std::vector<bgm::BinaryMap> vec(7, bgm::BinaryMap("", bgm::BinaryMap::Bitset()));
   bgm::MapsContainer maps(vec);
 
   maps.addRightNeighbour(0, 1, 10);
@@ -53,8 +52,7 @@ BOOST_AUTO_TEST_CASE(MisedAlignTest_Circle_1) {
 }
 
 BOOST_AUTO_TEST_CASE(MisedAlignTest_Circle_2) {
-  std::vector<bgm::BinaryMap> vec(7,
-                                  bgm::BinaryMap("", bgm::BinaryMap::Bitset()));
+  std::vector<bgm::BinaryMap> vec(7, bgm::BinaryMap("", bgm::BinaryMap::Bitset()));
   bgm::MapsContainer maps(vec);
 
   maps.addRightNeighbour(0, 1, 10);
@@ -79,8 +77,7 @@ BOOST_AUTO_TEST_CASE(MisedAlignTest_Circle_2) {
 }
 
 BOOST_AUTO_TEST_CASE(AnotherReferedAlignTest_Circle) {
-  std::vector<bgm::BinaryMap> vec(7,
-                                  bgm::BinaryMap("", bgm::BinaryMap::Bitset()));
+  std::vector<bgm::BinaryMap> vec(7, bgm::BinaryMap("", bgm::BinaryMap::Bitset()));
   bgm::MapsContainer maps(vec);
 
   maps.addRightNeighbour(0, 1, 10);
@@ -101,8 +98,7 @@ BOOST_AUTO_TEST_CASE(AnotherReferedAlignTest_Circle) {
 }
 
 BOOST_AUTO_TEST_CASE(MisedAlignTest_1) {
-  std::vector<bgm::BinaryMap> vec(7,
-                                  bgm::BinaryMap("", bgm::BinaryMap::Bitset()));
+  std::vector<bgm::BinaryMap> vec(7, bgm::BinaryMap("", bgm::BinaryMap::Bitset()));
   bgm::MapsContainer maps(vec);
 
   maps.addRightNeighbour(1, 2, 10);
@@ -125,8 +121,7 @@ BOOST_AUTO_TEST_CASE(MisedAlignTest_1) {
 }
 
 BOOST_AUTO_TEST_CASE(MisedAlignTest_2) {
-  std::vector<bgm::BinaryMap> vec(7,
-                                  bgm::BinaryMap("", bgm::BinaryMap::Bitset()));
+  std::vector<bgm::BinaryMap> vec(7, bgm::BinaryMap("", bgm::BinaryMap::Bitset()));
   bgm::MapsContainer maps(vec);
 
   maps.addRightNeighbour(1, 2, 10);
@@ -149,8 +144,7 @@ BOOST_AUTO_TEST_CASE(MisedAlignTest_2) {
 }
 
 BOOST_AUTO_TEST_CASE(AnotherReferedAlignTest) {
-  std::vector<bgm::BinaryMap> vec(7,
-                                  bgm::BinaryMap("", bgm::BinaryMap::Bitset()));
+  std::vector<bgm::BinaryMap> vec(7, bgm::BinaryMap("", bgm::BinaryMap::Bitset()));
   bgm::MapsContainer maps(vec);
 
   maps.addRightNeighbour(1, 2, 10);

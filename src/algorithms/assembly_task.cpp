@@ -4,6 +4,7 @@
 
 #include <algorithms/assembly_task.h>
 #include <data/file_loader.h>
+#include <data/result_writer.hpp>
 #include <fstream>
 #include <functional>
 #include <iomanip>
@@ -63,8 +64,7 @@ double AssemblyTask::runPerfTest() {
 
   writeResultToFile();
 
-  return std::chrono::duration_cast<std::chrono::milliseconds>(end - begin)
-             .count()
+  return std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count()
          / 1000.0;
 }
 
@@ -89,8 +89,8 @@ void AssemblyTask::runQuiet() {
 void AssemblyTask::runVerbose() {
   auto print = [](const std::string &what) {
     std::time_t t = std::time(nullptr);
-    std::cout << what + " at time : "
-              << std::put_time(std::localtime(&t), "%F %T %C") << "\n";
+    std::cout << what + " at time : " << std::put_time(std::localtime(&t), "%F %T %C")
+              << "\n";
   };
   print("loading maps");
   loadMaps();
@@ -110,8 +110,7 @@ void AssemblyTask::runVerbose() {
         auto newMaps = consensus_.getConsensusMapsAndReset();
 
         for (auto &refMap : newMaps) {
-          refMap.setIdentifier("No " + std::to_string(i) + " "
-                               + refMap.getIdentifier());
+          refMap.setIdentifier("No " + std::to_string(i) + " " + refMap.getIdentifier());
           maps_.push_back(std::move(refMap));
         }
       } else {
@@ -135,8 +134,7 @@ void AssemblyTask::loadMaps() {
   std::ifstream input;
   input.open(params_.getInputFile());
 
-  auto loaded =
-      MapsContainer(FileLoader::loadFile(input, params_.getMinMapLen()));
+  auto loaded = MapsContainer(FileLoader::loadFile(input, params_.getMinMapLen()));
   // change container to loaded maps
   std::swap(maps_, loaded);
 
@@ -145,23 +143,16 @@ void AssemblyTask::loadMaps() {
 
 void AssemblyTask::writeResultToFile() {
   // NOTE : sort contigs before output
-  std::sort(maps_.begin(),
-            maps_.end(),
-            [](const BinaryMap &a, const BinaryMap &b) -> bool {
-              return a.getMap().size() > b.getMap().size();
-            });
+  std::sort(
+      maps_.begin(), maps_.end(), [](const BinaryMap &a, const BinaryMap &b) -> bool {
+        return a.getMap().size() > b.getMap().size();
+      });
 
   // NOTE : result output
-  std::ofstream output;
-  output.open(params_.getOutputFile());
-
-  for (auto &map : maps_) {
-    if (map.isContig()) {
-      output << map.toFastaRecord();
-    }
-  }
-
-  output.close();
+  ResultWriter::writeMapsToFile(params_.getOutputFile(),
+                                maps_.begin(),
+                                maps_.end(),
+                                ResultWriter::contigsPredicate);
 }
 
 void AssemblyTask::operator()(mt4cpp::Progress &p) {

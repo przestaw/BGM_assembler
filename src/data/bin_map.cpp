@@ -23,9 +23,7 @@ BinaryMap::Bitset BinaryMap::getMap() { return Bitset(map_); }
 
 const std::string &BinaryMap::getIdentifier() const { return identifier_; }
 
-void BinaryMap::setIdentifier(const std::string &identifier) {
-  identifier_ = identifier;
-}
+void BinaryMap::setIdentifier(const std::string &identifier) { identifier_ = identifier; }
 
 const BinaryMap::Neighbour &bgm::BinaryMap::getLeftNeighbour() const {
   return leftNeighbour_;
@@ -47,9 +45,7 @@ std::string BinaryMap::toFastaRecord() const {
 
   // write in 80 bits chunks
   unsigned count = 1 + (temp.size() - 1) / 80;
-  for (unsigned i = 0; i < count; ++i) {
-    ret += temp.substr(i * 80, 80) + "\n";
-  }
+  for (unsigned i = 0; i < count; ++i) { ret += temp.substr(i * 80, 80) + "\n"; }
 
   return ret;
 }

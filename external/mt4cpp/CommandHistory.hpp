@@ -64,8 +64,7 @@ namespace mt4cpp {
     If the command is not found in history returns default Descriptor (id=0,
     status=NONE)
   */
-  inline CommandDesc findCommandDescriptor(const CommandHistory& history,
-                                           CommandID id) {
+  inline CommandDesc findCommandDescriptor(const CommandHistory& history, CommandID id) {
     PCommand cmd = history.find(id);
     if (cmd.get() != 0L)
       return cmd->getDescriptor();

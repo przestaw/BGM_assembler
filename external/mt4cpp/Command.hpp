@@ -104,8 +104,7 @@ namespace mt4cpp {
       std::for_each(
           observers_.begin(),
           observers_.end(),
-          boost::bind(
-              &CommandObserver::notifyState, _1, boost::cref(command_), state));
+          boost::bind(&CommandObserver::notifyState, _1, boost::cref(command_), state));
     }
 
     //! add observer
@@ -197,9 +196,8 @@ namespace mt4cpp {
 
     CommandDesc descriptor_; //!< the command state, progress and id
 
-    int counter_; /** counter for intrusive ptr */
-    volatile bool
-        haltFlag_; //!< flag set if the command should stop its execution
+    int counter_;            /** counter for intrusive ptr */
+    volatile bool haltFlag_; //!< flag set if the command should stop its execution
 
     Progress progress_; //!< progress for given command
   };
@@ -258,8 +256,7 @@ namespace mt4cpp {
 namespace mt4cpp {
 
   // constructor, progress from 0 to 100% for given command
-  inline Progress::Progress(Command& cmd)
-      : command_(cmd), start_(0), finish_(1) {}
+  inline Progress::Progress(Command& cmd) : command_(cmd), start_(0), finish_(1) {}
 
   /* \brief change the command progress (stored in Command::CommandDescription)
      Notify all observers about the progress.
@@ -280,10 +277,9 @@ namespace mt4cpp {
   //! notify all observers, increase the progress
   inline void Progress::step() {
     command_.checkHaltFlag();
-    std::for_each(
-        observers_.begin(),
-        observers_.end(),
-        boost::bind(&CommandObserver::notifyStep, _1, boost::cref(command_)));
+    std::for_each(observers_.begin(),
+                  observers_.end(),
+                  boost::bind(&CommandObserver::notifyStep, _1, boost::cref(command_)));
   }
 
 } // namespace mt4cpp

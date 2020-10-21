@@ -21,9 +21,7 @@ MapsContainer::MapsContainer(std::vector<BinaryMap> maps)
 //  }
 //}
 
-void MapsContainer::interandAddRight(size_t map,
-                                     size_t neighbour,
-                                     unsigned shift) {
+void MapsContainer::interandAddRight(size_t map, size_t neighbour, unsigned shift) {
   bool rFlag = (*this)[map].getRightNeighbour().first < 0;
   bool lFlag = (*this)[neighbour].getLeftNeighbour().first < 0;
 
@@ -83,9 +81,7 @@ void MapsContainer::interandAddRight(size_t map,
   }
 }
 
-void MapsContainer::addRightNeighbour(size_t map,
-                                      size_t neighbour,
-                                      unsigned shift) {
+void MapsContainer::addRightNeighbour(size_t map, size_t neighbour, unsigned shift) {
   // lock the container
   std::unique_lock guard(additionGuard_);
 

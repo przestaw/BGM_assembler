@@ -35,8 +35,7 @@ namespace mt4cpp {
     virtual void notifyState(const Command&, CommandDesc::State) {}
 
   private:
-    OstreamCommandObserver&
-    operator=(const OstreamCommandObserver&); //!< not allowed
+    OstreamCommandObserver& operator=(const OstreamCommandObserver&); //!< not allowed
 
     boost::mutex out_mutex;
     std::ostream& out_;

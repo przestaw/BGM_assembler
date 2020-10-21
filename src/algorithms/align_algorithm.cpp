@@ -13,12 +13,11 @@ AlignAlgorithm::AlignAlgorithm(MapsContainer& maps,
                                double minOverlapPart,
                                double threshold)
     : minOverlapQuants_(minOverlapQuants), minOverlapPart_(minOverlapPart),
-      threshold_(threshold), scoringFunction_([&](uint64_t diff,
-                                                  uint64_t ovlpLen,
-                                                  uint64_t mapLen1,
-                                                  uint64_t mapLen2) {
-        return proportionalScore(diff, ovlpLen, mapLen1, mapLen2);
-      }),
+      threshold_(threshold),
+      scoringFunction_(
+          [&](uint64_t diff, uint64_t ovlpLen, uint64_t mapLen1, uint64_t mapLen2) {
+            return proportionalScore(diff, ovlpLen, mapLen1, mapLen2);
+          }),
       maps_(maps) {
   //  scoringFunction_ =
   //      [&](uint64_t diff, uint64_t ovlpLen, uint64_t mapLen1, uint64_t
@@ -89,9 +88,8 @@ void AlignAlgorithm::alignOneMap(size_t index) {
   }
 }
 
-AlignAlgorithm::Alignment
-AlignAlgorithm::align(const BinaryMap::Bitset& ref_,
-                      const BinaryMap::Bitset& tested) const {
+AlignAlgorithm::Alignment AlignAlgorithm::align(const BinaryMap::Bitset& ref_,
+                                                const BinaryMap::Bitset& tested) const {
   // copy as it will be resized
   BinaryMap::Bitset ref(ref_);
 
@@ -113,8 +111,7 @@ AlignAlgorithm::align(const BinaryMap::Bitset& ref_,
   double best_quality = this->threshold_;
   int64_t best_shift  = -1;
 
-  auto performXorAndUpdate = [&](bgm::BinaryMap::Bitset shiftedTest,
-                                 const size_t shift) {
+  auto performXorAndUpdate = [&](bgm::BinaryMap::Bitset shiftedTest, const size_t shift) {
     // resize to equal lengths
     if (shiftedTest.size() < ref.size()) {
       ref.resize(shiftedTest.size());
