@@ -5,7 +5,7 @@
 #ifndef OMA_FILE_LOADER_H
 #define OMA_FILE_LOADER_H
 
-#include "bin_map.h"
+#include <data/bin_map.h>
 #include <string>
 #include <vector>
 

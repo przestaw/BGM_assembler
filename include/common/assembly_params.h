@@ -14,24 +14,11 @@ namespace bgm {
   public:
     /**
      * Simplified default params constructor
-     * @param inputFile input file
-     * @param outputFile output file
      */
-    AssemblyParams(std::string inputFile, std::string outputFile)
-        : AssemblyParams(std::move(inputFile),
-                         std::move(outputFile),
-                         1,
-                         200,
-                         0.5,
-                         0.1,
-                         0,
-                         true,
-                         false) {}
+    AssemblyParams() : AssemblyParams(1, 200, 0.5, 0.1, 0, true, false) {}
 
     /**
      * Constructor
-     * @param inputFile input file
-     * @param outputFile output file
      * @param threads no of threads, 0 will enable all available on the
      * machine, other values will create demanded no of threads
      * @param minOverlap minimum overlap length
@@ -42,17 +29,14 @@ namespace bgm {
      * @param reuseMaps reuse all maps after each fold to pile up rmaps on
      * contigs
      */
-    AssemblyParams(std::string inputFile,
-                   std::string outputFile,
-                   unsigned int threads,
+    AssemblyParams(unsigned int threads,
                    unsigned int minOverlap,
                    double minPart,
                    double threshold,
                    unsigned repeats,
                    bool markerPreference,
                    bool reuseMaps)
-        : inputFile_(std::move(inputFile)), outputFile_(std::move(outputFile)),
-          threads_(threads), minOverlap_(minOverlap), minPart_(minPart),
+        : threads_(threads), minOverlap_(minOverlap), minPart_(minPart),
           threshold_(threshold), repeats_(repeats), markerPreference_(markerPreference),
           reuseMaps_(reuseMaps) {}
 
@@ -66,16 +50,18 @@ namespace bgm {
      * @return threshold
      */
     [[nodiscard]] inline double getThreshold() const { return threshold_; }
-    /**
-     * Getter for input filename
-     * @return input filename
-     */
-    [[nodiscard]] inline const std::string& getInputFile() const { return inputFile_; }
-    /**
-     * Getter for output filename
-     * @return output filename
-     */
-    [[nodiscard]] inline const std::string& getOutputFile() const { return outputFile_; }
+    //    /**
+    //     * Getter for input filename
+    //     * @return input filename
+    //     */
+    //    [[nodiscard]] inline const std::string& getInputFile() const { return
+    //    inputFile_; }
+    //    /**
+    //     * Getter for output filename
+    //     * @return output filename
+    //     */
+    //    [[nodiscard]] inline const std::string& getOutputFile() const { return
+    //    outputFile_; }
     /**
      * Getter for minimum map overlap length
      * @return minimum map overlap length
@@ -112,8 +98,6 @@ namespace bgm {
     [[nodiscard]] bool isReuseMaps() const { return reuseMaps_; }
 
   private:
-    const std::string inputFile_;
-    const std::string outputFile_;
     const unsigned threads_;
     const unsigned minOverlap_;
     const double minPart_;

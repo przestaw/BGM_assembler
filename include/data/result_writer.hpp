@@ -5,7 +5,7 @@
 #ifndef BGM_ASM_RESULT_WRITER_HPP
 #define BGM_ASM_RESULT_WRITER_HPP
 
-#include "bin_map.h"
+#include <data/bin_map.h>
 #include <fstream>
 #include <string>
 

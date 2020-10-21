@@ -7,7 +7,7 @@
 
 #include <mt4cpp/Command.hpp>
 #include <mt4cpp/CommandHistory.hpp>
-#include <mt4cpp/OstreamCommandObserver.hpp>
+#include <mt4cpp/Scheduler.hpp>
 #include <mt4cpp/Version.hpp>
 
 #endif // BGM_ASM_MT4CPP_H

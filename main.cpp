@@ -1,8 +1,8 @@
-#include <algorithms/assembly_task.h>
 #include <boost/program_options.hpp>
 #include <common/observer.h>
 #include <error/exeception.h>
 #include <iostream>
+#include <task/file_io_assembly_task.h>
 #include <utility>
 
 using namespace boost::program_options;
@@ -13,13 +13,21 @@ using namespace bgm;
  */
 class ProgramParams : public AssemblyParams {
 public:
-  ProgramParams(bool verbose, AssemblyParams params)
-      : AssemblyParams(std::move(params)), verbose_(verbose) {}
+  ProgramParams(const bool verbose,
+                std::string inputFile,
+                std::string outputFile,
+                AssemblyParams params)
+      : AssemblyParams(params), verbose_(verbose), inputFile_(std::move(inputFile)),
+        outputFile_(std::move(outputFile)) {}
 
   [[nodiscard]] bool isVerbose() const { return verbose_; }
+  [[nodiscard]] const std::string &getInputFile() const { return inputFile_; }
+  [[nodiscard]] const std::string &getOutputFile() const { return outputFile_; }
 
 private:
-  bool verbose_;
+  const bool verbose_;
+  const std::string inputFile_;
+  const std::string outputFile_;
 };
 
 /**
@@ -94,18 +102,20 @@ inline std::optional<ProgramParams> parseParams(int argc, char *argv[]) {
         folds = vm["folds"].as<unsigned>();
       }
 
-      auto params  = AssemblyTask::Params(vm["input"].as<std::string>(),
-                                         vm["output"].as<std::string>(),
-                                         vm["threads"].as<unsigned>(),
-                                         vm["margin_quant"].as<unsigned>(),
-                                         vm["margin_part"].as<double>(),
-                                         vm["thresh"].as<double>(),
-                                         folds,
-                                         vm["marker_preference"].as<bool>(),
-                                         static_cast<bool>(vm.count("reuse_maps")));
-      bool verbose = vm.count("verbose");
+      auto assemblyParams =
+          FileIOAssemblyTask::Params(vm["threads"].as<unsigned>(),
+                                     vm["margin_quant"].as<unsigned>(),
+                                     vm["margin_part"].as<double>(),
+                                     vm["thresh"].as<double>(),
+                                     folds,
+                                     vm["marker_preference"].as<bool>(),
+                                     static_cast<bool>(vm.count("reuse_maps")));
+      bool verbosity = vm.count("verbose");
 
-      return ProgramParams(verbose, params);
+      return ProgramParams(verbosity,
+                           vm["input"].as<std::string>(),
+                           vm["output"].as<std::string>(),
+                           assemblyParams);
     }
   } catch (const boost::program_options::error &ex) {
     std::cerr << ex.what() << " !\n";
@@ -123,13 +133,16 @@ int main(int argc, char *argv[]) {
 
   auto params = parseParams(argc, argv);
   if (params.has_value()) {
-    // slice ProgramParams to assembly params
-    // NOLINTNEXTLINE(cppcoreguidelines-slicing) - slicing is intended
-    AssemblyTask assemblyTask(static_cast<AssemblyParams>(params.value()));
+
+    FileIOAssemblyTask assemblyTask(
+        params->getInputFile(),
+        params->getOutputFile(),
+        // NOLINTNEXTLINE(cppcoreguidelines-slicing) - slicing is intended
+        static_cast<AssemblyParams>(params.value()));
 
     if (params->isVerbose()) {
       // attach progress bar
-      assemblyTask.attachObserver(boost::make_shared<bgm::Observer>());
+      assemblyTask.attach(boost::make_shared<bgm::Observer>());
 
       std::cout << "RUNNING" << std::endl; // std::endl to flush stream
     }

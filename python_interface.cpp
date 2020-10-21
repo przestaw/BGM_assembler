@@ -1,8 +1,8 @@
 //
 // Created by przestaw on 20.10.2020.
 //
-#include <algorithms/assembly_task.h>
 #include <boost/python.hpp>
+#include <task/file_io_assembly_task.h>
 
 BOOST_PYTHON_MODULE(hello_ext) {
   using namespace boost::python;
