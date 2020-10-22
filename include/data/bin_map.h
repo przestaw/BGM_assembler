@@ -15,7 +15,15 @@ namespace bgm {
   class BinaryMap {
   public:
     using Bitset    = boost::dynamic_bitset<uint64_t>;
-    using Neighbour = std::pair<int, unsigned>; // NOTE : pair <index, shift>
+    using Neighbour = std::pair<int, unsigned>;
+
+    /**
+     * Constructor
+     * @param identifier identifier for BinaryMap
+     * @param bmap binary map in string
+     */
+    BinaryMap(std::string identifier, std::string bmap);
+
     /**
      * Constructor
      * @param identifier identifier for BinaryMap
@@ -28,6 +36,19 @@ namespace bgm {
      * @return map identifier
      */
     [[nodiscard]] const std::string &getIdentifier() const;
+
+    /**
+     * Getter for map identifier as C style const char *
+     * NOTE : for compatibility with boost.python
+     * @return map identifier as C style const char *
+     */
+    [[nodiscard]] const char * getCIdentifier() const;
+
+    /**
+     * Setter for map identifier
+     * @param identifier new map identifier
+     */
+    void setIdentifier(const std::string &identifier);
     /**
      * Sets left neighbour to desired value
      * @param best best left neighbor
@@ -91,9 +112,6 @@ namespace bgm {
   private:
     // data
     std::string identifier_;
-
-  public:
-    void setIdentifier(const std::string &identifier);
 
   private:
     Bitset map_;

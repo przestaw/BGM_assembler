@@ -50,18 +50,6 @@ namespace bgm {
      * @return threshold
      */
     [[nodiscard]] inline double getThreshold() const { return threshold_; }
-    //    /**
-    //     * Getter for input filename
-    //     * @return input filename
-    //     */
-    //    [[nodiscard]] inline const std::string& getInputFile() const { return
-    //    inputFile_; }
-    //    /**
-    //     * Getter for output filename
-    //     * @return output filename
-    //     */
-    //    [[nodiscard]] inline const std::string& getOutputFile() const { return
-    //    outputFile_; }
     /**
      * Getter for minimum map overlap length
      * @return minimum map overlap length

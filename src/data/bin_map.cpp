@@ -3,6 +3,15 @@
 
 using namespace bgm;
 
+BinaryMap::BinaryMap(std::string c_identifier, std::string c_bmap)
+    : identifier_(std::move(c_identifier)),
+      leftNeighbour_(-1, std::numeric_limits<unsigned>::max()),
+      rightNeighbour_(-1, std::numeric_limits<unsigned>::max()), mark_(false),
+      contig_(false) {
+  std::reverse(c_bmap.begin(), c_bmap.end());
+  map_ = Bitset(c_bmap);
+}
+
 BinaryMap::BinaryMap(std::string c_identifier, Bitset c_map)
     : identifier_(std::move(c_identifier)), map_(std::move(c_map)),
       leftNeighbour_(-1, std::numeric_limits<unsigned>::max()),
@@ -22,6 +31,8 @@ const BinaryMap::Bitset &BinaryMap::getMap() const { return map_; }
 BinaryMap::Bitset BinaryMap::getMap() { return Bitset(map_); }
 
 const std::string &BinaryMap::getIdentifier() const { return identifier_; }
+
+const char *BinaryMap::getCIdentifier() const { return identifier_.c_str(); }
 
 void BinaryMap::setIdentifier(const std::string &identifier) { identifier_ = identifier; }
 

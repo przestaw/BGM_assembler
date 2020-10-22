@@ -7,9 +7,10 @@ project(${PROJECT_NAME})
 set(PROJECT_DESCRIPTION "Binary Maps Assembly prototype")
 
 set(EXECUTABLE ${PROJECT_NAME}-program)
-set(LIBRARY ${PROJECT_NAME}-lib)
+set(LIBRARY ${PROJECT_NAME})
 set(TEST ${PROJECT_NAME}-test)
 set(CHECK ${TEST}-check)
+set(PYTHON_INT ${PROJECT_NAME}-python)
 
 # Add custom cmake modules
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake_modules/finders")
@@ -124,14 +125,14 @@ target_link_libraries(${EXECUTABLE} ${EXTERNAL_LIBS})
 # Python3 interface
 find_package(PythonLibs 3.6 REQUIRED)
 
-add_library(BGM_python MODULE ${LIB_SRC} ${LIB_INC} ${LIB_TMP} python_interface.cpp)
+add_library(${PYTHON_INT} MODULE ${LIB_SRC} ${LIB_INC} ${LIB_TMP} python_interface/python_interface.cpp)
 
 # Set up the libraries and header search paths for python3 interface
-target_link_libraries(BGM_python ${EXTERNAL_LIBS} "Boost::python" ${PYTHON_LIBRARIES})
-target_include_directories(BGM_python PRIVATE ${PYTHON_INCLUDE_DIRS})
+target_link_libraries(${PYTHON_INT} ${EXTERNAL_LIBS} "Boost::python" ${PYTHON_LIBRARIES})
+target_include_directories(${PYTHON_INT} PRIVATE ${PYTHON_INCLUDE_DIRS})
 
 # Clang Format
-clangformat_setup(${LIB_SRC} ${LIB_INC} ${TEST_SRC} ${LIB_TMP} ${EXT_SRC} main.cpp python_interface.cpp)
+clangformat_setup(${LIB_SRC} ${LIB_INC} ${TEST_SRC} ${LIB_TMP} ${EXT_SRC} main.cpp python_interface/python_interface.cpp)
 add_custom_target(build-all DEPENDS format-project ${PROGRAM} ${LIB} ${CHECK} ${TEST})
 
 # Clang Tidy

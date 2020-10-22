@@ -31,4 +31,4 @@ void Observer::notifyStep(const Command& cmd) {
   std::cout << '#' << std::flush;
 }
 
-void Observer::notifyState(const Command&, mt4cpp::CommandDesc::State state) {}
+void Observer::notifyState(const Command&, mt4cpp::CommandDesc::State) {}
