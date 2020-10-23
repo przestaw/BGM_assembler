@@ -2,15 +2,22 @@
 // Created by przestaw on 20.10.2020.
 //
 #include <boost/python.hpp>
-#include <task/file_io_assembly_task.h>
+#include <task/py_assembly_task.h>
+
+class testClas {
+public:
+  const bgm::BinaryMap& getMap() const { return map; }
+
+private:
+  bgm::BinaryMap map = bgm::BinaryMap("ja", "111000111000");
+};
 
 BOOST_PYTHON_MODULE(BGM_asm) {
   using namespace boost::python;
 
   // class AssemblyParams with constructor
-  // signature : unsigned int, unsigned int, double, double, unsigned, bool, bool
-
-  class_<bgm::AssemblyParams>(
+  // note : signature : unsigned int, unsigned int, double, double, unsigned, bool, bool
+  class_<bgm::AssemblyTask::Params>(
       "AssemblyParams",
       init<unsigned int, unsigned int, double, double, unsigned, bool, bool>())
       // properties for class AssemblyParams
@@ -25,11 +32,16 @@ BOOST_PYTHON_MODULE(BGM_asm) {
 
   // class BinaryMap
   class_<bgm::BinaryMap>("CppBinaryMap", init<std::string, std::string>())
-      .add_property("name", &bgm::BinaryMap::getCIdentifier, &bgm::BinaryMap::setIdentifier)
+      .add_property(
+          "name", &bgm::BinaryMap::getCIdentifier, &bgm::BinaryMap::setIdentifier)
       .def("toFastaRecord", &bgm::BinaryMap::toFastaRecord)
       //.add_property("markFlag", &bgm::BinaryMap::isMark, &bgm::BinaryMap::setMark)
       .add_property("contigFlag", &bgm::BinaryMap::isContig, &bgm::BinaryMap::setContig);
 
-  //  class_<bgm::AssemblyTask>("AssemblyTask")
-  //      .def("run", &bgm::AssemblyTask::run);
+  // class AssemblyTask
+  class_<bgm::PyAssemblyTask, bases<>, bgm::PyAssemblyTask*, boost::noncopyable>(
+      "AssemblyTask", init<bgm::PyAssemblyTask::Params>())
+      .def("addMap", &bgm::PyAssemblyTask::addMap)
+      .def("execute", &bgm::PyAssemblyTask::execute)
+      .def("getResult", &bgm::PyAssemblyTask::getPyResult);
 }

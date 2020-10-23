@@ -24,10 +24,9 @@ namespace bgm {
 
     std::vector<BinaryMap> getResult();
 
-  private:
+  protected:
     void operator()(mt4cpp::Progress& p) override;
 
-  protected:
     double profileAlgorithm() override;
   };
 

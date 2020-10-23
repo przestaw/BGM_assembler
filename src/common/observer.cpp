@@ -7,7 +7,7 @@
 using namespace bgm;
 using namespace mt4cpp;
 
-void Observer::notifyProgress(const Command& cmd, double progress) {
+void Observer::notifyProgress(const Command&, double progress) {
   boost::mutex::scoped_lock scoped_lock(outMutex);
   const int barWidth = 40;
 
@@ -26,7 +26,7 @@ void Observer::notifyProgress(const Command& cmd, double progress) {
   std::cout.flush();
 }
 
-void Observer::notifyStep(const Command& cmd) {
+void Observer::notifyStep(const Command&) {
   boost::mutex::scoped_lock scoped_lock(outMutex);
   std::cout << '#' << std::flush;
 }
