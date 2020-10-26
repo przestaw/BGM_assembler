@@ -12,3 +12,6 @@ print("\t.repeats = ", params.repeats)
 print("\t.threshold = ", params.threshold)
 print("\t.markerPreference = ", params.markerPreference)
 print("\t.reuseMaps = ", params.reuseMaps)
+
+#import BGM_asm
+#help(BGM_asm)

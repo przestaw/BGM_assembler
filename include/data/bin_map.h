@@ -10,7 +10,7 @@
 
 namespace bgm {
   /**
-   * Wraper for binary map sequence
+   * Wrapper for bitset representation of a  binary map sequence
    */
   class BinaryMap {
   public:

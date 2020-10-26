@@ -23,7 +23,7 @@ namespace bgm {
      * machine, other values will create demanded no of threads
      * @param minOverlap minimum overlap length
      * @param minPart minimum overlap part of smaller map
-     * @param threshold threshold of differences for overlap to be meaningful
+     * @param threshold max no of differences for overlap to be meaningful
      * @param repeats no of folds to perform before output
      * @param markerPreference preference of marker or empty space
      * @param reuseMaps reuse all maps after each fold to pile up rmaps on

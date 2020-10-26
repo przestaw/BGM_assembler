@@ -12,9 +12,20 @@ set(TEST ${PROJECT_NAME}-test)
 set(CHECK ${TEST}-check)
 set(PYTHON_INT ${PROJECT_NAME}-python)
 
-# Add custom cmake modules
+# Add custom cmake modules path
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake_modules/finders")
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake_modules")
+
+# Version
+include(Utils)
+
+set(MAJOR_VERSION 0)
+set(MINOR_VERSION 0)
+set(PATCH_VERSION 0)
+# NOTE : function is used to ser variable VERSION with git commit suffix
+# NOTE : version is set at cmake run, not build
+set_version()
+message("version is : " ${VERSION})
 
 # Find external tools
 find_package(LATEX)
@@ -39,6 +50,11 @@ set(EXTERNAL_LIBS "Boost::program_options" "Boost::unit_test_framework" "Threads
 
 # CXX standard
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+# TODO :
+# -march=skylake
+# -mtune=skylake
 
 # Configure Toolchain
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
@@ -126,10 +142,16 @@ target_link_libraries(${EXECUTABLE} ${EXTERNAL_LIBS})
 find_package(PythonLibs 3.6 REQUIRED)
 
 add_library(${PYTHON_INT} MODULE ${LIB_SRC} ${LIB_INC} ${LIB_TMP} python_interface/python_interface.cpp)
+set_target_properties(${PYTHON_INT} PROPERTIES PREFIX "") # remove lib prefix for python module
+set_target_properties(${PYTHON_INT} PROPERTIES OUTPUT_NAME "BGM_asm") # set name to match module name in python convention
 
 # Set up the libraries and header search paths for python3 interface
 target_link_libraries(${PYTHON_INT} ${EXTERNAL_LIBS} "Boost::python" ${PYTHON_LIBRARIES})
 target_include_directories(${PYTHON_INT} PRIVATE ${PYTHON_INCLUDE_DIRS})
+
+# Set Version for targets
+set_property(TARGET ${PYTHON_INT} PROPERTY VERSION ${VERSION})
+set_property(TARGET ${PYTHON_INT} PROPERTY SOVERSION ${MAJOR_VERSION})
 
 # Clang Format
 clangformat_setup(${LIB_SRC} ${LIB_INC} ${TEST_SRC} ${LIB_TMP} ${EXT_SRC} main.cpp python_interface/python_interface.cpp)
@@ -142,7 +164,11 @@ if (CLANG_TIDY_FOUND)
             CMAKE_CXX_CLANG_TIDY
             "${CLANG_TIDY_EXE}
             -checks=${CLANG_TIDY_CHECKS}")
-    #    set(CMAKE_CXX_CLANG_TIDY
-    #            ${CLANG_TIDY_EXE}
-    #            -checks=${CLANG_TIDY_CHECKS} )
 endif ()
+
+# Install BGM
+
+# TODO
+# https://cmake.org/cmake/help/v3.17/guide/tutorial/index.html#id14
+#install(TARGETS MathFunctions DESTINATION lib)
+#install(FILES MathFunctions.h DESTINATION include)
