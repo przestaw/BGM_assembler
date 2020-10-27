@@ -38,7 +38,8 @@ FileLoader::SingleRecord FileLoader::parseBinMap(std::istream& in) {
 }
 
 BinaryMap::Bitset FileLoader::getSequence(std::istream& in) {
-  std::string seq, tmpLine;
+  std::string seq;
+  std::string tmpLine;
 
   while (in.peek() != '>' && !in.eof()) {
     getline(in, tmpLine, '\n');
@@ -63,7 +64,8 @@ FileLoader::ParsedRecord FileLoader::parseBinMaps(std::istream& in) {
 }
 
 FileLoader::SequencePair FileLoader::getSequences(std::istream& in) {
-  std::string seq, tmpLine;
+  std::string seq;
+  std::string tmpLine;
 
   while (in.peek() != '>' && !in.eof()) {
     getline(in, tmpLine, '\n');

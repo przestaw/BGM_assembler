@@ -10,7 +10,6 @@
 #include <boost/python/tuple.hpp>
 #include <task/py_assembly_task.h>
 
-
 BOOST_PYTHON_MODULE(BGM_asm) {
   using namespace boost::python;
 
@@ -58,7 +57,7 @@ BOOST_PYTHON_MODULE(BGM_asm) {
           args("self", "name", "binmap_str"),
           "Wrapper for bitset representation of a binary map sequence"))
       .add_property("name",
-                    &bgm::BinaryMap::getCIdentifier,
+                    &bgm::BinaryMap::getPyIdentifier,
                     &bgm::BinaryMap::setIdentifier,
                     "sequence identifier")
       .def("toFastaRecord",
@@ -81,5 +80,4 @@ BOOST_PYTHON_MODULE(BGM_asm) {
       .def("getResult",
            &bgm::py::PyAssemblyTask::getPyResult,
            "obtains resulting binary maps");
-
 }

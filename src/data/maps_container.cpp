@@ -21,7 +21,7 @@ MapsContainer::MapsContainer(std::vector<BinaryMap> maps)
 //  }
 //}
 
-void MapsContainer::interandAddRight(size_t map, size_t neighbour, unsigned shift) {
+void MapsContainer::internalAddRight(size_t map, size_t neighbour, unsigned shift) {
   bool rFlag = (*this)[map].getRightNeighbour().first < 0;
   bool lFlag = (*this)[neighbour].getLeftNeighbour().first < 0;
 
@@ -50,12 +50,12 @@ void MapsContainer::interandAddRight(size_t map, size_t neighbour, unsigned shif
       (*this)[neighbour].setLeftNeighbour(map, shift);
       (*this)[rNeighbor.first].setLeftNeighbour(-1, 0);
 
-      interandAddRight(neighbour, rNeighbor.first, diff);
+      internalAddRight(neighbour, rNeighbor.first, diff);
     } else {
       auto diff = shift - rNeighbor.second;
 
       // M -> R -> N
-      interandAddRight(rNeighbor.first, neighbour, diff);
+      internalAddRight(rNeighbor.first, neighbour, diff);
     }
   } else if (rFlag) { // rFlag && !lFlag
     auto lNeighbor = (*this)[neighbour].getLeftNeighbour();
@@ -66,10 +66,10 @@ void MapsContainer::interandAddRight(size_t map, size_t neighbour, unsigned shif
       (*this)[neighbour].setLeftNeighbour(map, shift);
       (*this)[lNeighbor.first].setRightNeighbour(-1, 0);
 
-      interandAddRight(lNeighbor.first, map, diff);
+      internalAddRight(lNeighbor.first, map, diff);
     } else {
       auto diff = shift - lNeighbor.second;
-      interandAddRight(map, lNeighbor.first, diff);
+      internalAddRight(map, lNeighbor.first, diff);
     }
   } else { // !rFlag && !lFlag
     auto rNeighbor = (*this)[map].getRightNeighbour();
@@ -93,7 +93,7 @@ void MapsContainer::addRightNeighbour(size_t map, size_t neighbour, unsigned shi
   }
    */
 
-  this->interandAddRight(map, neighbour, shift);
+  this->internalAddRight(map, neighbour, shift);
 }
 
 void MapsContainer::breakLink(size_t left, size_t right) {

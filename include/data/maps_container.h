@@ -68,7 +68,7 @@ namespace bgm {
     // used to synchronize unaligned pivot usage
     std::mutex unalignedGuard_;
     // used to lock mutex only once
-    void interandAddRight(size_t map, size_t neighbour, unsigned shift);
+    void internalAddRight(size_t map, size_t neighbour, unsigned shift);
   };
 } // namespace bgm
 

@@ -20,12 +20,12 @@ namespace bgm {
 
     /**
      * Constructor
-     * @param input
-     * @param output
+     * @param inputFilename
+     * @param outputFilename
      * @param params parameter for task
      */
-    FileIOAssemblyTask(const std::string &input,
-                       const std::string &output,
+    FileIOAssemblyTask(std::string inputFilename,
+                       std::string outputFilename,
                        Params params);
 
   private:

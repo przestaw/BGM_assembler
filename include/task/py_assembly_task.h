@@ -14,7 +14,8 @@ namespace bgm::py {
   public:
     using Params = bgm::AbstractTask::Params;
 
-    explicit PyAssemblyTask(Params params) : AssemblyTask(std::vector<bgm::BinaryMap>(), params) {}
+    explicit PyAssemblyTask(Params params)
+        : AssemblyTask(std::vector<bgm::BinaryMap>(), params) {}
 
     void addMap(bgm::BinaryMap map);
 
@@ -23,11 +24,12 @@ namespace bgm::py {
   protected:
     // unnecessary
     double profileAlgorithm() override { return 0.0; };
+
   private:
     void operator()(mt4cpp::Progress& p) override;
 
     std::mutex mapsGuard;
   };
-} // namespace bgm
+} // namespace bgm::py
 
 #endif // BGM_ASM_PY_ASSEMBLY_TASK_H

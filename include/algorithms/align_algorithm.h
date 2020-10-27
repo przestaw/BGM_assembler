@@ -127,7 +127,7 @@ namespace bgm {
     [[nodiscard]] double proportionalScore(uint64_t diff,
                                            uint64_t ovlpLen,
                                            uint64_t mapLen1,
-                                           uint64_t mapLen2) {
+                                           uint64_t mapLen2) const {
       UNUSED_VAL(mapLen1);
       UNUSED_VAL(mapLen2);
 
@@ -143,7 +143,7 @@ namespace bgm {
 
     // TODO : remove
     [[nodiscard]] double
-    diffScore(uint64_t diff, uint64_t ovlpLen, uint64_t mapLen1, uint64_t mapLen2) {
+    diffScore(uint64_t diff, uint64_t ovlpLen, uint64_t mapLen1, uint64_t mapLen2) const {
       UNUSED_VAL(mapLen1);
       UNUSED_VAL(mapLen2);
       const double diffP = static_cast<double>(diff) / static_cast<double>(ovlpLen);

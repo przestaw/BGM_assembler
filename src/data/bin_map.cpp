@@ -53,6 +53,9 @@ const BinaryMap::Neighbour &bgm::BinaryMap::getRightNeighbour() const {
 }
 
 std::string BinaryMap::toFastaRecord() const {
+  // typical FASTA sequenc width
+  const size_t width = 80;
+  // header line
   std::string ret = "> ";
   ret += identifier_;
   ret += "\n";
@@ -61,15 +64,15 @@ std::string BinaryMap::toFastaRecord() const {
   std::string temp = toStringBMap();
 
   // write in 80 bits chunks
-  unsigned count = 1 + (temp.size() - 1) / 80;
-  for (unsigned i = 0; i < count; ++i) { ret += temp.substr(i * 80, 80) + "\n"; }
+  unsigned count = 1 + (temp.size() - 1) / width;
+  for (unsigned i = 0; i < count; ++i) { ret += temp.substr(i * width, width) + "\n"; }
 
   return ret;
 }
 
 bool BinaryMap::isMark() const { return mark_; }
 
-void BinaryMap::setMark(bool Mark) { mark_ = Mark; }
+void BinaryMap::setMark(bool mark) { mark_ = mark; }
 
 bool BinaryMap::isContig() const { return contig_; }
 

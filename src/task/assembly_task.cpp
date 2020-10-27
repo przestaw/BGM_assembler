@@ -2,10 +2,10 @@
 // Created by przestaw on 21.10.2020.
 //
 
-#include <task/assembly_task.h>
 #include <data/file_loader.h>
 #include <data/result_writer.hpp>
 #include <functional>
+#include <task/assembly_task.h>
 #include <utility>
 
 bgm::AssemblyTask::AssemblyTask(std::vector<BinaryMap> maps, Params params)

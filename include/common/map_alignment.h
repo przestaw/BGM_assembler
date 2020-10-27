@@ -44,6 +44,7 @@ namespace bgm {
     inline bool operator>(const MapAlignment& rhs) const { return rhs < (*this); }
     inline bool operator<=(const MapAlignment& rhs) const { return !((*this) > rhs); }
     inline bool operator>=(const MapAlignment& rhs) const { return !((*this) < rhs); }
+
   private:
     // data
     const int64_t map_;

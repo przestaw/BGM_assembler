@@ -18,17 +18,7 @@ AlignAlgorithm::AlignAlgorithm(MapsContainer& maps,
           [&](uint64_t diff, uint64_t ovlpLen, uint64_t mapLen1, uint64_t mapLen2) {
             return proportionalScore(diff, ovlpLen, mapLen1, mapLen2);
           }),
-      maps_(maps) {
-  //  scoringFunction_ =
-  //      [&](uint64_t diff, uint64_t ovlpLen, uint64_t mapLen1, uint64_t
-  //      mapLen2) {
-  //        return proportionalScore(diff, ovlpLen, mapLen1, mapLen2);
-  //      };
-}
-//      scoringFunction(std::bind(&AlignAlgorithm::defaultScore, this,
-//                                std::placeholders::_1, std::placeholders::_2,
-//                                std::placeholders::_3, std::placeholders::_4))
-//                                {}
+      maps_(maps) {}
 
 void AlignAlgorithm::alignMapsSingle() { rangeWorkerThread(0, maps_.size()); }
 

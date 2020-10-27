@@ -13,10 +13,11 @@
 
 using namespace bgm;
 
-FileIOAssemblyTask::FileIOAssemblyTask(const std::string &input,
-                                       const std::string &output,
+FileIOAssemblyTask::FileIOAssemblyTask(std::string inputFilename,
+                                       std::string outputFilename,
                                        FileIOAssemblyTask::Params params)
-    : AbstractTask(params, MapsContainer()), inputFile_(input), outputFile_(output) {}
+    : AbstractTask(params, MapsContainer()), inputFile_(std::move(inputFilename)),
+      outputFile_(std::move(outputFilename)) {}
 
 void FileIOAssemblyTask::loadMaps() {
   std::ifstream input;
@@ -46,19 +47,19 @@ void FileIOAssemblyTask::operator()(mt4cpp::Progress &p) {
   const auto step    = 0.8 / repeats;
   loadMaps();
 
-  p.setProgress(0.1);
+  p.setProgress(.1);
 
   for (unsigned i = 1; i <= repeats; ++i) {
     if (maps_.size() > 1) {
       fold_();
-      p.setProgress(0.1 + step * i);
+      p.setProgress(.1 + step * i);
       prepareNextFold_(params_.isReuseMaps());
     } else {
       break;
     }
   }
 
-  p.setProgress(0.9);
+  p.setProgress(.9);
   writeResultToFile();
   p.setProgress(1.);
 }

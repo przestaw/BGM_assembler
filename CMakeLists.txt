@@ -33,8 +33,10 @@ find_package(Doxygen)
 
 # Configure Clang-tidy
 find_package(CLANG_TIDY)
-# NOTE : checking is set for individual targets
-set(CLANG_TIDY_CHECKS "cppcoreguidelines-*,performance-*,portability-*,-clang-analyzer-*,readability-*,cert-*,bugprone-*")
+if (CLANG_TIDY_FOUND)
+    set(CLANG_TIDY_CHECKS "cppcoreguidelines-*,performance-*,portability-*,-clang-analyzer-*,readability-*,cert-*,bugprone-*,modernize-*")
+    set(CXX_CLANG_TIDY ${CLANG_TIDY_EXE};-checks=${CLANG_TIDY_CHECKS};-header-filter='${PROJECT_SOURCE_DIR}/include/*')
+endif ()
 
 # Add Clang Format
 include(UseClangFormat)
@@ -155,15 +157,6 @@ set_property(TARGET ${PYTHON_INT} PROPERTY SOVERSION ${MAJOR_VERSION})
 # Clang Format
 clangformat_setup(${LIB_SRC} ${LIB_INC} ${TEST_SRC} ${LIB_TMP} ${EXT_SRC} main.cpp python_interface/python_interface.cpp)
 add_custom_target(build-all DEPENDS format-project ${PROGRAM} ${LIB} ${CHECK} ${TEST})
-
-# Clang Tidy
-if (CLANG_TIDY_FOUND)
-    set_target_properties(${EXECUTABLE} ${LIBRARY}
-            PROPERTIES
-            CMAKE_CXX_CLANG_TIDY
-            "${CLANG_TIDY_EXE}
-            -checks=${CLANG_TIDY_CHECKS}")
-endif ()
 
 # Install BGM
 

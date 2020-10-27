@@ -12,7 +12,8 @@ namespace bgm {
   public:
     void notifyProgress(const mt4cpp::Command& cmd, double progress) override;
     void notifyStep(const mt4cpp::Command& cmd) override;
-    void notifyState(const mt4cpp::Command&, mt4cpp::CommandDesc::State state) override;
+    void notifyState(const mt4cpp::Command& cmd,
+                     mt4cpp::CommandDesc::State state) override;
 
   private:
     boost::mutex outMutex;
