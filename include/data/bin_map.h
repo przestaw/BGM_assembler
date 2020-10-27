@@ -38,11 +38,11 @@ namespace bgm {
     [[nodiscard]] const std::string &getIdentifier() const;
 
     /**
-     * Getter for map identifier as C style const char *
-     * NOTE : for compatibility with boost.python
-     * @return map identifier as C style const char *
+     * Getter for map identifier
+     * NOTE : for boost.python compatibility
+     * @return map identifier
      */
-    [[nodiscard]] const char * getCIdentifier() const;
+    [[nodiscard]] std::string getPyIdentifier() const;
 
     /**
      * Setter for map identifier
@@ -88,6 +88,11 @@ namespace bgm {
     [[nodiscard]] std::string toFastaRecord() const;
 
     /**
+     * Extracts BinaryMap sequnece
+     * @return string with sequence
+     */
+    [[nodiscard]] std::string toStringBMap() const;
+    /**
      * Getter for flag for use in algorithms
      * @return true if marked
      */
@@ -112,8 +117,6 @@ namespace bgm {
   private:
     // data
     std::string identifier_;
-
-  private:
     Bitset map_;
     // Left best aligned map
     Neighbour leftNeighbour_;

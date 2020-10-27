@@ -11,7 +11,7 @@ namespace bgm {
   /**
    * Class wrapping information about map alignment
    */
-  class MapAlignment { // NOTE: WIP Alignment -> MapAlignment
+  class MapAlignment { // NOTE: WIP Alignment -> MapAlignment, std::optional
   public:
     /**
      * Constructor
@@ -44,8 +44,8 @@ namespace bgm {
     inline bool operator>(const MapAlignment& rhs) const { return rhs < (*this); }
     inline bool operator<=(const MapAlignment& rhs) const { return !((*this) > rhs); }
     inline bool operator>=(const MapAlignment& rhs) const { return !((*this) < rhs); }
-
   private:
+    // data
     const int64_t map_;
     const std::size_t shift_;
     const double quality_;

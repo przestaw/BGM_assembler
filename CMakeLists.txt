@@ -46,7 +46,8 @@ enable_testing()
 # Add external libs : boost
 find_package(Boost COMPONENTS program_options unit_test_framework python REQUIRED)
 find_package(Threads REQUIRED)
-set(EXTERNAL_LIBS "Boost::program_options" "Boost::unit_test_framework" "Threads::Threads")
+find_package(PythonLibs 3.6 REQUIRED)
+set(EXTERNAL_LIBS "Boost::program_options" "Boost::unit_test_framework" "Threads::Threads" "Boost::python" ${PYTHON_LIBRARIES})
 
 # CXX standard
 set(CMAKE_CXX_STANDARD 17)
@@ -117,6 +118,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}
 include_directories(${PROJECT_SOURCE_DIR}/include)
 include_directories(${BOOST_INCLUDE_DIR})
 include_directories(${PROJECT_SOURCE_DIR}/external) # for mt4cpp
+include_directories(PRIVATE ${PYTHON_INCLUDE_DIRS})
 
 # find source files
 file(GLOB_RECURSE EXT_SRC "${PROJECT_SOURCE_DIR}/external/*.hpp")
@@ -139,15 +141,12 @@ target_link_libraries(${EXECUTABLE} ${LIBRARY})
 target_link_libraries(${EXECUTABLE} ${EXTERNAL_LIBS})
 
 # Python3 interface
-find_package(PythonLibs 3.6 REQUIRED)
-
 add_library(${PYTHON_INT} MODULE ${LIB_SRC} ${LIB_INC} ${LIB_TMP} python_interface/python_interface.cpp)
 set_target_properties(${PYTHON_INT} PROPERTIES PREFIX "") # remove lib prefix for python module
 set_target_properties(${PYTHON_INT} PROPERTIES OUTPUT_NAME "BGM_asm") # set name to match module name in python convention
 
 # Set up the libraries and header search paths for python3 interface
-target_link_libraries(${PYTHON_INT} ${EXTERNAL_LIBS} "Boost::python" ${PYTHON_LIBRARIES})
-target_include_directories(${PYTHON_INT} PRIVATE ${PYTHON_INCLUDE_DIRS})
+target_link_libraries(${PYTHON_INT} ${EXTERNAL_LIBS})
 
 # Set Version for targets
 set_property(TARGET ${PYTHON_INT} PROPERTY VERSION ${VERSION})

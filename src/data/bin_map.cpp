@@ -32,7 +32,15 @@ BinaryMap::Bitset BinaryMap::getMap() { return Bitset(map_); }
 
 const std::string &BinaryMap::getIdentifier() const { return identifier_; }
 
-const char *BinaryMap::getCIdentifier() const { return identifier_.c_str(); }
+std::string BinaryMap::getPyIdentifier() const { return identifier_; }
+
+std::string BinaryMap::toStringBMap() const {
+  std::string ret;
+  // bitset string is reversed
+  boost::to_string(map_, ret);
+  std::reverse(ret.begin(), ret.end());
+  return ret;
+}
 
 void BinaryMap::setIdentifier(const std::string &identifier) { identifier_ = identifier; }
 
@@ -49,10 +57,8 @@ std::string BinaryMap::toFastaRecord() const {
   ret += identifier_;
   ret += "\n";
 
-  // bitset string is reversed
-  std::string temp;
-  boost::to_string(map_, temp);
-  std::reverse(temp.begin(), temp.end());
+  // bitset string is reversed - handled in toStringBMap
+  std::string temp = toStringBMap();
 
   // write in 80 bits chunks
   unsigned count = 1 + (temp.size() - 1) / 80;

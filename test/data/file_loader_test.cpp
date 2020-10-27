@@ -4,7 +4,7 @@
 #include <boost/test/unit_test.hpp>
 #include <data/file_loader.h>
 
-BOOST_AUTO_TEST_SUITE(OMA_Test_Suite)
+BOOST_AUTO_TEST_SUITE(BGM_Test_Suite)
 BOOST_AUTO_TEST_SUITE(FileLoader_Test_Suite)
 
 const std::string testFile =

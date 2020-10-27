@@ -5,17 +5,18 @@
 #ifndef BGM_ASM_PY_ASSEMBLY_TASK_H
 #define BGM_ASM_PY_ASSEMBLY_TASK_H
 
-#include <boost/python/list.hpp>
+#include <boost/python.hpp>
 #include <task/assembly_task.h>
 
-namespace bgm {
-  class PyAssemblyTask : public AssemblyTask {
+namespace bgm::py {
+
+  class PyAssemblyTask : public bgm::AssemblyTask {
   public:
-    using Params = AbstractTask::Params;
+    using Params = bgm::AbstractTask::Params;
 
     explicit PyAssemblyTask(Params params) : AssemblyTask(std::vector<bgm::BinaryMap>(), params) {}
 
-    void addMap(BinaryMap map);
+    void addMap(bgm::BinaryMap map);
 
     boost::python::list getPyResult();
 

@@ -6,7 +6,7 @@
 #include <algorithms/consensus_builder.h>
 #include <boost/test/unit_test.hpp>
 
-BOOST_AUTO_TEST_SUITE(OMA_Test_Suite)
+BOOST_AUTO_TEST_SUITE(BGM_Test_Suite)
 
 BOOST_AUTO_TEST_SUITE(Align_Consensus_Test_Suite)
 

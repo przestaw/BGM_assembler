@@ -4,6 +4,6 @@
 #include <boost/test/unit_test.hpp>
 #include <data/bin_map.h>
 
-BOOST_AUTO_TEST_SUITE(OMA_Test_Suite)
+BOOST_AUTO_TEST_SUITE(BGM_Test_Suite)
 
 BOOST_AUTO_TEST_SUITE_END()

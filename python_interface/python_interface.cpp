@@ -10,20 +10,13 @@
 #include <boost/python/tuple.hpp>
 #include <task/py_assembly_task.h>
 
-class testClas {
-public:
-  const bgm::BinaryMap& getMap() const { return map; }
-
-private:
-  bgm::BinaryMap map = bgm::BinaryMap("ja", "111000111000");
-};
 
 BOOST_PYTHON_MODULE(BGM_asm) {
   using namespace boost::python;
 
   // class AssemblyParams with constructor
   // note : signature : unsigned int, unsigned int, double, double, unsigned, bool, bool
-  class_<bgm::PyAssemblyTask::Params>(
+  class_<bgm::py::PyAssemblyTask::Params>(
       "AssemblyParams",
       init<unsigned int, unsigned int, double, double, unsigned, bool, bool>(
           args("self",
@@ -79,13 +72,14 @@ BOOST_PYTHON_MODULE(BGM_asm) {
           "contig flag - indicates that map origin is from performed consensus");
 
   // class AssemblyTask
-  class_<bgm::PyAssemblyTask, bases<>, bgm::PyAssemblyTask*, boost::noncopyable>(
-      "AssemblyTask", init<bgm::PyAssemblyTask::Params>(args("self", "params")))
-      .def("addMap", &bgm::PyAssemblyTask::addMap, "adds map to internal container")
+  class_<bgm::py::PyAssemblyTask, bases<>, bgm::py::PyAssemblyTask*, boost::noncopyable>(
+      "AssemblyTask", init<bgm::py::PyAssemblyTask::Params>(args("self", "params")))
+      .def("addMap", &bgm::py::PyAssemblyTask::addMap, "adds map to internal container")
       .def("execute",
-           &bgm::PyAssemblyTask::execute,
+           &bgm::py::PyAssemblyTask::execute,
            "runs algorithm with params specified in constructor")
       .def("getResult",
-           &bgm::PyAssemblyTask::getPyResult,
+           &bgm::py::PyAssemblyTask::getPyResult,
            "obtains resulting binary maps");
+
 }
