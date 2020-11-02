@@ -95,7 +95,7 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 
     # using GCC
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}   -O0 -Og -g -Wshadow -Wall -pedantic -Wextra -Wold-style-cast")
-    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -finline-functions -fdevirtualize -fmerge-constants")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -finline-functions -fdevirtualize -fmerge-constants  -march=native -mtune=native")
     # find and set toolchain
     include(GNUtoolchain)
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")

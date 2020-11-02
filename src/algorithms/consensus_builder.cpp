@@ -62,7 +62,7 @@ void ConsensusBuilder::breakOneCycle(int map) {
   } while (tmp != map);
 
   // break cycle
-  if (right < 0) {
+  if (right >= 0) {
     conMaps_.breakLink(conMaps_[right].getLeftNeighbour().first, right);
   }
 }
