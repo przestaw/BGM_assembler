@@ -8,7 +8,9 @@
 #include <boost/python/overloads.hpp>
 #include <boost/python/raw_function.hpp>
 #include <boost/python/tuple.hpp>
+#include <python_functions.h>
 #include <task/py_assembly_task.h>
+#include <utility>
 
 BOOST_PYTHON_MODULE(BGM_asm) {
   using namespace boost::python;
@@ -69,6 +71,16 @@ BOOST_PYTHON_MODULE(BGM_asm) {
           &bgm::BinaryMap::isContig,
           &bgm::BinaryMap::setContig,
           "contig flag - indicates that map origin is from performed consensus");
+
+  // xor between 2 maps
+  def("xorBinaryMaps",
+      &bgm::xorBinaryMaps,
+      "Performs xor between maps and return diffrences count");
+
+  // find best align using bgm
+  def("findBestMapAlignemnt",
+      &bgm::findBestAlignemnt,
+      "Finds overlap with the least diffrences between maps");
 
   // class AssemblyTask
   class_<bgm::py::PyAssemblyTask, bases<>, bgm::py::PyAssemblyTask*, boost::noncopyable>(

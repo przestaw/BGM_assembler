@@ -94,7 +94,7 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     endif ()
 
     # using GCC
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}   -O0 -Og -g -Wshadow -Wall -pedantic -Wextra -Wold-style-cast")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 -Og -g -Wshadow -Wall -pedantic -Wextra -Wold-style-cast -Wl,--no-undefined")
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -finline-functions -fdevirtualize -fmerge-constants  -march=native -mtune=native")
     # find and set toolchain
     include(GNUtoolchain)
@@ -120,7 +120,9 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}
 include_directories(${PROJECT_SOURCE_DIR}/include)
 include_directories(${BOOST_INCLUDE_DIR})
 include_directories(${PROJECT_SOURCE_DIR}/external) # for mt4cpp
+include_directories(${PROJECT_SOURCE_DIR}/python_interface)
 include_directories(PRIVATE ${PYTHON_INCLUDE_DIRS})
+
 
 # find source files
 file(GLOB_RECURSE EXT_SRC "${PROJECT_SOURCE_DIR}/external/*.hpp")
@@ -143,7 +145,10 @@ target_link_libraries(${EXECUTABLE} ${LIBRARY})
 target_link_libraries(${EXECUTABLE} ${EXTERNAL_LIBS})
 
 # Python3 interface
-add_library(${PYTHON_INT} MODULE ${LIB_SRC} ${LIB_INC} ${LIB_TMP} python_interface/python_interface.cpp)
+file(GLOB PY_SRC ${PROJECT_SOURCE_DIR}/python_interface/*.cpp)
+file(GLOB PY_INC ${PROJECT_SOURCE_DIR}/python_interface/*.h)
+
+add_library(${PYTHON_INT} MODULE ${LIB_SRC} ${LIB_INC} ${LIB_TMP} ${PY_SRC} ${PY_INC})
 set_target_properties(${PYTHON_INT} PROPERTIES PREFIX "") # remove lib prefix for python module
 set_target_properties(${PYTHON_INT} PROPERTIES OUTPUT_NAME "BGM_asm") # set name to match module name in python convention
 
@@ -155,7 +160,7 @@ set_property(TARGET ${PYTHON_INT} PROPERTY VERSION ${VERSION})
 set_property(TARGET ${PYTHON_INT} PROPERTY SOVERSION ${MAJOR_VERSION})
 
 # Clang Format
-clangformat_setup(${LIB_SRC} ${LIB_INC} ${TEST_SRC} ${LIB_TMP} ${EXT_SRC} main.cpp python_interface/python_interface.cpp)
+clangformat_setup(${LIB_SRC} ${LIB_INC} ${TEST_SRC} ${LIB_TMP} ${EXT_SRC} main.cpp ${PY_SRC} ${PY_INC})
 add_custom_target(build-all DEPENDS format-project ${PROGRAM} ${LIB} ${CHECK} ${TEST})
 
 # Install BGM

@@ -50,6 +50,15 @@ namespace bgm {
      */
     [[nodiscard]] Alignment align(const BinaryMap::Bitset &ref,
                                   const BinaryMap::Bitset &tested) const;
+
+    /**
+     * Align two maps for analysis. Used by python interface
+     * @param left left argument
+     * @param right right argument
+     * @return offset between maps begins
+     */
+    [[nodiscard]] static unsigned pyAlignFromBegins(const BinaryMap::Bitset &left,
+                                                    const BinaryMap::Bitset &right);
     /*
      *
      * NOTE :     1.            2.                3.
