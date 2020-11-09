@@ -1,16 +1,21 @@
 //
 // Created by przestaw on 20.10.2020.
 //
+#include "python_compare_bitmaps.h"
 #include <boost/python/args.hpp>
 #include <boost/python/class.hpp>
 #include <boost/python/def.hpp>
 #include <boost/python/module.hpp>
+#include <boost/python/numpy.hpp>
 #include <boost/python/overloads.hpp>
 #include <boost/python/raw_function.hpp>
 #include <boost/python/tuple.hpp>
 #include <python_functions.h>
 #include <task/py_assembly_task.h>
 #include <utility>
+
+namespace p = boost::python;
+namespace np = boost::python::numpy;
 
 BOOST_PYTHON_MODULE(BGM_asm) {
   using namespace boost::python;
@@ -77,11 +82,6 @@ BOOST_PYTHON_MODULE(BGM_asm) {
       &bgm::xorBinaryMaps,
       "Performs xor between maps and return diffrences count");
 
-  // find best align using bgm
-  def("findBestMapAlignemnt",
-      &bgm::findBestAlignemnt,
-      "Finds overlap with the least diffrences between maps");
-
   // class AssemblyTask
   class_<bgm::py::PyAssemblyTask, bases<>, bgm::py::PyAssemblyTask*, boost::noncopyable>(
       "AssemblyTask", init<bgm::py::PyAssemblyTask::Params>(args("self", "params")))
@@ -92,4 +92,15 @@ BOOST_PYTHON_MODULE(BGM_asm) {
       .def("getResult",
            &bgm::py::PyAssemblyTask::getPyResult,
            "obtains resulting binary maps");
+
+  // find best align using bgm
+  def("findBestMapAlignemnt",
+      &bgm::findBestAlignemnt,
+      "Finds overlap with the least diffrences between maps");
+
+  //np::initialize();
+
+  def("alignMapToRef",
+      &bgm::alignMapToRef<int>,
+      "Aligns map to referenc and returns image ndarray");
 }

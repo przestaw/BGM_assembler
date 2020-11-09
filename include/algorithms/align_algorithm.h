@@ -5,6 +5,7 @@
 #ifndef OMA_ALIGN_ALGORITHM_H
 #define OMA_ALIGN_ALGORITHM_H
 
+#include <common/map_alignment.h>
 #include <data/maps_container.h>
 #include <project_defines.h>
 
@@ -16,7 +17,8 @@ namespace bgm {
      *  shift of 0 indicates no alignment
      *   -> [as shift 0 would mean duplicate this should not affect results]
      */
-    using Alignment = std::pair<int64_t, size_t>;
+    using Alignment   = std::pair<int64_t, size_t>;
+    using PyAlignment = bgm::PyAlignment;
 
     /**
      * Constructor
@@ -57,8 +59,8 @@ namespace bgm {
      * @param right right argument
      * @return offset between maps begins
      */
-    [[nodiscard]] static unsigned pyAlignFromBegins(const BinaryMap::Bitset &left,
-                                                    const BinaryMap::Bitset &right);
+    [[nodiscard]] static PyAlignment pyAlignFromBegins(const BinaryMap::Bitset &left,
+                                                       const BinaryMap::Bitset &right);
     /*
      *
      * NOTE :     1.            2.                3.

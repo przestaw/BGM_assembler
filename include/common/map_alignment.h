@@ -26,17 +26,17 @@ namespace bgm {
      * Getter for map id
      * @return map id
      */
-    [[nodiscard]] int64_t getMap() const { return map_; }
+    [[nodiscard]] inline int64_t getMap() const { return map_; }
     /**
      * Getter for shift between maps
      * @return shift between maps
      */
-    [[nodiscard]] std::size_t getShift() const { return shift_; }
+    [[nodiscard]] inline std::size_t getShift() const { return shift_; }
     /**
      * Getter for quality of alignment
      * @return quality of alignment
      */
-    [[nodiscard]] double getQuality() const { return quality_; }
+    [[nodiscard]] inline double getQuality() const { return quality_; }
 
     inline bool operator<(const MapAlignment& rhs) const {
       return this->quality_ < rhs.quality_;
@@ -49,6 +49,23 @@ namespace bgm {
     // data
     const int64_t map_;
     const std::size_t shift_;
+    const double quality_;
+  };
+
+  class PyAlignment{
+  public:
+    PyAlignment(const unsigned long shift,
+                const unsigned long overlap,
+                const double quality)
+        : shift_(shift), overlap_(overlap), quality_(quality) {}
+
+    [[nodiscard]] inline int getShift() const { return shift_; }
+    [[nodiscard]] inline std::size_t getOverlap() const { return overlap_; }
+    [[nodiscard]] inline double getQuality() const { return quality_; }
+
+  private:
+    const int shift_;
+    const std::size_t overlap_;
     const double quality_;
   };
 } // namespace bgm

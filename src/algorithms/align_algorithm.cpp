@@ -92,14 +92,14 @@ AlignAlgorithm::Alignment AlignAlgorithm::align(const BinaryMap::Bitset& ref_,
   const size_t refLen     = ref.size();
   const size_t testedLen  = tested.size();
   const size_t smallerLen = std::min(refLen, testedLen);
-  const size_t max_shift =
+  const size_t maxShift =
       std::min(1 + smallerLen - minOverlapQuants_,
                static_cast<size_t>(smallerLen * (1 - minOverlapPart_)));
 
   // init best as worst numerically possible
   size_t best         = std::numeric_limits<size_t>::max();
   double best_quality = this->threshold_;
-  int64_t best_shift  = -1;
+  int64_t bestShift   = -1;
 
   auto performXorAndUpdate = [&](bgm::BinaryMap::Bitset shiftedTest, const size_t shift) {
     // resize to equal lengths
@@ -108,7 +108,7 @@ AlignAlgorithm::Alignment AlignAlgorithm::align(const BinaryMap::Bitset& ref_,
     }
 
     shiftedTest ^= ref;
-    const size_t xor_result = shiftedTest.count();
+    const size_t xorResult = shiftedTest.count();
     // const double q = static_cast<double>(xor_result) / shiftedTest.size();
 
     const double q = this->scoringFunction_(
@@ -116,9 +116,9 @@ AlignAlgorithm::Alignment AlignAlgorithm::align(const BinaryMap::Bitset& ref_,
 
     // above threshold or better 'quality' alignment
     if (q < best_quality) {
-      if (best > xor_result) {
-        best         = xor_result;
-        best_shift   = shift;
+      if (best > xorResult) {
+        best         = xorResult;
+        bestShift    = shift;
         best_quality = q;
       }
     }
@@ -127,7 +127,7 @@ AlignAlgorithm::Alignment AlignAlgorithm::align(const BinaryMap::Bitset& ref_,
   // different approach for longer ref and longer testmap
   if (ref.size() <= tested.size()) {
     std::size_t diff = tested.size() - ref.size();
-    for (size_t shift = 0; shift < max_shift; ++shift) {
+    for (size_t shift = 0; shift < maxShift; ++shift) {
       // NOTE : bitset has different direction -> lowest & highest position
       // NOTE : use diff to move R ends together
       bgm::BinaryMap::Bitset shiftedTest = tested >> (shift + diff);
@@ -146,7 +146,7 @@ AlignAlgorithm::Alignment AlignAlgorithm::align(const BinaryMap::Bitset& ref_,
     // NOTE : use diff to move R ends together
     ref = ref >> diff;
 
-    for (size_t shift = 0; shift < max_shift; ++shift) {
+    for (size_t shift = 0; shift < maxShift; ++shift) {
       // NOTE : bitset has different direction -> lowest & highest position
       bgm::BinaryMap::Bitset shiftedTest = tested >> shift;
       // resize to correct value
@@ -161,7 +161,7 @@ AlignAlgorithm::Alignment AlignAlgorithm::align(const BinaryMap::Bitset& ref_,
     }
   }
 
-  return AlignAlgorithm::Alignment(best_shift, best);
+  return AlignAlgorithm::Alignment(bestShift, best);
 }
 
 void AlignAlgorithm::workerThread() {
@@ -176,71 +176,66 @@ void AlignAlgorithm::rangeWorkerThread(size_t begin, size_t end) {
   for (size_t iter = begin; iter < end; ++iter) { alignOneMap(iter); }
 }
 
-unsigned AlignAlgorithm::pyAlignFromBegins(const BinaryMap::Bitset& left,
-                                           const BinaryMap::Bitset& tested) {
-  // copy as it will be resized
-  BinaryMap::Bitset ref(left);
-
+PyAlignment AlignAlgorithm::pyAlignFromBegins(const BinaryMap::Bitset& left,
+                                              const BinaryMap::Bitset& right) {
   // calc max shift
-  const size_t refLen     = ref.size();
-  const size_t testedLen  = tested.size();
+  const size_t refLen     = left.size();
+  const size_t testedLen  = right.size();
   const size_t smallerLen = std::min(refLen, testedLen);
-  const size_t max_shift  = smallerLen;
+  const bool refLarger    = refLen > testedLen;
+  const size_t maxShift   = smallerLen * 0.5;
+  const size_t diffLen    = refLarger ? refLen - testedLen : testedLen - refLen;
 
   // init best as worst numerically possible
-  size_t best        = std::numeric_limits<size_t>::max();
-  int64_t best_shift = -1;
+  size_t best       = std::numeric_limits<size_t>::max();
+  double bestQual   = 1.;
+  size_t overlap    = 0.0;
+  bool alignSign    = true;
+  int64_t bestShift = -1;
 
-  auto performXorAndUpdate = [&](bgm::BinaryMap::Bitset shiftedTest, const size_t shift) {
-    // resize to equal lengths
-    if (shiftedTest.size() < ref.size()) {
-      ref.resize(shiftedTest.size());
+  auto performXorAndUpdate = [&](const bgm::BinaryMap::Bitset& ref,
+                                 const bgm::BinaryMap::Bitset& map,
+                                 const size_t shift,
+                                 bool sign) {
+    // shift
+    auto shiftedTest = map >> shift;
+    auto refTest     = ref;
+
+    // lay out sizes
+    if (refTest.size() < shiftedTest.size()) {
+      shiftedTest.resize(refTest.size());
+    } else {
+      refTest.resize(shiftedTest.size());
     }
 
-    shiftedTest ^= ref;
-    const size_t xor_result = shiftedTest.count();
+    // xor
+    shiftedTest ^= refTest;
+    const size_t xorResult = shiftedTest.count();
+    const size_t ovlpLen   = shiftedTest.size();
+    const double qual      = xorResult / static_cast<double>(ovlpLen);
 
-    if (best > xor_result) {
-      best = xor_result;
+    // update
+    if (best > xorResult) {
+      if (qual < bestQual) {
+        best      = xorResult;
+        bestQual  = qual;
+        overlap   = ovlpLen;
+        alignSign = sign;
+      }
     }
   };
 
-  // different approach for longer ref and longer testmap
-  if (ref.size() <= tested.size()) {
-    std::size_t diff = tested.size() - ref.size();
-    for (size_t shift = 0; shift < max_shift; ++shift) {
-      // NOTE : bitset has different direction -> lowest & highest position
-      // NOTE : use diff to move R ends together
-      bgm::BinaryMap::Bitset shiftedTest = tested >> (shift + diff);
-      // resize to correct value
-      shiftedTest.resize(tested.size() - (shift + diff));
+  size_t limitShift = refLarger ? maxShift : maxShift + diffLen;
 
-      /* resize to equal lengths
-       * perform xor
-       * count diffrences and compare with margin & best
-       */
-      performXorAndUpdate(shiftedTest, shift);
-    }
-  } else { // reference is longer
-    std::size_t diff = ref.size() - tested.size();
-    // NOTE : bitset has different direction -> lowest & highest position
-    // NOTE : use diff to move R ends together
-    ref = ref >> diff;
+  for (size_t i = 0; i < limitShift; ++i) { performXorAndUpdate(right, left, i, false); }
 
-    for (size_t shift = 0; shift < max_shift; ++shift) {
-      // NOTE : bitset has different direction -> lowest & highest position
-      bgm::BinaryMap::Bitset shiftedTest = tested >> shift;
-      // resize to correct value
-      shiftedTest.resize(tested.size() - shift);
+  limitShift = refLarger ? maxShift + diffLen : maxShift;
 
-      /* Note :
-       *     - resize to equal lengths
-       *     - perform xor
-       *     - count diffrences and compare with margin & best
-       */
-      performXorAndUpdate(shiftedTest, shift);
-    }
+  for (size_t i = 0; i < limitShift; ++i) { performXorAndUpdate(left, right, i, true); }
+
+  if (alignSign) {
+    return PyAlignment(-bestShift, overlap, bestQual);
+  } else {
+    return PyAlignment(bestShift, overlap, bestQual);
   }
-
-  return best_shift;
 }

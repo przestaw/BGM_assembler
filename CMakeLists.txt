@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.12)
 
 # Set naming scheme 
 set(PROJECT_NAME BGM-asm)
@@ -46,10 +46,11 @@ include(CTest)
 enable_testing()
 
 # Add external libs : boost
-find_package(Boost COMPONENTS program_options unit_test_framework python REQUIRED)
+find_package(Boost COMPONENTS program_options unit_test_framework python numpy REQUIRED)
 find_package(Threads REQUIRED)
 find_package(PythonLibs 3.6 REQUIRED)
-set(EXTERNAL_LIBS "Boost::program_options" "Boost::unit_test_framework" "Threads::Threads" "Boost::python" ${PYTHON_LIBRARIES})
+set(EXTERNAL_LIBS "Boost::program_options" "Boost::unit_test_framework" "Threads::Threads")
+set(PYTHON_EXTERNAL "Boost::python" "Boost::numpy" ${PYTHON_LIBRARIES})
 
 # CXX standard
 set(CMAKE_CXX_STANDARD 17)
@@ -153,7 +154,7 @@ set_target_properties(${PYTHON_INT} PROPERTIES PREFIX "") # remove lib prefix fo
 set_target_properties(${PYTHON_INT} PROPERTIES OUTPUT_NAME "BGM_asm") # set name to match module name in python convention
 
 # Set up the libraries and header search paths for python3 interface
-target_link_libraries(${PYTHON_INT} ${EXTERNAL_LIBS})
+target_link_libraries(${PYTHON_INT} ${EXTERNAL_LIBS} ${PYTHON_EXTERNAL})
 
 # Set Version for targets
 set_property(TARGET ${PYTHON_INT} PROPERTY VERSION ${VERSION})
