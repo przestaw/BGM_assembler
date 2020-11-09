@@ -98,7 +98,7 @@ BOOST_PYTHON_MODULE(BGM_asm) {
       &bgm::findBestAlignemnt,
       "Finds overlap with the least diffrences between maps");
 
-  //np::initialize();
+  np::initialize();
 
   def("alignMapToRef",
       &bgm::alignMapToRef<int>,

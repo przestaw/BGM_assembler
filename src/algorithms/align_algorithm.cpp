@@ -183,7 +183,7 @@ PyAlignment AlignAlgorithm::pyAlignFromBegins(const BinaryMap::Bitset& left,
   const size_t testedLen  = right.size();
   const size_t smallerLen = std::min(refLen, testedLen);
   const bool refLarger    = refLen > testedLen;
-  const size_t maxShift   = smallerLen * 0.5;
+  const size_t maxShift   = smallerLen / 2;
   const size_t diffLen    = refLarger ? refLen - testedLen : testedLen - refLen;
 
   // init best as worst numerically possible
@@ -199,6 +199,7 @@ PyAlignment AlignAlgorithm::pyAlignFromBegins(const BinaryMap::Bitset& left,
                                  bool sign) {
     // shift
     auto shiftedTest = map >> shift;
+    shiftedTest.resize(shiftedTest.size() - (shift));
     auto refTest     = ref;
 
     // lay out sizes
@@ -217,6 +218,7 @@ PyAlignment AlignAlgorithm::pyAlignFromBegins(const BinaryMap::Bitset& left,
     // update
     if (best > xorResult) {
       if (qual < bestQual) {
+        bestShift = shift;
         best      = xorResult;
         bestQual  = qual;
         overlap   = ovlpLen;

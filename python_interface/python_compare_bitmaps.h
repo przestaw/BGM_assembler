@@ -25,11 +25,11 @@ namespace bgm {
     const size_t lLen = l.getMap().size();
     const size_t rLen = r.getMap().size();
 
-    const int64_t totalLen =
-        (static_cast<int64_t>(l.getMap().size() + r.getMap().size()) - align.getOverlap());
+    const size_t totalLen =
+        (l.getMap().size() + r.getMap().size()) - align.getOverlap();
 
-    const size_t startL = align.getShift() < 0 ? rLen + align.getShift() : 0;
-    const size_t startR = align.getShift() > 0 ? lLen - align.getShift() : 0;
+    const size_t startL = align.getShift() < 0 ? -align.getShift() : 0;
+    const size_t startR = align.getShift() > 0 ? +align.getShift() : 0;
 
     auto getValAtPos =
         [&](const size_t n, const size_t start, const bgm::BinaryMap& bMap) -> int8_t {
@@ -64,14 +64,7 @@ namespace bgm {
 
     auto data = std::vector<int8_t>(3 * totalLen);
 
-    std::cout << totalLen << '\n'
-              << lLen << '\n'
-              << startL << '\n'
-              << rLen << '\n'
-              << startR << '\n';
-
     for (auto i = 0; i < totalLen; ++i) {
-      std::cout << i << " = " <<std::endl;
       const auto lVal = getValAtPos(i, startL, l);
       const auto rVal = getValAtPos(i, startR, r);
 
@@ -84,11 +77,9 @@ namespace bgm {
       data[i + 2 * totalLen] = getCmpValFromInt(xorVal);
     }
 
-    std::cout << "alive " << totalLen << std::endl;
-
     // NOTE: need to copy data to maintain ownership !
     boost::python::numpy::ndarray ret = boost::python::numpy::zeros(
-        boost::python::make_tuple(3, 8),
+        boost::python::make_tuple(3, totalLen),
         boost::python::numpy::dtype::get_builtin<ValueType>());
     std::copy(data.begin(), data.end(), reinterpret_cast<ValueType*>(ret.get_data()));
 
