@@ -65,14 +65,14 @@ namespace bgm {
     bool votePosition(std::list<std::pair<std::size_t, int>> &voters);
 
     // contigs
-    std::mutex congigLock_;
+    mutable std::mutex congigLock_;
     std::deque<size_t> contigs_;
 
     // consensus maps;
     std::vector<BinaryMap> consensusMaps_;
 
     // output
-    std::mutex consensusLock;
+    mutable std::mutex consensusLock;
     void addReadyMap(const BinaryMap::Bitset &readyMap);
 
     // input

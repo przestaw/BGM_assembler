@@ -62,11 +62,11 @@ namespace bgm {
 
   private:
     // used to synchronize neighbour addition
-    std::mutex additionGuard_;
+    mutable std::mutex additionGuard_;
     // points next unaligned map
     size_t unalignedPivot_;
     // used to synchronize unaligned pivot usage
-    std::mutex unalignedGuard_;
+    mutable std::mutex unalignedGuard_;
     // used to lock mutex only once
     void internalAddRight(size_t map, size_t neighbour, unsigned shift);
   };

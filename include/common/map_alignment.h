@@ -52,7 +52,7 @@ namespace bgm {
     const double quality_;
   };
 
-  class PyAlignment{
+  class PyAlignment {
   public:
     PyAlignment(const unsigned long shift,
                 const unsigned long overlap,

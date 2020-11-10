@@ -28,7 +28,7 @@ namespace bgm::py {
   private:
     void operator()(mt4cpp::Progress& p) override;
 
-    std::mutex mapsGuard;
+    mutable std::mutex mapsGuard;
   };
 } // namespace bgm::py
 

@@ -200,7 +200,7 @@ PyAlignment AlignAlgorithm::pyAlignFromBegins(const BinaryMap::Bitset& left,
     // shift
     auto shiftedTest = map >> shift;
     shiftedTest.resize(shiftedTest.size() - (shift));
-    auto refTest     = ref;
+    auto refTest = ref;
 
     // lay out sizes
     if (refTest.size() < shiftedTest.size()) {

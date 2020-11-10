@@ -1,7 +1,7 @@
 //
 // Created by przestaw on 20.10.2020.
 //
-#include "python_compare_bitmaps.h"
+
 #include <boost/python/args.hpp>
 #include <boost/python/class.hpp>
 #include <boost/python/def.hpp>
@@ -10,11 +10,11 @@
 #include <boost/python/overloads.hpp>
 #include <boost/python/raw_function.hpp>
 #include <boost/python/tuple.hpp>
-#include <python_functions.h>
+#include <compare_bitmaps.h>
+#include <free_functions.h>
 #include <task/py_assembly_task.h>
-#include <utility>
 
-namespace p = boost::python;
+namespace p  = boost::python;
 namespace np = boost::python::numpy;
 
 BOOST_PYTHON_MODULE(BGM_asm) {
@@ -79,7 +79,7 @@ BOOST_PYTHON_MODULE(BGM_asm) {
 
   // xor between 2 maps
   def("xorBinaryMaps",
-      &bgm::xorBinaryMaps,
+      &bgm::py::xorBinaryMaps,
       "Performs xor between maps and return diffrences count");
 
   // class AssemblyTask
@@ -95,12 +95,16 @@ BOOST_PYTHON_MODULE(BGM_asm) {
 
   // find best align using bgm
   def("findBestMapAlignemnt",
-      &bgm::findBestAlignemnt,
+      &bgm::py::findBestAlignemnt,
       "Finds overlap with the least diffrences between maps");
 
+  // initialize numpy
   np::initialize();
 
-  def("alignMapToRef",
-      &bgm::alignMapToRef<int>,
-      "Aligns map to referenc and returns image ndarray");
+  // class CompareBitmaps
+  class_<bgm::py::CompareBitmaps, bases<>, bgm::py::CompareBitmaps*, boost::noncopyable>(
+      "CompareBitmaps", init<bgm::BinaryMap, bgm::BinaryMap>(args("ref", "map")))
+      .def("compare",
+           &bgm::py::CompareBitmaps::alignMapToRefPy<int8_t>,
+           "compares binary maps");
 }
