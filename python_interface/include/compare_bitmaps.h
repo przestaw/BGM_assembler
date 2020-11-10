@@ -72,6 +72,6 @@ namespace bgm::py {
     return ret;
   }
 
-} // namespace bgm
+} // namespace bgm::py
 
 #endif // BGM_ASM_COMPARE_BITMAPS_H

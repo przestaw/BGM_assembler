@@ -9,8 +9,11 @@ set(PROJECT_DESCRIPTION "Binary Maps Assembly prototype")
 set(EXECUTABLE ${PROJECT_NAME}-program)
 set(LIBRARY ${PROJECT_NAME})
 set(TEST ${PROJECT_NAME}-test)
-set(CHECK ${TEST}-check)
+set(BGM_CHECK ${TEST}-check)
 set(PYTHON_INT ${PROJECT_NAME}-python)
+set(TEST_PY_INT ${PYTHON_INT}-test)
+set(PY_CHECK ${PYTHON_INT}-check)
+set(TEST_PYTEST ${PYTHON_INT}-pytest)
 
 # Add custom cmake modules path
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake_modules/finders")
@@ -34,8 +37,8 @@ find_package(Doxygen)
 # Configure Clang-tidy
 find_package(CLANG_TIDY)
 if (CLANG_TIDY_FOUND)
-    set(CLANG_TIDY_CHECKS "cppcoreguidelines-*,performance-*,portability-*,-clang-analyzer-*,readability-*,cert-*,bugprone-*,modernize-*")
-    set(CXX_CLANG_TIDY ${CLANG_TIDY_EXE};-checks=${CLANG_TIDY_CHECKS};-header-filter='${PROJECT_SOURCE_DIR}/include/*')
+    set(CLANG_TIDY_BGM_CHECKS "cppcoreguidelines-*,performance-*,portability-*,-clang-analyzer-*,readability-*,cert-*,bugprone-*,modernize-*")
+    set(CXX_CLANG_TIDY ${CLANG_TIDY_EXE};-checks=${CLANG_TIDY_BGM_CHECKS};-header-filter='${PROJECT_SOURCE_DIR}/include/*')
 endif ()
 
 # Add Clang Format
@@ -55,10 +58,6 @@ set(PYTHON_EXTERNAL "Boost::python" "Boost::numpy" ${PYTHON_LIBRARIES})
 # CXX standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
-
-# TODO :
-# -march=skylake
-# -mtune=skylake
 
 # Configure Toolchain
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
@@ -129,14 +128,11 @@ file(GLOB_RECURSE EXT_SRC ${PROJECT_SOURCE_DIR}/external/*.hpp)
 file(GLOB_RECURSE LIB_SRC ${PROJECT_SOURCE_DIR}/src/*.cpp)
 file(GLOB_RECURSE LIB_INC ${PROJECT_SOURCE_DIR}/include/*.h)
 file(GLOB_RECURSE LIB_TMP ${PROJECT_SOURCE_DIR}/include/*.hpp)
-file(GLOB_RECURSE TEST_SRC ${PROJECT_SOURCE_DIR}/test/*.cpp)
-
-# Include src and test for library and test-check
-add_subdirectory("test")
+file(GLOB_RECURSE TEST_SRC ${PROJECT_SOURCE_DIR}/test/assembler/*.cpp)
 
 # library
 add_library(${LIBRARY} ${LIB_SRC} ${LIB_INC} ${LIB_TMP})
-add_dependencies(${LIBRARY} ${CHECK})
+add_dependencies(${LIBRARY} ${BGM_CHECK})
 
 # Program executable
 add_executable(${EXECUTABLE} main.cpp)
@@ -147,6 +143,7 @@ target_link_libraries(${EXECUTABLE} ${EXTERNAL_LIBS})
 # Python3 interface
 file(GLOB PY_SRC ${PROJECT_SOURCE_DIR}/python_interface/src/*.cpp)
 file(GLOB PY_INC ${PROJECT_SOURCE_DIR}/python_interface/include/*.h)
+file(GLOB_RECURSE PY_TEST_SRC ${PROJECT_SOURCE_DIR}/test/python/*.cpp)
 
 add_library(${PYTHON_INT}
             MODULE
@@ -156,14 +153,18 @@ set_target_properties(${PYTHON_INT} PROPERTIES OUTPUT_NAME "BGM_asm") # set name
 
 # Set up the libraries and header search paths for python3 interface
 target_link_libraries(${PYTHON_INT} ${EXTERNAL_LIBS} ${PYTHON_EXTERNAL})
+add_dependencies(${PYTHON_INT} ${PY_CHECK})
 
 # Set Version for targets
 set_property(TARGET ${PYTHON_INT} PROPERTY VERSION ${VERSION})
 set_property(TARGET ${PYTHON_INT} PROPERTY SOVERSION ${MAJOR_VERSION})
 
+# Include src and test for library and test-check
+add_subdirectory("test")
+
 # Clang Format
-clangformat_setup(${LIB_SRC} ${LIB_INC} ${TEST_SRC} ${LIB_TMP} ${EXT_SRC} main.cpp ${PY_SRC} ${PY_INC})
-add_custom_target(build-all DEPENDS format-project ${PROGRAM} ${LIB} ${CHECK} ${TEST})
+clangformat_setup(${LIB_SRC} ${LIB_INC} ${TEST_SRC} ${LIB_TMP} ${EXT_SRC} main.cpp ${PY_SRC} ${PY_INC} ${PY_TEST_SRC})
+add_custom_target(build-all DEPENDS format-project ${TEST} ${BGM_CHECK} ${LIB} ${PROGRAM} ${TEST_PY_INT} ${PY_CHECK} ${PYTHON_INT})
 
 # Install BGM
 

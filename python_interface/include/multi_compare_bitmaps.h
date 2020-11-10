@@ -10,12 +10,12 @@
 #include <marker_type.h>
 #include <mutex>
 
-namespace bgm::py{
+namespace bgm::py {
   class MultiCompareBitmaps {
   public:
     using MarkerType = bgm::py::MarkerType;
 
-    MultiCompareBitmaps(bgm::BinaryMap  ref);
+    MultiCompareBitmaps(bgm::BinaryMap ref);
 
     void addMap(bgm::BinaryMap map);
 
@@ -23,7 +23,7 @@ namespace bgm::py{
      * Method performing comparison between maps
      * @return linear vector of lines of aligned maps bitmap
      */
-    std::vector<MarkerType> alignMapToRef();
+    std::vector<MarkerType> alignMapsToRef();
 
     /**
      * Method performing comparison between two maps,
@@ -38,10 +38,28 @@ namespace bgm::py{
     template <typename ValueType>
     boost::python::numpy::ndarray
     alignMapToRefPy(ValueType empty, ValueType marker, ValueType map, ValueType refmap);
+
   private:
     mutable std::mutex mapsGuard;
     bgm::BinaryMap ref_;
     std::vector<bgm::BinaryMap> maps_;
+
+    struct MapAlignDescriptor {
+      //      MapAlignDescriptor(std::string name,
+      //                         int shift,
+      //                         size_t overlap,
+      //                         size_t fo,
+      //                         size_t f,
+      //                         size_t r,
+      //                         size_t ro);
+      std::string name;
+      int shift;
+      size_t overlap;
+      size_t fo;
+      size_t f;
+      size_t r;
+      size_t ro;
+    };
   };
 
   template <typename ValueType>
@@ -54,7 +72,7 @@ namespace bgm::py{
     };
 
     // TODO -> change type to vec<vec<value>>
-    const auto data = this->alignMapToRef();
+    const auto data = this->alignMapsToRef();
 
     // NOTE: need to copy data to maintain ownership !
     boost::python::numpy::ndarray ret = boost::python::numpy::zeros(
@@ -68,5 +86,5 @@ namespace bgm::py{
 
     return ret;
   }
-}
+} // namespace bgm::py
 #endif // BGM_ASM_MULTI_COMPARE_BITMAPS_H

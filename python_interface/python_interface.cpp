@@ -12,7 +12,8 @@
 #include <boost/python/tuple.hpp>
 #include <compare_bitmaps.h>
 #include <free_functions.h>
-#include <task/py_assembly_task.h>
+#include <multi_compare_bitmaps.h>
+#include <py_assembly_task.h>
 
 namespace p  = boost::python;
 namespace np = boost::python::numpy;
@@ -104,7 +105,23 @@ BOOST_PYTHON_MODULE(BGM_asm) {
   // class CompareBitmaps
   class_<bgm::py::CompareBitmaps, bases<>, bgm::py::CompareBitmaps*, boost::noncopyable>(
       "CompareBitmaps", init<bgm::BinaryMap, bgm::BinaryMap>(args("ref", "map")))
-      .def("compare",
+      .def("compareInt",
            &bgm::py::CompareBitmaps::alignMapToRefPy<int8_t>,
+           "compares binary maps")
+      .def("compareFloat",
+           &bgm::py::CompareBitmaps::alignMapToRefPy<float>,
+           "compares binary maps");
+
+  // class MultiCompareBitmaps
+  class_<bgm::py::MultiCompareBitmaps, bases<>, bgm::py::MultiCompareBitmaps*, boost::noncopyable>(
+      "CompareBitmaps", init<bgm::BinaryMap>(args("ref")))
+      .def("addMapToCompare",
+           &bgm::py::MultiCompareBitmaps::addMap,
+           "add map for comparison")
+      .def("compareInt",
+           &bgm::py::MultiCompareBitmaps::alignMapToRefPy<int8_t>,
+           "compares binary maps")
+      .def("compareFloat",
+           &bgm::py::MultiCompareBitmaps::alignMapToRefPy<float>,
            "compares binary maps");
 }

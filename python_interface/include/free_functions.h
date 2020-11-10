@@ -13,6 +13,6 @@ namespace bgm::py {
   unsigned xorBinaryMaps(bgm::BinaryMap l, bgm::BinaryMap r);
 
   int findBestAlignemnt(bgm::BinaryMap l, bgm::BinaryMap r);
-} // namespace bgm
+} // namespace bgm::py
 
 #endif // BGM_ASM_FREE_FUNCTIONS_H
