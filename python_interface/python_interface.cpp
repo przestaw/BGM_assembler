@@ -78,10 +78,15 @@ BOOST_PYTHON_MODULE(BGM_asm) {
           &bgm::BinaryMap::setContig,
           "contig flag - indicates that map origin is from performed consensus");
 
+  // xor count between 2 maps
+  def("xorCountBinaryMaps",
+      &bgm::py::xorCountBinaryMaps,
+      "Performs xor between maps and return diffrences count");
+
   // xor between 2 maps
   def("xorBinaryMaps",
       &bgm::py::xorBinaryMaps,
-      "Performs xor between maps and return diffrences count");
+      "Performs xor between maps and return difference map");
 
   // class AssemblyTask
   class_<bgm::py::PyAssemblyTask, bases<>, bgm::py::PyAssemblyTask*, boost::noncopyable>(

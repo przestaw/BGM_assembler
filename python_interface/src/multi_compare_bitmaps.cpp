@@ -62,7 +62,7 @@ bgm::py::MultiCompareBitmaps::alignMapsToRef() {
     maxFo = maxFo > pivot.fo ? maxFo : pivot.fo;
     maxRo = maxRo > pivot.ro ? maxRo : pivot.ro;
 
-    pivot.name = std::to_string(result.getQuality()) + " : " + map.getIdentifier();
+    pivot.name = std::to_string(result.getDiffrences()) + " : " + map.getIdentifier();
 
     alignResults.push_back(std::move(pivot));
   }

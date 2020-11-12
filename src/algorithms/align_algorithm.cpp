@@ -216,28 +216,27 @@ PyAlignment AlignAlgorithm::pyAlignFromBegins(const BinaryMap::Bitset& left,
     const double qual      = xorResult / static_cast<double>(ovlpLen);
 
     // update
-    if (best > xorResult) {
-      if (qual < bestQual) {
-        bestShift = shift;
-        best      = xorResult;
-        bestQual  = qual;
-        overlap   = ovlpLen;
-        alignSign = sign;
-      }
+
+    if (qual < bestQual) {
+      bestShift = shift;
+      best      = xorResult;
+      bestQual  = qual;
+      overlap   = ovlpLen;
+      alignSign = sign;
     }
   };
 
-  size_t limitShift = refLarger ? maxShift : maxShift + diffLen;
+  size_t limitShift = !refLarger ? maxShift : maxShift + diffLen;
 
   for (size_t i = 0; i < limitShift; ++i) { performXorAndUpdate(right, left, i, false); }
 
-  limitShift = refLarger ? maxShift + diffLen : maxShift;
+  limitShift = !refLarger ? maxShift + diffLen : maxShift;
 
   for (size_t i = 0; i < limitShift; ++i) { performXorAndUpdate(left, right, i, true); }
 
   if (alignSign) {
-    return PyAlignment(-bestShift, overlap, bestQual);
+    return PyAlignment(-bestShift, overlap, best);
   } else {
-    return PyAlignment(bestShift, overlap, bestQual);
+    return PyAlignment(bestShift, overlap, best);
   }
 }

@@ -10,7 +10,9 @@
 #include <data/bin_map.h>
 
 namespace bgm::py {
-  unsigned xorBinaryMaps(bgm::BinaryMap l, bgm::BinaryMap r);
+  unsigned xorCountBinaryMaps(bgm::BinaryMap l, bgm::BinaryMap r);
+
+  bgm::BinaryMap xorBinaryMaps(bgm::BinaryMap l, bgm::BinaryMap r);
 
   int findBestAlignemnt(bgm::BinaryMap l, bgm::BinaryMap r);
 } // namespace bgm::py

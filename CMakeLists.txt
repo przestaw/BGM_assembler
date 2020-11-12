@@ -49,10 +49,10 @@ include(CTest)
 enable_testing()
 
 # Add external libs : boost
-find_package(Boost COMPONENTS program_options unit_test_framework python numpy REQUIRED)
+find_package(Boost COMPONENTS program_options thread unit_test_framework python numpy REQUIRED)
 find_package(Threads REQUIRED)
 find_package(PythonLibs 3.6 REQUIRED)
-set(EXTERNAL_LIBS "Boost::program_options" "Boost::unit_test_framework" "Threads::Threads")
+set(EXTERNAL_LIBS Boost::thread Boost::program_options Threads::Threads)
 set(PYTHON_EXTERNAL "Boost::python" "Boost::numpy" ${PYTHON_LIBRARIES})
 
 # CXX standard
@@ -94,7 +94,7 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     endif ()
 
     # using GCC
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 -Og -g -Wshadow -Wall -pedantic -Wextra -Wold-style-cast -Wl,--no-undefined")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 -g -Wshadow -Wall -pedantic -Wextra -Wold-style-cast -Wl,--no-undefined")
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -finline-functions -fdevirtualize -fmerge-constants  -march=native -mtune=native")
     # find and set toolchain
     include(GNUtoolchain)

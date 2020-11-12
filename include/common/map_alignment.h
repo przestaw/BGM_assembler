@@ -6,6 +6,7 @@
 #define BGM_ASM_MAP_ALIGNMENT_H
 
 #include <cstdint>
+#include <ostream>
 
 namespace bgm {
   /**
@@ -56,18 +57,32 @@ namespace bgm {
   public:
     PyAlignment(const unsigned long shift,
                 const unsigned long overlap,
-                const double quality)
-        : shift_(shift), overlap_(overlap), quality_(quality) {}
+                const std::size_t quality)
+        : shift_(shift), overlap_(overlap), diffrences_(quality) {}
 
     [[nodiscard]] inline int getShift() const { return shift_; }
     [[nodiscard]] inline std::size_t getOverlap() const { return overlap_; }
-    [[nodiscard]] inline double getQuality() const { return quality_; }
+    [[nodiscard]] inline std::size_t getDiffrences() const { return diffrences_; }
+
+    inline bool operator==(const PyAlignment& rhs) const {
+      return this->shift_ == rhs.shift_ && this->overlap_ == rhs.overlap_
+             && this->diffrences_ == rhs.diffrences_;
+    }
+    inline bool operator!=(const PyAlignment& rhs) const { return !(*this == rhs); }
+
+    friend std::ostream& operator<<(std::ostream& out, const PyAlignment& alignment);
 
   private:
     const int shift_;
     const std::size_t overlap_;
-    const double quality_;
+    const std::size_t diffrences_;
   };
+
+  inline std::ostream& operator<<(std::ostream& out, const PyAlignment& alignment) {
+    out << "(" << alignment.getShift() << ", " << alignment.getOverlap() << ", "
+        << alignment.getDiffrences() << ")";
+    return out;
+  }
 } // namespace bgm
 
 #endif // BGM_ASM_MAP_ALIGNMENT_H

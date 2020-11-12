@@ -4,7 +4,7 @@
 namespace p  = boost::python;
 namespace np = boost::python::numpy;
 
-unsigned bgm::py::xorBinaryMaps(bgm::BinaryMap l, bgm::BinaryMap r) {
+unsigned bgm::py::xorCountBinaryMaps(bgm::BinaryMap l, bgm::BinaryMap r) {
   if (l.getMap().size() != r.getMap().size()) {
     throw std::runtime_error("Mismatched arguments size");
   }
@@ -12,6 +12,17 @@ unsigned bgm::py::xorBinaryMaps(bgm::BinaryMap l, bgm::BinaryMap r) {
   bgm::BinaryMap::Bitset lMap = l.getMap();
   lMap ^= r.getMap();
   return lMap.count();
+}
+
+bgm::BinaryMap bgm::py::xorBinaryMaps(bgm::BinaryMap l, bgm::BinaryMap r) {
+  if (l.getMap().size() != r.getMap().size()) {
+    throw std::runtime_error("Mismatched arguments size");
+  }
+
+  bgm::BinaryMap::Bitset lMap = l.getMap();
+  lMap ^= r.getMap();
+
+  return bgm::BinaryMap("XOR " + l.getIdentifier() + " & " + r.getIdentifier(), lMap);
 }
 
 int bgm::py::findBestAlignemnt(bgm::BinaryMap l, bgm::BinaryMap r) {
