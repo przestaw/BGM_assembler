@@ -1,3 +1,8 @@
+# search for files
+file(GLOB_RECURSE TEST_SRC ${PROJECT_SOURCE_DIR}/test/assembler/*.cpp)
+file(GLOB_RECURSE PY_TEST_SRC ${PROJECT_SOURCE_DIR}/test/python/*.cpp)
+
+# config targets
 add_executable(${TEST}
         ${LIB_INC} ${LIB_SRC} ${LIB_TMP} ${TEST_SRC} ${PROJECT_SOURCE_DIR}/test/test_main.cpp)
 target_link_libraries(${TEST} ${EXTERNAL_LIBS} ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})

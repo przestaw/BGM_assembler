@@ -9,7 +9,8 @@ set(PROJECT_DESCRIPTION "Binary Maps Assembly prototype")
 set(EXECUTABLE ${PROJECT_NAME}-program)
 set(LIBRARY ${PROJECT_NAME})
 set(TEST ${PROJECT_NAME}-test)
-set(BGM_CHECK ${TEST}-check)
+set(BGM_CHECK ${PROJECT_NAME}-check)
+
 set(PYTHON_INT ${PROJECT_NAME}-python)
 set(TEST_PY_INT ${PYTHON_INT}-test)
 set(PY_CHECK ${PYTHON_INT}-check)
@@ -120,18 +121,15 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}
 include_directories(${PROJECT_SOURCE_DIR}/include)
 include_directories(${BOOST_INCLUDE_DIR})
 include_directories(${PROJECT_SOURCE_DIR}/external) # for mt4cpp
-include_directories(${PROJECT_SOURCE_DIR}/python_interface/include)
+include_directories(include/python)
 include_directories(PRIVATE ${PYTHON_INCLUDE_DIRS})
 
 # find source files
-file(GLOB_RECURSE EXT_SRC ${PROJECT_SOURCE_DIR}/external/*.hpp)
-file(GLOB_RECURSE LIB_SRC ${PROJECT_SOURCE_DIR}/src/*.cpp)
-file(GLOB_RECURSE LIB_INC ${PROJECT_SOURCE_DIR}/include/*.h)
-file(GLOB_RECURSE LIB_TMP ${PROJECT_SOURCE_DIR}/include/*.hpp)
-file(GLOB_RECURSE TEST_SRC ${PROJECT_SOURCE_DIR}/test/assembler/*.cpp)
+add_subdirectory(${PROJECT_SOURCE_DIR}/include)
+add_subdirectory(${PROJECT_SOURCE_DIR}/src)
 
 # library
-add_library(${LIBRARY} ${LIB_SRC} ${LIB_INC} ${LIB_TMP})
+add_library(${LIBRARY} ${LIB_SRC} ${LIB_INC})
 add_dependencies(${LIBRARY} ${BGM_CHECK})
 
 # Program executable
@@ -141,13 +139,9 @@ target_link_libraries(${EXECUTABLE} ${LIBRARY})
 target_link_libraries(${EXECUTABLE} ${EXTERNAL_LIBS})
 
 # Python3 interface
-file(GLOB PY_SRC ${PROJECT_SOURCE_DIR}/python_interface/src/*.cpp)
-file(GLOB PY_INC ${PROJECT_SOURCE_DIR}/python_interface/include/*.h)
-file(GLOB_RECURSE PY_TEST_SRC ${PROJECT_SOURCE_DIR}/test/python/*.cpp)
-
 add_library(${PYTHON_INT}
             MODULE
-            ${LIB_SRC} ${LIB_INC} ${LIB_TMP} ${PY_SRC} ${PY_INC} ${PROJECT_SOURCE_DIR}/python_interface/python_interface.cpp)
+            ${LIB_SRC} ${LIB_INC} ${PY_SRC} ${PY_INC} python_interface.cpp)
 set_target_properties(${PYTHON_INT} PROPERTIES PREFIX "") # remove lib prefix for python module
 set_target_properties(${PYTHON_INT} PROPERTIES OUTPUT_NAME "BGM_asm") # set name to match module name in python convention
 

@@ -90,6 +90,7 @@ BOOST_AUTO_TEST_CASE(Compare_Perfect_Same) {
   bgm::py::CompareBitmaps compare(one, two);
   auto result = compare.alignMapToRef();
 
+  BOOST_TEST_REQUIRE(expected.size() == result.size());
   BOOST_CHECK(std::equal(result.begin(), result.end(), expected.begin()));
 }
 
@@ -172,6 +173,7 @@ BOOST_AUTO_TEST_CASE(Compare_Diff_Same) {
   bgm::py::CompareBitmaps compare(one, two);
   auto result = compare.alignMapToRef();
 
+  BOOST_TEST_REQUIRE(expected.size() == result.size());
   BOOST_CHECK(std::equal(result.begin(), result.end(), expected.begin()));
 }
 
@@ -254,6 +256,7 @@ BOOST_AUTO_TEST_CASE(Compare_Diff_Same_rev) {
   bgm::py::CompareBitmaps compare(two, one);
   auto result = compare.alignMapToRef();
 
+  BOOST_TEST_REQUIRE(expected.size() == result.size());
   BOOST_CHECK(std::equal(result.begin(), result.end(), expected.begin()));
 }
 
@@ -364,6 +367,7 @@ BOOST_AUTO_TEST_CASE(Compare_Perfect_Overlapping) {
   bgm::py::CompareBitmaps compare(one, two);
   auto result = compare.alignMapToRef();
 
+  BOOST_TEST_REQUIRE(expected.size() == result.size());
   BOOST_CHECK(std::equal(result.begin(), result.end(), expected.begin()));
 }
 
@@ -474,6 +478,7 @@ BOOST_AUTO_TEST_CASE(Compare_Perfect_Overlapping_rev) {
   bgm::py::CompareBitmaps compare(two, one);
   auto result = compare.alignMapToRef();
 
+  BOOST_TEST_REQUIRE(expected.size() == result.size());
   BOOST_CHECK(std::equal(result.begin(), result.end(), expected.begin()));
 }
 
@@ -586,6 +591,7 @@ BOOST_AUTO_TEST_CASE(Compare_Diff_Overlapping) {
   bgm::py::CompareBitmaps compare(one, two);
   auto result = compare.alignMapToRef();
 
+  BOOST_TEST_REQUIRE(expected.size() == result.size());
   BOOST_CHECK(std::equal(result.begin(), result.end(), expected.begin()));
 }
 
@@ -698,6 +704,7 @@ BOOST_AUTO_TEST_CASE(Compare_Diff_Overlapping_rev) {
   bgm::py::CompareBitmaps compare(two, one);
   auto result = compare.alignMapToRef();
 
+  BOOST_TEST_REQUIRE(expected.size() == result.size());
   BOOST_CHECK(std::equal(result.begin(), result.end(), expected.begin()));
 }
 
@@ -810,6 +817,7 @@ BOOST_AUTO_TEST_CASE(Compare_Perfect_Submap) {
   bgm::py::CompareBitmaps compare(one, two);
   auto result = compare.alignMapToRef();
 
+  BOOST_TEST_REQUIRE(expected.size() == result.size());
   BOOST_CHECK(std::equal(result.begin(), result.end(), expected.begin()));
 }
 
@@ -922,6 +930,7 @@ BOOST_AUTO_TEST_CASE(Compare_Perfect_Submap_rev) {
   bgm::py::CompareBitmaps compare(two, one);
   auto result = compare.alignMapToRef();
 
+  BOOST_TEST_REQUIRE(expected.size() == result.size());
   BOOST_CHECK(std::equal(result.begin(), result.end(), expected.begin()));
 }
 
@@ -1032,6 +1041,7 @@ BOOST_AUTO_TEST_CASE(Compare_Diff_Submap) {
   bgm::py::CompareBitmaps compare(one, two);
   auto result = compare.alignMapToRef();
 
+  BOOST_TEST_REQUIRE(expected.size() == result.size());
   BOOST_CHECK(std::equal(result.begin(), result.end(), expected.begin()));
 }
 
@@ -1144,6 +1154,7 @@ BOOST_AUTO_TEST_CASE(Compare_Diff_Submap_rev) {
   bgm::py::CompareBitmaps compare(two, one);
   auto result = compare.alignMapToRef();
 
+  BOOST_TEST_REQUIRE(expected.size() == result.size());
   BOOST_CHECK(std::equal(result.begin(), result.end(), expected.begin()));
 }
 

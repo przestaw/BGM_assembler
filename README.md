@@ -63,8 +63,10 @@
   
 - Project targets :
 
-    - **build-all** - builds all available targets
-    - **BGM-asm-test** - UnitTest made with *boost*
-    - **BGM-asm-check** - dummy target for test run during library compilation
     - **BGM-asm-library** - library containing all classes excluding parameters
     - **BGM-asm-program** - program available for command line usage
+    - **BGM-asm-test** - unit tests for Cpp library made with *boost*
+    - **BGM-asm-check** - dummy target for test run during library compilation
+    - **BGM-asm-python** - python package utilizing boost.python
+    - **BGM-asm-python-test** - unit tests for python package made with *boost*
+    - **BGM-asm-python-check** - dummy target for test run during python package compilation
