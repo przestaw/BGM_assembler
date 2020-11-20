@@ -17,8 +17,9 @@ namespace bgm {
      *  shift of 0 indicates no alignment
      *   -> [as shift 0 would mean duplicate this should not affect results]
      */
-    using Alignment   = std::pair<int64_t, size_t>;
-    using PyAlignment = bgm::PyAlignment;
+    // using Alignment   = std::pair<int64_t, size_t>;
+    using VisualAlign = bgm::VisualAlignment;
+    using LayoutAlign = bgm::LayoutAlignment;
 
     /**
      * Constructor
@@ -50,8 +51,8 @@ namespace bgm {
      * @param tested shifted map
      * @return offset between right maps ends, 0 means no meaningful alignment
      */
-    [[nodiscard]] Alignment align(const BinaryMap::Bitset &ref,
-                                  const BinaryMap::Bitset &tested) const;
+    [[nodiscard]] LayoutAlignment align(const BinaryMap::Bitset &ref,
+                                        const BinaryMap::Bitset &tested) const;
 
     /**
      * Align two maps for analysis. Used by python interface
@@ -59,7 +60,7 @@ namespace bgm {
      * @param right right argument
      * @return offset between maps begins
      */
-    [[nodiscard]] static PyAlignment pyAlignFromBegins(const BinaryMap::Bitset &left,
+    [[nodiscard]] static VisualAlign pyAlignFromBegins(const BinaryMap::Bitset &left,
                                                        const BinaryMap::Bitset &right);
     /*
      *

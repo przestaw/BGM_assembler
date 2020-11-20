@@ -54,17 +54,17 @@ void AlignAlgorithm::alignOneMap(size_t index) {
    * NOTE : left neighbours are found in this process as relation
    *        is symmetrical
    */
-  Alignment best   = Alignment(-1, std::numeric_limits<size_t>::max());
-  size_t neighbour = 0;
+  LayoutAlignment best = LayoutAlignment::notAligned();
+  size_t neighbour     = 0;
   /* NOTE : iterate from index to max
    *      - if pair with lower position it would be found earlier
    */
   for (size_t iter = 0; iter < maps_.size(); ++iter) {
     if (iter != index) {
       // reuse align fun by switching arguments
-      Alignment result = align(maps_[iter].getMap(), maps_[index].getMap());
+      LayoutAlignment result = align(maps_[iter].getMap(), maps_[index].getMap());
       // NOTE : if result of alignment is better save it as new best
-      if (result.second < best.second) {
+      if (result < best) {
         best      = result;
         neighbour = iter;
       }
@@ -73,19 +73,19 @@ void AlignAlgorithm::alignOneMap(size_t index) {
   /* NOTE : value different than zero indicates significant alignment
    *        - see notes in align function
    */
-  if (best.first >= 0) {
-    maps_.addRightNeighbour(index, neighbour, best.first);
+  if (best.isValid()) {
+    maps_.addRightNeighbour(index, neighbour, best.getShift());
   }
 }
 
-AlignAlgorithm::Alignment AlignAlgorithm::align(const BinaryMap::Bitset& ref_,
-                                                const BinaryMap::Bitset& tested) const {
+AlignAlgorithm::LayoutAlign AlignAlgorithm::align(const BinaryMap::Bitset& ref_,
+                                                  const BinaryMap::Bitset& tested) const {
   // copy as it will be resized
   BinaryMap::Bitset ref(ref_);
 
   // sanity check
   if (std::min(ref.size(), tested.size()) <= minOverlapQuants_) {
-    return std::make_pair(-1, std::numeric_limits<size_t>::max());
+    return LayoutAlignment::notAligned();
   }
 
   // calc max shift
@@ -97,9 +97,9 @@ AlignAlgorithm::Alignment AlignAlgorithm::align(const BinaryMap::Bitset& ref_,
                static_cast<size_t>(smallerLen * (1 - minOverlapPart_)));
 
   // init best as worst numerically possible
-  size_t best         = std::numeric_limits<size_t>::max();
-  double best_quality = this->threshold_;
-  int64_t bestShift   = -1;
+  size_t best        = std::numeric_limits<size_t>::max();
+  double bestQuality = std::numeric_limits<double>::max(); // this->threshold_;
+  int64_t bestShift = -1;
 
   auto performXorAndUpdate = [&](bgm::BinaryMap::Bitset shiftedTest, const size_t shift) {
     // resize to equal lengths
@@ -115,11 +115,11 @@ AlignAlgorithm::Alignment AlignAlgorithm::align(const BinaryMap::Bitset& ref_,
         shiftedTest.count(), shiftedTest.size(), refLen, testedLen);
 
     // above threshold or better 'quality' alignment
-    if (q < best_quality) {
+    if (q < bestQuality) {
       if (best > xorResult) {
-        best         = xorResult;
-        bestShift    = shift;
-        best_quality = q;
+        best        = xorResult;
+        bestShift   = shift;
+        bestQuality = q;
       }
     }
   };
@@ -161,7 +161,11 @@ AlignAlgorithm::Alignment AlignAlgorithm::align(const BinaryMap::Bitset& ref_,
     }
   }
 
-  return AlignAlgorithm::Alignment(bestShift, best);
+  if (bestQuality < this->threshold_) {
+    return AlignAlgorithm::LayoutAlign(0, bestShift, bestQuality);
+  } else {
+    return AlignAlgorithm::LayoutAlign::notAligned();
+  }
 }
 
 void AlignAlgorithm::workerThread() {
@@ -176,8 +180,8 @@ void AlignAlgorithm::rangeWorkerThread(size_t begin, size_t end) {
   for (size_t iter = begin; iter < end; ++iter) { alignOneMap(iter); }
 }
 
-PyAlignment AlignAlgorithm::pyAlignFromBegins(const BinaryMap::Bitset& left,
-                                              const BinaryMap::Bitset& right) {
+VisualAlignment AlignAlgorithm::pyAlignFromBegins(const BinaryMap::Bitset& left,
+                                                  const BinaryMap::Bitset& right) {
   // calc max shift
   const size_t refLen     = left.size();
   const size_t testedLen  = right.size();
@@ -235,8 +239,8 @@ PyAlignment AlignAlgorithm::pyAlignFromBegins(const BinaryMap::Bitset& left,
   for (size_t i = 0; i < limitShift; ++i) { performXorAndUpdate(left, right, i, true); }
 
   if (alignSign) {
-    return PyAlignment(-bestShift, overlap, best);
+    return VisualAlign(-bestShift, overlap, best);
   } else {
-    return PyAlignment(bestShift, overlap, best);
+    return VisualAlign(bestShift, overlap, best);
   }
 }

@@ -6,6 +6,7 @@
 #define BIN_MAP_H
 
 #include <boost/dynamic_bitset.hpp>
+#include <common/map_alignment.h>
 #include <cstdint>
 
 namespace bgm {
@@ -15,7 +16,7 @@ namespace bgm {
   class BinaryMap {
   public:
     using Bitset    = boost::dynamic_bitset<uint64_t>;
-    using Neighbour = std::pair<int, unsigned>;
+    using Neighbour = bgm::LayoutAlignment;
 
     /**
      * Constructor
@@ -52,15 +53,13 @@ namespace bgm {
     /**
      * Sets left neighbour to desired value
      * @param best best left neighbor
-     * @param shift shift between neighbour right ends
      */
-    void setLeftNeighbour(int best, unsigned shift);
+    void setLeftNeighbour(BinaryMap::Neighbour best);
     /**
      * Sets right neighbour to desired value
      * @param best best left neighbor
-     * @param shift shift between neighbour right ends
      */
-    void setRightNeighbour(int best, unsigned shift);
+    void setRightNeighbour(BinaryMap::Neighbour best);
     /**
      * Getter for Bitmap of BinaryMap
      * @return copy of Bitmap for further use

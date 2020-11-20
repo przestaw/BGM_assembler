@@ -44,11 +44,11 @@ BOOST_AUTO_TEST_CASE(MisedAlignTest_Circle_1) {
   // 2 -(10)- 3 -(10)- 4
   maps.addRightNeighbour(2, 3, 10);
 
-  BOOST_CHECK_EQUAL(maps[2].getRightNeighbour().first, 3);
-  BOOST_CHECK_EQUAL(maps[2].getRightNeighbour().second, 10);
+  BOOST_CHECK_EQUAL(maps[2].getRightNeighbour().getMap(), 3);
+  BOOST_CHECK_EQUAL(maps[2].getRightNeighbour().getShift(), 10);
 
-  BOOST_CHECK_EQUAL(maps[3].getRightNeighbour().first, 4);
-  BOOST_CHECK_EQUAL(maps[3].getRightNeighbour().second, 10);
+  BOOST_CHECK_EQUAL(maps[3].getRightNeighbour().getMap(), 4);
+  BOOST_CHECK_EQUAL(maps[3].getRightNeighbour().getShift(), 10);
 }
 
 BOOST_AUTO_TEST_CASE(MisedAlignTest_Circle_2) {
@@ -69,11 +69,11 @@ BOOST_AUTO_TEST_CASE(MisedAlignTest_Circle_2) {
   // 2 -(10)- 3 -(10)- 4
   maps.addRightNeighbour(3, 4, 10);
 
-  BOOST_CHECK_EQUAL(maps[2].getRightNeighbour().first, 3);
-  BOOST_CHECK_EQUAL(maps[2].getRightNeighbour().second, 10);
+  BOOST_CHECK_EQUAL(maps[2].getRightNeighbour().getMap(), 3);
+  BOOST_CHECK_EQUAL(maps[2].getRightNeighbour().getShift(), 10);
 
-  BOOST_CHECK_EQUAL(maps[3].getRightNeighbour().first, 4);
-  BOOST_CHECK_EQUAL(maps[3].getRightNeighbour().second, 10);
+  BOOST_CHECK_EQUAL(maps[3].getRightNeighbour().getMap(), 4);
+  BOOST_CHECK_EQUAL(maps[3].getRightNeighbour().getShift(), 10);
 }
 
 BOOST_AUTO_TEST_CASE(AnotherReferedAlignTest_Circle) {
@@ -90,11 +90,11 @@ BOOST_AUTO_TEST_CASE(AnotherReferedAlignTest_Circle) {
 
   maps.addRightNeighbour(2, 4, 20);
 
-  BOOST_CHECK_EQUAL(maps[2].getRightNeighbour().first, 3);
-  BOOST_CHECK_EQUAL(maps[2].getRightNeighbour().second, 10);
+  BOOST_CHECK_EQUAL(maps[2].getRightNeighbour().getMap(), 3);
+  BOOST_CHECK_EQUAL(maps[2].getRightNeighbour().getShift(), 10);
 
-  BOOST_CHECK_EQUAL(maps[3].getRightNeighbour().first, 4);
-  BOOST_CHECK_EQUAL(maps[3].getRightNeighbour().second, 10);
+  BOOST_CHECK_EQUAL(maps[3].getRightNeighbour().getMap(), 4);
+  BOOST_CHECK_EQUAL(maps[3].getRightNeighbour().getShift(), 10);
 }
 
 BOOST_AUTO_TEST_CASE(MisedAlignTest_1) {
@@ -113,11 +113,11 @@ BOOST_AUTO_TEST_CASE(MisedAlignTest_1) {
   // 2 -(10)- 3 -(10)- 4
   maps.addRightNeighbour(2, 3, 10);
 
-  BOOST_CHECK_EQUAL(maps[2].getRightNeighbour().first, 3);
-  BOOST_CHECK_EQUAL(maps[2].getRightNeighbour().second, 10);
+  BOOST_CHECK_EQUAL(maps[2].getRightNeighbour().getMap(), 3);
+  BOOST_CHECK_EQUAL(maps[2].getRightNeighbour().getShift(), 10);
 
-  BOOST_CHECK_EQUAL(maps[3].getRightNeighbour().first, 4);
-  BOOST_CHECK_EQUAL(maps[3].getRightNeighbour().second, 10);
+  BOOST_CHECK_EQUAL(maps[3].getRightNeighbour().getMap(), 4);
+  BOOST_CHECK_EQUAL(maps[3].getRightNeighbour().getShift(), 10);
 }
 
 BOOST_AUTO_TEST_CASE(MisedAlignTest_2) {
@@ -136,11 +136,11 @@ BOOST_AUTO_TEST_CASE(MisedAlignTest_2) {
   // 2 -(10)- 3 -(10)- 4
   maps.addRightNeighbour(3, 4, 10);
 
-  BOOST_CHECK_EQUAL(maps[2].getRightNeighbour().first, 3);
-  BOOST_CHECK_EQUAL(maps[2].getRightNeighbour().second, 10);
+  BOOST_CHECK_EQUAL(maps[2].getRightNeighbour().getMap(), 3);
+  BOOST_CHECK_EQUAL(maps[2].getRightNeighbour().getShift(), 10);
 
-  BOOST_CHECK_EQUAL(maps[3].getRightNeighbour().first, 4);
-  BOOST_CHECK_EQUAL(maps[3].getRightNeighbour().second, 10);
+  BOOST_CHECK_EQUAL(maps[3].getRightNeighbour().getMap(), 4);
+  BOOST_CHECK_EQUAL(maps[3].getRightNeighbour().getShift(), 10);
 }
 
 BOOST_AUTO_TEST_CASE(AnotherReferedAlignTest) {
@@ -155,11 +155,11 @@ BOOST_AUTO_TEST_CASE(AnotherReferedAlignTest) {
 
   maps.addRightNeighbour(2, 4, 20);
 
-  BOOST_CHECK_EQUAL(maps[2].getRightNeighbour().first, 3);
-  BOOST_CHECK_EQUAL(maps[2].getRightNeighbour().second, 10);
+  BOOST_CHECK_EQUAL(maps[2].getRightNeighbour().getMap(), 3);
+  BOOST_CHECK_EQUAL(maps[2].getRightNeighbour().getShift(), 10);
 
-  BOOST_CHECK_EQUAL(maps[3].getRightNeighbour().first, 4);
-  BOOST_CHECK_EQUAL(maps[3].getRightNeighbour().second, 10);
+  BOOST_CHECK_EQUAL(maps[3].getRightNeighbour().getMap(), 4);
+  BOOST_CHECK_EQUAL(maps[3].getRightNeighbour().getShift(), 10);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

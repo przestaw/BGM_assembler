@@ -98,8 +98,8 @@ namespace bgm {
     // lambdas for contig map count deduction
     const std::function<size_t(size_t)> countLenL = [&](size_t mapId) {
       size_t len;
-      for (len   = 1; conMaps_[mapId].getLeftNeighbour().first >= 0;
-           mapId = conMaps_[mapId].getLeftNeighbour().first) {
+      for (len   = 1; conMaps_[mapId].getLeftNeighbour().isValid();
+           mapId = conMaps_[mapId].getLeftNeighbour().getMap()) {
         ++len;
       }
       return len;

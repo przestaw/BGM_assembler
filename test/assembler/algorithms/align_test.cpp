@@ -30,12 +30,12 @@ BOOST_AUTO_TEST_CASE(TwoPerfectlyMatchedMaps_AreAligned) {
   bgm::MapsContainer maps; // for compatibility
   bgm::AlignAlgorithm aligner(maps, 40);
 
-  bgm::AlignAlgorithm::Alignment res = aligner.align(two, one);
+  bgm::AlignAlgorithm::LayoutAlign res = aligner.align(two, one);
 
   // shift
-  BOOST_CHECK_EQUAL(res.first, 50);
+  BOOST_CHECK_EQUAL(res.getShift(), 50);
   // perfect match
-  BOOST_CHECK_EQUAL(res.second, 0);
+  BOOST_CHECK_EQUAL(res.getQuality(), 0);
 }
 
 BOOST_AUTO_TEST_CASE(TwoAllDifferentMaps_AreNotAligned) {
@@ -50,10 +50,10 @@ BOOST_AUTO_TEST_CASE(TwoAllDifferentMaps_AreNotAligned) {
   bgm::MapsContainer maps; // for compatibility
   bgm::AlignAlgorithm aligner(maps, 10);
 
-  bgm::AlignAlgorithm::Alignment res = aligner.align(two, one);
+  bgm::AlignAlgorithm::LayoutAlign res = aligner.align(two, one);
 
-  // shift 0 means no match
-  BOOST_CHECK_EQUAL(res.first, -1);
+  // means no match
+  BOOST_CHECK_EQUAL(res.isValid(), false);
 }
 
 BOOST_AUTO_TEST_CASE(TwoDiffrentlySizedMaps_AreAligned_1) {
@@ -72,12 +72,12 @@ BOOST_AUTO_TEST_CASE(TwoDiffrentlySizedMaps_AreAligned_1) {
   bgm::MapsContainer maps; // for compatibility
   bgm::AlignAlgorithm aligner(maps, 40);
 
-  bgm::AlignAlgorithm::Alignment res1 = aligner.align(two, one);
+  bgm::AlignAlgorithm::LayoutAlign res1 = aligner.align(two, one);
 
   // shift
-  BOOST_CHECK_EQUAL(res1.first, 50);
+  BOOST_CHECK_EQUAL(res1.getShift(), 50);
   // perfect match
-  BOOST_CHECK_EQUAL(res1.second, 0);
+  BOOST_CHECK_EQUAL(res1.getQuality(), 0);
 }
 
 BOOST_AUTO_TEST_CASE(TwoDiffrentlySizedMaps_AreAligned_2) {
@@ -98,12 +98,12 @@ BOOST_AUTO_TEST_CASE(TwoDiffrentlySizedMaps_AreAligned_2) {
   bgm::MapsContainer maps; // for compatibility
   bgm::AlignAlgorithm aligner(maps, 40);
 
-  bgm::AlignAlgorithm::Alignment res1 = aligner.align(one, two);
+  bgm::AlignAlgorithm::LayoutAlign res1 = aligner.align(one, two);
 
   // shift
-  BOOST_CHECK_EQUAL(res1.first, 1);
+  BOOST_CHECK_EQUAL(res1.getShift(), 1);
   // perfect match
-  BOOST_CHECK_EQUAL(res1.second, 0);
+  BOOST_CHECK_EQUAL(res1.getQuality(), 0);
 }
 BOOST_AUTO_TEST_SUITE_END()
 
@@ -122,7 +122,7 @@ BOOST_AUTO_TEST_CASE(Test_Align_2_Binmaps_1) {
 
   auto res = bgm::AlignAlgorithm::pyAlignFromBegins(map1.getMap(), map2.getMap());
 
-  auto expected = bgm::PyAlignment(50, 110, 0);
+  auto expected = bgm::VisualAlignment(50, 110, 0);
 
   BOOST_CHECK_EQUAL(res, expected);
 }
@@ -139,7 +139,7 @@ BOOST_AUTO_TEST_CASE(Test_Align_2_Binmaps_diff_Size_1) {
 
   auto res = bgm::AlignAlgorithm::pyAlignFromBegins(map1.getMap(), map2.getMap());
 
-  auto expected = bgm::PyAlignment(11, 112, 0);
+  auto expected = bgm::VisualAlignment(11, 112, 0);
 
   BOOST_CHECK_EQUAL(res, expected);
 }
@@ -157,7 +157,7 @@ BOOST_AUTO_TEST_CASE(Test_Align_2_Binmaps_diff_Size_2) {
 
   auto res = bgm::AlignAlgorithm::pyAlignFromBegins(map1.getMap(), map2.getMap());
 
-  auto expected = bgm::PyAlignment(15, 112, 0);
+  auto expected = bgm::VisualAlignment(15, 112, 0);
 
   BOOST_CHECK_EQUAL(res, expected);
 }
@@ -175,7 +175,7 @@ BOOST_AUTO_TEST_CASE(Test_Align_2_Binmaps_diff_Size_3) {
 
   auto res = bgm::AlignAlgorithm::pyAlignFromBegins(map1.getMap(), map2.getMap());
 
-  auto expected = bgm::PyAlignment(20, 134, 0);
+  auto expected = bgm::VisualAlignment(20, 134, 0);
 
   BOOST_CHECK_EQUAL(res, expected);
 }
@@ -193,7 +193,7 @@ BOOST_AUTO_TEST_CASE(Test_Align_2_Binmaps_1_inv) {
 
   auto res = bgm::AlignAlgorithm::pyAlignFromBegins(map2.getMap(), map1.getMap());
 
-  auto expected = bgm::PyAlignment(-50, 110, 0);
+  auto expected = bgm::VisualAlignment(-50, 110, 0);
 
   BOOST_CHECK_EQUAL(res, expected);
 }
@@ -212,7 +212,7 @@ BOOST_AUTO_TEST_CASE(Test_Align_2_Binmaps_diff_Size_2_inv) {
 
   auto res = bgm::AlignAlgorithm::pyAlignFromBegins(map2.getMap(), map1.getMap());
 
-  auto expected = bgm::PyAlignment(-15, 112, 0);
+  auto expected = bgm::VisualAlignment(-15, 112, 0);
 
   BOOST_CHECK_EQUAL(res, expected);
 }
@@ -231,7 +231,7 @@ BOOST_AUTO_TEST_CASE(Test_Align_2_Binmaps_diff_Size_3_inv) {
 
   auto res = bgm::AlignAlgorithm::pyAlignFromBegins(map2.getMap(), map1.getMap());
 
-  auto expected = bgm::PyAlignment(-20, 134, 0);
+  auto expected = bgm::VisualAlignment(-20, 134, 0);
 
   BOOST_CHECK_EQUAL(res, expected);
 }
@@ -248,7 +248,7 @@ BOOST_AUTO_TEST_CASE(Test_Align_2_Binmaps_With_Diff) {
 
   auto res = bgm::AlignAlgorithm::pyAlignFromBegins(map1.getMap(), map2.getMap());
 
-  auto expected = bgm::PyAlignment(50, 110, 7);
+  auto expected = bgm::VisualAlignment(50, 110, 7);
 
   BOOST_CHECK_EQUAL(res, expected);
 }
@@ -265,7 +265,7 @@ BOOST_AUTO_TEST_CASE(Test_Align_2_Binmaps_diff_Size_1_With_Diff) {
 
   auto res = bgm::AlignAlgorithm::pyAlignFromBegins(map1.getMap(), map2.getMap());
 
-  auto expected = bgm::PyAlignment(15, 128, 17);
+  auto expected = bgm::VisualAlignment(15, 128, 17);
 
   BOOST_CHECK_EQUAL(res, expected);
 }
@@ -283,7 +283,7 @@ BOOST_AUTO_TEST_CASE(Test_Align_2_Binmaps_Diff_Size_2_With_Diff) {
 
   auto res = bgm::AlignAlgorithm::pyAlignFromBegins(map1.getMap(), map2.getMap());
 
-  auto expected = bgm::PyAlignment(20, 134, 10);
+  auto expected = bgm::VisualAlignment(20, 134, 10);
 
   BOOST_CHECK_EQUAL(res, expected);
 }

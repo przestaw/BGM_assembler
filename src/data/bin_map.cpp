@@ -4,27 +4,20 @@
 using namespace bgm;
 
 BinaryMap::BinaryMap(std::string c_identifier, std::string c_bmap)
-    : identifier_(std::move(c_identifier)),
-      leftNeighbour_(-1, std::numeric_limits<unsigned>::max()),
-      rightNeighbour_(-1, std::numeric_limits<unsigned>::max()), mark_(false),
-      contig_(false) {
+    : identifier_(std::move(c_identifier)), leftNeighbour_(Neighbour::notAligned()),
+      rightNeighbour_(Neighbour::notAligned()), mark_(false), contig_(false) {
   std::reverse(c_bmap.begin(), c_bmap.end());
   map_ = Bitset(c_bmap);
 }
 
 BinaryMap::BinaryMap(std::string c_identifier, Bitset c_map)
     : identifier_(std::move(c_identifier)), map_(std::move(c_map)),
-      leftNeighbour_(-1, std::numeric_limits<unsigned>::max()),
-      rightNeighbour_(-1, std::numeric_limits<unsigned>::max()), mark_(false),
-      contig_(false) {}
+      leftNeighbour_(Neighbour::notAligned()), rightNeighbour_(Neighbour::notAligned()),
+      mark_(false), contig_(false) {}
 
-void BinaryMap::setLeftNeighbour(int best, unsigned int shift) {
-  leftNeighbour_ = Neighbour(best, shift);
-}
+void BinaryMap::setLeftNeighbour(BinaryMap::Neighbour best) { leftNeighbour_ = best; }
 
-void BinaryMap::setRightNeighbour(int best, unsigned int shift) {
-  rightNeighbour_ = Neighbour(best, shift);
-}
+void BinaryMap::setRightNeighbour(BinaryMap::Neighbour best) { rightNeighbour_ = best; }
 
 const BinaryMap::Bitset &BinaryMap::getMap() const { return map_; }
 

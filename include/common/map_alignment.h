@@ -12,7 +12,7 @@ namespace bgm {
   /**
    * Class wrapping information about map alignment
    */
-  class MapAlignment { // NOTE: WIP Alignment -> MapAlignment, std::optional
+  class LayoutAlignment { // NOTE: WIP Alignment -> MapAlignment, std::optional
   public:
     /**
      * Constructor
@@ -20,8 +20,24 @@ namespace bgm {
      * @param shift shift between maps
      * @param quality quality of alignment
      */
-    MapAlignment(int64_t map, std::size_t shift, double quality = 0.0)
+    LayoutAlignment(int64_t map, std::size_t shift, double quality = 0.0)
         : map_(map), shift_(shift), quality_(quality) {}
+
+    /**
+     * Returns not an alignment [map index is negative]
+     * @return not an alignment
+     */
+    static LayoutAlignment notAligned() {
+      static LayoutAlignment notAlign =
+          LayoutAlignment(-1, 0, std::numeric_limits<double>::max());
+      return notAlign;
+    }
+
+    /**
+     * Checks if alignment is valid [map index is positive]
+     * @return true if alignment is valid
+     */
+    inline bool isValid() const { return map_ >= 0; }
 
     /**
      * Getter for map id
@@ -39,38 +55,38 @@ namespace bgm {
      */
     [[nodiscard]] inline double getQuality() const { return quality_; }
 
-    inline bool operator<(const MapAlignment& rhs) const {
+    inline bool operator<(const LayoutAlignment& rhs) const {
       return this->quality_ < rhs.quality_;
     }
-    inline bool operator>(const MapAlignment& rhs) const { return rhs < (*this); }
-    inline bool operator<=(const MapAlignment& rhs) const { return !((*this) > rhs); }
-    inline bool operator>=(const MapAlignment& rhs) const { return !((*this) < rhs); }
+    inline bool operator>(const LayoutAlignment& rhs) const { return rhs < (*this); }
+    inline bool operator<=(const LayoutAlignment& rhs) const { return !((*this) > rhs); }
+    inline bool operator>=(const LayoutAlignment& rhs) const { return !((*this) < rhs); }
 
   private:
     // data
-    const int64_t map_;
-    const std::size_t shift_;
-    const double quality_;
+    int64_t map_;
+    std::size_t shift_;
+    double quality_;
   };
 
-  class PyAlignment {
+  class VisualAlignment {
   public:
-    PyAlignment(const unsigned long shift,
-                const unsigned long overlap,
-                const std::size_t quality)
+    VisualAlignment(const unsigned long shift,
+                    const unsigned long overlap,
+                    const std::size_t quality)
         : shift_(shift), overlap_(overlap), diffrences_(quality) {}
 
     [[nodiscard]] inline int getShift() const { return shift_; }
     [[nodiscard]] inline std::size_t getOverlap() const { return overlap_; }
     [[nodiscard]] inline std::size_t getDiffrences() const { return diffrences_; }
 
-    inline bool operator==(const PyAlignment& rhs) const {
+    inline bool operator==(const VisualAlignment& rhs) const {
       return this->shift_ == rhs.shift_ && this->overlap_ == rhs.overlap_
              && this->diffrences_ == rhs.diffrences_;
     }
-    inline bool operator!=(const PyAlignment& rhs) const { return !(*this == rhs); }
+    inline bool operator!=(const VisualAlignment& rhs) const { return !(*this == rhs); }
 
-    friend std::ostream& operator<<(std::ostream& out, const PyAlignment& alignment);
+    friend std::ostream& operator<<(std::ostream& out, const VisualAlignment& alignment);
 
   private:
     const int shift_;
@@ -78,7 +94,7 @@ namespace bgm {
     const std::size_t diffrences_;
   };
 
-  inline std::ostream& operator<<(std::ostream& out, const PyAlignment& alignment) {
+  inline std::ostream& operator<<(std::ostream& out, const VisualAlignment& alignment) {
     out << "(" << alignment.getShift() << ", " << alignment.getOverlap() << ", "
         << alignment.getDiffrences() << ")";
     return out;

@@ -22,13 +22,6 @@ namespace bgm {
      * @param maps maps to be stored
      */
     explicit MapsContainer(std::vector<BinaryMap> maps = std::vector<BinaryMap>());
-    //    /**
-    //     * Set neighbourhood for 2 maps
-    //     * @param map map
-    //     * @param neighbour left map neighbour
-    //     * @param shift shift between right ends
-    //     */
-    //    void addLeftNeighbour(size_t map, size_t neighbour, unsigned shift);
     /**
      * Set neighbourhood for 2 maps
      * @param map map

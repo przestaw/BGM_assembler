@@ -19,11 +19,11 @@ print("\t.reuseMaps = ", params.reuseMaps)
 #import BGM_asm
 #help(BGM_asm)
 
-#map1 = CppBinaryMap("map1", "1010111100001101010001110101")
-map2 = CppBinaryMap("map2", "10101111000011010100011")
-map3 = CppBinaryMap("map3",  "010111100001101010001")
-map4 = CppBinaryMap("map4",      "11100001101010001101")
-map5 = CppBinaryMap("map5",             "1101010001101")
+map1 = CppBinaryMap("map1", "10101111000011010100011101011")
+map2 = CppBinaryMap("map2", "101011110000110101000111")
+map3 = CppBinaryMap("map3",   "10111100001101010001")
+map4 = CppBinaryMap("map4",      "111000011010100011101")
+map5 = CppBinaryMap("map5",             "11010100011101011")
 
 print("align")
 compareMaps = CompareBitmaps(map2, map3)

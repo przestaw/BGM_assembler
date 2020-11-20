@@ -9,73 +9,61 @@ using namespace bgm;
 MapsContainer::MapsContainer(std::vector<BinaryMap> maps)
     : std::vector<BinaryMap>(std::move(maps)), unalignedPivot_(0) {}
 
-// void MapsContainer::addLeftNeighbour(size_t map, size_t neighbour,
-//                                     unsigned shift) {
-//  // lock the container
-//  std::unique_lock guard(additionGuard);
-//
-//  if ((*this)[map].getLeftNeighbour().first < 0
-//      && (*this)[neighbour].getRightNeighbour().first < 0) {
-//    (*this)[map].setLeftNeighbour(neighbour, shift);
-//    (*this)[neighbour].setRightNeighbour(map, shift);
-//  }
-//}
-
 void MapsContainer::internalAddRight(size_t map, size_t neighbour, unsigned shift) {
-  bool rFlag = (*this)[map].getRightNeighbour().first < 0;
-  bool lFlag = (*this)[neighbour].getLeftNeighbour().first < 0;
+  bool rFlag = !(*this)[map].getRightNeighbour().isValid();
+  bool lFlag = !(*this)[neighbour].getLeftNeighbour().isValid();
 
   // avoid 0-shift cycles
   if (shift == 0) {
     // NOTE : Code below is used to avoid creation of 0's length cycles
     auto lNeighbour = (*this)[map].getLeftNeighbour();
-    while (lNeighbour.second == 0 && lNeighbour.first >= 0) {
-      if (lNeighbour.first == static_cast<int>(neighbour)) {
+    while (lNeighbour.getShift() == 0 && lNeighbour.getMap() >= 0) {
+      if (lNeighbour.getMap() == static_cast<int>(neighbour)) {
         return;
       }
-      lNeighbour = (*this)[lNeighbour.first].getLeftNeighbour();
+      lNeighbour = (*this)[lNeighbour.getMap()].getLeftNeighbour();
     }
   }
 
   if (rFlag && lFlag) {
-    (*this)[map].setRightNeighbour(neighbour, shift);
-    (*this)[neighbour].setLeftNeighbour(map, shift);
+    (*this)[map].setRightNeighbour(BinaryMap::Neighbour(neighbour, shift));
+    (*this)[neighbour].setLeftNeighbour(BinaryMap::Neighbour(map, shift));
   } else if (!rFlag && lFlag) {
     auto rNeighbor = (*this)[map].getRightNeighbour();
-    if (rNeighbor.second > shift) {
-      auto diff = rNeighbor.second - shift;
+    if (rNeighbor.getShift() > shift) {
+      auto diff = rNeighbor.getShift() - shift;
 
       // M -> N -> R
-      (*this)[map].setRightNeighbour(neighbour, shift);
-      (*this)[neighbour].setLeftNeighbour(map, shift);
-      (*this)[rNeighbor.first].setLeftNeighbour(-1, 0);
+      (*this)[map].setRightNeighbour(BinaryMap::Neighbour(neighbour, shift));
+      (*this)[neighbour].setLeftNeighbour(BinaryMap::Neighbour(map, shift));
+      (*this)[rNeighbor.getMap()].setLeftNeighbour(BinaryMap::Neighbour::notAligned());
 
-      internalAddRight(neighbour, rNeighbor.first, diff);
+      internalAddRight(neighbour, rNeighbor.getMap(), diff);
     } else {
-      auto diff = shift - rNeighbor.second;
+      auto diff = shift - rNeighbor.getShift();
 
       // M -> R -> N
-      internalAddRight(rNeighbor.first, neighbour, diff);
+      internalAddRight(rNeighbor.getMap(), neighbour, diff);
     }
   } else if (rFlag) { // rFlag && !lFlag
     auto lNeighbor = (*this)[neighbour].getLeftNeighbour();
-    if (lNeighbor.second > shift) {
-      auto diff = lNeighbor.second - shift;
+    if (lNeighbor.getShift() > shift) {
+      auto diff = lNeighbor.getShift() - shift;
 
-      (*this)[map].setRightNeighbour(neighbour, shift);
-      (*this)[neighbour].setLeftNeighbour(map, shift);
-      (*this)[lNeighbor.first].setRightNeighbour(-1, 0);
+      (*this)[map].setRightNeighbour(BinaryMap::Neighbour(neighbour, shift));
+      (*this)[neighbour].setLeftNeighbour(BinaryMap::Neighbour(map, shift));
+      (*this)[lNeighbor.getMap()].setRightNeighbour(BinaryMap::Neighbour::notAligned());
 
-      internalAddRight(lNeighbor.first, map, diff);
+      internalAddRight(lNeighbor.getMap(), map, diff);
     } else {
-      auto diff = shift - lNeighbor.second;
-      internalAddRight(map, lNeighbor.first, diff);
+      auto diff = shift - lNeighbor.getShift();
+      internalAddRight(map, lNeighbor.getMap(), diff);
     }
   } else { // !rFlag && !lFlag
     auto rNeighbor = (*this)[map].getRightNeighbour();
     auto lNeighbor = (*this)[neighbour].getLeftNeighbour();
 
-    if (rNeighbor.first != lNeighbor.first) {
+    if (rNeighbor.getMap() != lNeighbor.getMap()) {
       std::cerr << "M -> A ... B -> N\n";
     } // else : M -> ? -> N [OK]
   }
@@ -85,22 +73,14 @@ void MapsContainer::addRightNeighbour(size_t map, size_t neighbour, unsigned shi
   // lock the container
   std::unique_lock guard(additionGuard_);
 
-  /*
-  if ((*this)[map].getRightNeighbour().first < 0
-      && (*this)[neighbour].getLeftNeighbour().first < 0) {
-    (*this)[map].setRightNeighbour(neighbour, shift);
-    (*this)[neighbour].setLeftNeighbour(map, shift);
-  }
-   */
-
   this->internalAddRight(map, neighbour, shift);
 }
 
 void MapsContainer::breakLink(size_t left, size_t right) {
   // lock the container
   std::unique_lock guard(additionGuard_);
-  (*this)[left].setRightNeighbour(-1, std::numeric_limits<unsigned>::max());
-  (*this)[right].setLeftNeighbour(-1, std::numeric_limits<unsigned>::max());
+  (*this)[left].setRightNeighbour(BinaryMap::Neighbour::notAligned());
+  (*this)[right].setLeftNeighbour(BinaryMap::Neighbour::notAligned());
 }
 
 size_t MapsContainer::getUnaligned() {
