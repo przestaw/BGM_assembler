@@ -74,7 +74,7 @@ void AlignAlgorithm::alignOneMap(size_t index) {
    *        - see notes in align function
    */
   if (best.isValid()) {
-    maps_.addRightNeighbour(index, neighbour, best.getShift());
+    maps_.addRightNeighbour(index, best.mirrorAlignment(neighbour));
   }
 }
 
@@ -99,7 +99,7 @@ AlignAlgorithm::LayoutAlign AlignAlgorithm::align(const BinaryMap::Bitset& ref_,
   // init best as worst numerically possible
   size_t best        = std::numeric_limits<size_t>::max();
   double bestQuality = std::numeric_limits<double>::max(); // this->threshold_;
-  int64_t bestShift = -1;
+  int64_t bestShift  = -1;
 
   auto performXorAndUpdate = [&](bgm::BinaryMap::Bitset shiftedTest, const size_t shift) {
     // resize to equal lengths

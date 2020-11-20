@@ -44,18 +44,16 @@ void ConsensusBuilder::breakCycles() {
 }
 
 void ConsensusBuilder::breakOneCycle(int map) {
-  // TODO : use quality
-  // TODO : init with conMaps_[map].getLeftNeighbour()
-  int tmp          = map;
-  unsigned lenOvlp = 0;
-  int right        = -1;
+  int tmp     = map;
+  double qual = bgm::BinaryMap::Neighbour::notAligned().getQuality();
+  int right   = -1;
   // find largest shift
   do {
     conMaps_[tmp].setMark();
 
-    if (lenOvlp < conMaps_[map].getLeftNeighbour().getShift()) {
-      lenOvlp = conMaps_[map].getLeftNeighbour().getShift();
-      right   = conMaps_[map].getLeftNeighbour().getMap();
+    if (qual > conMaps_[map].getLeftNeighbour().getQuality()) {
+      qual  = conMaps_[map].getLeftNeighbour().getQuality();
+      right = conMaps_[map].getLeftNeighbour().getMap();
     }
 
     tmp = conMaps_[tmp].getLeftNeighbour().getMap();

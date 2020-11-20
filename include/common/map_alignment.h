@@ -24,6 +24,17 @@ namespace bgm {
         : map_(map), shift_(shift), quality_(quality) {}
 
     /**
+     * Mirror the alignment for second map
+     * @param map second map
+     * @return mirrored alignment
+     */
+    inline LayoutAlignment mirrorAlignment(int64_t map) {
+      LayoutAlignment copy = *this;
+      copy.map_            = map;
+      return copy;
+    }
+
+    /**
      * Returns not an alignment [map index is negative]
      * @return not an alignment
      */

@@ -26,9 +26,8 @@ namespace bgm {
      * Set neighbourhood for 2 maps
      * @param map map
      * @param neighbour left map neighbour
-     * @param shift shift between right ends
      */
-    void addRightNeighbour(size_t map, size_t neighbour, unsigned shift);
+    void addRightNeighbour(size_t map, LayoutAlignment neighbour);
     /**
      * Breaks link between two maps
      * @param left left map
@@ -61,7 +60,7 @@ namespace bgm {
     // used to synchronize unaligned pivot usage
     mutable std::mutex unalignedGuard_;
     // used to lock mutex only once
-    void internalAddRight(size_t map, size_t neighbour, unsigned shift);
+    void internalAddRight(size_t map, LayoutAlignment align);
   };
 } // namespace bgm
 

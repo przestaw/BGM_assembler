@@ -9,26 +9,26 @@ BOOST_AUTO_TEST_SUITE(BGM_Test_Suite)
 
 BOOST_AUTO_TEST_SUITE(Consensus_Test_Suite)
 
-// BOOST_AUTO_TEST_CASE(OneMap_CreatesValidMap) {
-//  oma::MapsContainer mapsContainer;
-//  std::string test   = "1010111100001101010001110101";
-//  std::string mapStr = "1010111100001101010001110101";
-//
-//  // reversed string to account for direction od constructor
-//  std::reverse(mapStr.begin(), mapStr.end());
-//
-//  mapsContainer.emplace_back("map",
-//                             oma::BinaryMap::Bitset(std::string(mapStr)));
-//  oma::ConsensusBuilder testFixture(mapsContainer);
-//
-//  testFixture.runConsensusSingle();
-//
-//  BOOST_REQUIRE_EQUAL(1, testFixture.getConsensusMaps().size());
-//  std::string res;
-//  boost::to_string(testFixture.getConsensusMaps()[0].getMap(), res);
-//
-//  BOOST_CHECK_EQUAL(res, test);
-//}
+ BOOST_AUTO_TEST_CASE(OneMap_CreatesValidMap) {
+    bgm::MapsContainer mapsContainer;
+  std::string test   = "1010111100001101010001110101";
+  std::string mapStr = "1010111100001101010001110101";
+
+  // reversed string to account for direction od constructor
+  std::reverse(mapStr.begin(), mapStr.end());
+
+  mapsContainer.emplace_back("map",
+                             bgm::BinaryMap::Bitset(std::string(mapStr)));
+  bgm::ConsensusBuilder testFixture(mapsContainer);
+
+  testFixture.runConsensusSingle();
+
+  BOOST_REQUIRE_EQUAL(1, testFixture.getConsensusMaps().size());
+  std::string res;
+  boost::to_string(testFixture.getConsensusMaps()[0].getMap(), res);
+
+  BOOST_CHECK_EQUAL(res, test);
+}
 
 BOOST_AUTO_TEST_CASE(TwoMaps_CreatesValidMap) {
   bgm::MapsContainer mapsContainer;
@@ -41,7 +41,7 @@ BOOST_AUTO_TEST_CASE(TwoMaps_CreatesValidMap) {
 
   mapsContainer.emplace_back("map1", bgm::BinaryMap::Bitset(std::string(mapStr1)));
   mapsContainer.emplace_back("map2", bgm::BinaryMap::Bitset(std::string(mapStr2)));
-  mapsContainer.addRightNeighbour(0, 1, 5);
+  mapsContainer.addRightNeighbour(0, bgm::BinaryMap::Neighbour(1, 5));
   bgm::ConsensusBuilder testFixture(mapsContainer);
 
   testFixture.runConsensusSingle();
@@ -69,8 +69,8 @@ BOOST_AUTO_TEST_CASE(ThreeMapsSameDist_CreatesValidMap) {
   mapsContainer.emplace_back("map2", bgm::BinaryMap::Bitset(std::string(mapStr2)));
   mapsContainer.emplace_back("map3", bgm::BinaryMap::Bitset(std::string(mapStr3)));
 
-  mapsContainer.addRightNeighbour(0, 1, 3);
-  mapsContainer.addRightNeighbour(1, 2, 3);
+  mapsContainer.addRightNeighbour(0, bgm::BinaryMap::Neighbour(1, 3));
+  mapsContainer.addRightNeighbour(1, bgm::BinaryMap::Neighbour(2, 3));
   bgm::ConsensusBuilder testFixture(mapsContainer);
 
   testFixture.runConsensusSingle();
@@ -98,8 +98,8 @@ BOOST_AUTO_TEST_CASE(ThreeMapsDiffDist_CreatesValidMap_3) {
   mapsContainer.emplace_back("map2", bgm::BinaryMap::Bitset(std::string(mapStr2)));
   mapsContainer.emplace_back("map3", bgm::BinaryMap::Bitset(std::string(mapStr3)));
 
-  mapsContainer.addRightNeighbour(0, 1, 3);
-  mapsContainer.addRightNeighbour(1, 2, 2);
+  mapsContainer.addRightNeighbour(0, bgm::BinaryMap::Neighbour(1, 3));
+  mapsContainer.addRightNeighbour(1, bgm::BinaryMap::Neighbour(2, 2));
   bgm::ConsensusBuilder testFixture(mapsContainer);
 
   testFixture.runConsensusSingle();
@@ -143,9 +143,9 @@ BOOST_AUTO_TEST_CASE(FourMapsSameDist_CreatesValidMap) {
   mapsContainer.emplace_back("map2", bgm::BinaryMap::Bitset(std::string(mapStr2)));
   mapsContainer.emplace_back("map3", bgm::BinaryMap::Bitset(std::string(mapStr3)));
   mapsContainer.emplace_back("map4", bgm::BinaryMap::Bitset(std::string(mapStr4)));
-  mapsContainer.addRightNeighbour(0, 1, 80);
-  mapsContainer.addRightNeighbour(1, 2, 80);
-  mapsContainer.addRightNeighbour(2, 3, 80);
+  mapsContainer.addRightNeighbour(0, bgm::BinaryMap::Neighbour(1, 80));
+  mapsContainer.addRightNeighbour(1, bgm::BinaryMap::Neighbour(2, 80));
+  mapsContainer.addRightNeighbour(2, bgm::BinaryMap::Neighbour(3, 80));
   bgm::ConsensusBuilder testFixture(mapsContainer);
 
   testFixture.runConsensusSingle();
@@ -190,9 +190,9 @@ BOOST_AUTO_TEST_CASE(FourMapsDiffDist_CreatesValidMap) {
   mapsContainer.emplace_back("map3", bgm::BinaryMap::Bitset(std::string(mapStr3)));
   mapsContainer.emplace_back("map4", bgm::BinaryMap::Bitset(std::string(mapStr4)));
 
-  mapsContainer.addRightNeighbour(0, 1, 71);
-  mapsContainer.addRightNeighbour(1, 2, 87);
-  mapsContainer.addRightNeighbour(2, 3, 83);
+  mapsContainer.addRightNeighbour(0, bgm::BinaryMap::Neighbour(1, 71));
+  mapsContainer.addRightNeighbour(1, bgm::BinaryMap::Neighbour(2, 87));
+  mapsContainer.addRightNeighbour(2, bgm::BinaryMap::Neighbour(3, 83));
 
   bgm::ConsensusBuilder testFixture(mapsContainer);
 

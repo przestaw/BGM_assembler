@@ -30,19 +30,19 @@ BOOST_AUTO_TEST_CASE(MisedAlignTest_Circle_1) {
   std::vector<bgm::BinaryMap> vec(7, bgm::BinaryMap("", bgm::BinaryMap::Bitset()));
   bgm::MapsContainer maps(vec);
 
-  maps.addRightNeighbour(0, 1, 10);
-  maps.addRightNeighbour(1, 2, 10);
+  maps.addRightNeighbour(0, bgm::BinaryMap::Neighbour(1, 10));
+  maps.addRightNeighbour(1, bgm::BinaryMap::Neighbour(2, 10));
 
-  maps.addRightNeighbour(2, 4, 20);
+  maps.addRightNeighbour(2, bgm::BinaryMap::Neighbour(4, 20));
 
-  maps.addRightNeighbour(4, 5, 10);
-  maps.addRightNeighbour(5, 6, 10);
-  maps.addRightNeighbour(6, 0, 10);
+  maps.addRightNeighbour(4, bgm::BinaryMap::Neighbour(5, 10));
+  maps.addRightNeighbour(5, bgm::BinaryMap::Neighbour(6, 10));
+  maps.addRightNeighbour(6, bgm::BinaryMap::Neighbour(0, 10));
 
   // tested method should resolve 2 -(20)- 4 && 2 -(10)- 3
   // =>
   // 2 -(10)- 3 -(10)- 4
-  maps.addRightNeighbour(2, 3, 10);
+  maps.addRightNeighbour(2, bgm::BinaryMap::Neighbour(3, 10));
 
   BOOST_CHECK_EQUAL(maps[2].getRightNeighbour().getMap(), 3);
   BOOST_CHECK_EQUAL(maps[2].getRightNeighbour().getShift(), 10);
@@ -55,19 +55,19 @@ BOOST_AUTO_TEST_CASE(MisedAlignTest_Circle_2) {
   std::vector<bgm::BinaryMap> vec(7, bgm::BinaryMap("", bgm::BinaryMap::Bitset()));
   bgm::MapsContainer maps(vec);
 
-  maps.addRightNeighbour(0, 1, 10);
-  maps.addRightNeighbour(1, 2, 10);
+  maps.addRightNeighbour(0, bgm::BinaryMap::Neighbour(1, 10));
+  maps.addRightNeighbour(1, bgm::BinaryMap::Neighbour(2, 10));
 
-  maps.addRightNeighbour(2, 4, 20);
+  maps.addRightNeighbour(2, bgm::BinaryMap::Neighbour(4, 20));
 
-  maps.addRightNeighbour(4, 5, 10);
-  maps.addRightNeighbour(5, 6, 10);
-  maps.addRightNeighbour(6, 0, 10);
+  maps.addRightNeighbour(4, bgm::BinaryMap::Neighbour(5, 10));
+  maps.addRightNeighbour(5, bgm::BinaryMap::Neighbour(6, 10));
+  maps.addRightNeighbour(6, bgm::BinaryMap::Neighbour(0, 10));
 
   // tested method should resolve 2 -(20)- 4 && 3 -(10)- 4
   // =>
   // 2 -(10)- 3 -(10)- 4
-  maps.addRightNeighbour(3, 4, 10);
+  maps.addRightNeighbour(3, bgm::BinaryMap::Neighbour(4, 10));
 
   BOOST_CHECK_EQUAL(maps[2].getRightNeighbour().getMap(), 3);
   BOOST_CHECK_EQUAL(maps[2].getRightNeighbour().getShift(), 10);
@@ -80,15 +80,15 @@ BOOST_AUTO_TEST_CASE(AnotherReferedAlignTest_Circle) {
   std::vector<bgm::BinaryMap> vec(7, bgm::BinaryMap("", bgm::BinaryMap::Bitset()));
   bgm::MapsContainer maps(vec);
 
-  maps.addRightNeighbour(0, 1, 10);
-  maps.addRightNeighbour(1, 2, 10);
-  maps.addRightNeighbour(2, 3, 10);
-  maps.addRightNeighbour(3, 4, 10);
-  maps.addRightNeighbour(4, 5, 10);
-  maps.addRightNeighbour(5, 6, 10);
-  maps.addRightNeighbour(6, 0, 10);
+  maps.addRightNeighbour(0, bgm::BinaryMap::Neighbour(1, 10));
+  maps.addRightNeighbour(1, bgm::BinaryMap::Neighbour(2, 10));
+  maps.addRightNeighbour(2, bgm::BinaryMap::Neighbour(3, 10));
+  maps.addRightNeighbour(3, bgm::BinaryMap::Neighbour(4, 10));
+  maps.addRightNeighbour(4, bgm::BinaryMap::Neighbour(5, 10));
+  maps.addRightNeighbour(5, bgm::BinaryMap::Neighbour(6, 10));
+  maps.addRightNeighbour(6, bgm::BinaryMap::Neighbour(0, 10));
 
-  maps.addRightNeighbour(2, 4, 20);
+  maps.addRightNeighbour(2, bgm::BinaryMap::Neighbour(4, 20));
 
   BOOST_CHECK_EQUAL(maps[2].getRightNeighbour().getMap(), 3);
   BOOST_CHECK_EQUAL(maps[2].getRightNeighbour().getShift(), 10);
@@ -101,17 +101,17 @@ BOOST_AUTO_TEST_CASE(MisedAlignTest_1) {
   std::vector<bgm::BinaryMap> vec(7, bgm::BinaryMap("", bgm::BinaryMap::Bitset()));
   bgm::MapsContainer maps(vec);
 
-  maps.addRightNeighbour(1, 2, 10);
+  maps.addRightNeighbour(1, bgm::BinaryMap::Neighbour(2, 10));
 
-  maps.addRightNeighbour(2, 4, 20);
+  maps.addRightNeighbour(2, bgm::BinaryMap::Neighbour(4, 20));
 
-  maps.addRightNeighbour(4, 5, 10);
-  maps.addRightNeighbour(5, 6, 10);
+  maps.addRightNeighbour(4, bgm::BinaryMap::Neighbour(5, 10));
+  maps.addRightNeighbour(5, bgm::BinaryMap::Neighbour(6, 10));
 
   // tested method should resolve 2 -(20)- 4 && 2 -(10)- 3
   // =>
   // 2 -(10)- 3 -(10)- 4
-  maps.addRightNeighbour(2, 3, 10);
+  maps.addRightNeighbour(2, bgm::BinaryMap::Neighbour(3, 10));
 
   BOOST_CHECK_EQUAL(maps[2].getRightNeighbour().getMap(), 3);
   BOOST_CHECK_EQUAL(maps[2].getRightNeighbour().getShift(), 10);
@@ -124,17 +124,17 @@ BOOST_AUTO_TEST_CASE(MisedAlignTest_2) {
   std::vector<bgm::BinaryMap> vec(7, bgm::BinaryMap("", bgm::BinaryMap::Bitset()));
   bgm::MapsContainer maps(vec);
 
-  maps.addRightNeighbour(1, 2, 10);
+  maps.addRightNeighbour(1, bgm::BinaryMap::Neighbour(2, 10));
 
-  maps.addRightNeighbour(2, 4, 20);
+  maps.addRightNeighbour(2, bgm::BinaryMap::Neighbour(4, 20));
 
-  maps.addRightNeighbour(4, 5, 10);
-  maps.addRightNeighbour(5, 6, 10);
+  maps.addRightNeighbour(4, bgm::BinaryMap::Neighbour(5, 10));
+  maps.addRightNeighbour(5, bgm::BinaryMap::Neighbour(6, 10));
 
   // tested method should resolve 2 -(20)- 4 && 3 -(10)- 4
   // =>
   // 2 -(10)- 3 -(10)- 4
-  maps.addRightNeighbour(3, 4, 10);
+  maps.addRightNeighbour(3, bgm::BinaryMap::Neighbour(4, 10));
 
   BOOST_CHECK_EQUAL(maps[2].getRightNeighbour().getMap(), 3);
   BOOST_CHECK_EQUAL(maps[2].getRightNeighbour().getShift(), 10);
@@ -147,13 +147,13 @@ BOOST_AUTO_TEST_CASE(AnotherReferedAlignTest) {
   std::vector<bgm::BinaryMap> vec(7, bgm::BinaryMap("", bgm::BinaryMap::Bitset()));
   bgm::MapsContainer maps(vec);
 
-  maps.addRightNeighbour(1, 2, 10);
-  maps.addRightNeighbour(2, 3, 10);
-  maps.addRightNeighbour(3, 4, 10);
-  maps.addRightNeighbour(4, 5, 10);
-  maps.addRightNeighbour(5, 6, 10);
+  maps.addRightNeighbour(1, bgm::BinaryMap::Neighbour(2, 10));
+  maps.addRightNeighbour(2, bgm::BinaryMap::Neighbour(3, 10));
+  maps.addRightNeighbour(3, bgm::BinaryMap::Neighbour(4, 10));
+  maps.addRightNeighbour(4, bgm::BinaryMap::Neighbour(5, 10));
+  maps.addRightNeighbour(5, bgm::BinaryMap::Neighbour(6, 10));
 
-  maps.addRightNeighbour(2, 4, 20);
+  maps.addRightNeighbour(2, bgm::BinaryMap::Neighbour(4, 20));
 
   BOOST_CHECK_EQUAL(maps[2].getRightNeighbour().getMap(), 3);
   BOOST_CHECK_EQUAL(maps[2].getRightNeighbour().getShift(), 10);
