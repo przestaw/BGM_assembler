@@ -11,23 +11,25 @@ using namespace bgm;
 /**
  * ProgramParams struct for storing runtime params
  */
-class ProgramParams : public AssemblyParams {
+class ProgramParams{
 public:
   ProgramParams(const bool verbose,
                 std::string inputFile,
                 std::string outputFile,
                 AssemblyParams params)
-      : AssemblyParams(params), verbose_(verbose), inputFile_(std::move(inputFile)),
-        outputFile_(std::move(outputFile)) {}
+      : verbose_(verbose), inputFile_(std::move(inputFile)),
+        outputFile_(std::move(outputFile)), params_(params)  {}
 
   [[nodiscard]] bool isVerbose() const { return verbose_; }
   [[nodiscard]] const std::string &getInputFile() const { return inputFile_; }
   [[nodiscard]] const std::string &getOutputFile() const { return outputFile_; }
+  [[nodiscard]] explicit operator AssemblyParams() const { return params_; }
 
 private:
   const bool verbose_;
   const std::string inputFile_;
   const std::string outputFile_;
+  const AssemblyParams params_;
 };
 
 /**
@@ -128,32 +130,31 @@ inline std::optional<ProgramParams> parseParams(int argc, char *argv[]) {
  * @return 0 on success
  */
 int main(int argc, char *argv[]) {
-  std::cout << "Prototype OM algorithm - BGM_asm\n"
-            << "by Stawczyk Przemyslaw" << std::endl; // flush stream
+  try {
+    auto params = parseParams(argc, argv);
+    if (params.has_value()) {
+      FileIOAssemblyTask assemblyTask(
+          params->getInputFile(),
+          params->getOutputFile(),
+          static_cast<AssemblyParams>(params.value()));
 
-  auto params = parseParams(argc, argv);
-  if (params.has_value()) {
+      if (params->isVerbose()) {
+        // attach progress bar
+        assemblyTask.attach(boost::make_shared<bgm::Observer>());
+        std::cout << "Prototype OM algorithm - BGM_asm\n"
+                  << "by Stawczyk Przemyslaw"
+                  << "RUNNING" << std::endl; // std::endl to flush stream
+      }
 
-    FileIOAssemblyTask assemblyTask(
-        params->getInputFile(),
-        params->getOutputFile(),
-        // NOLINTNEXTLINE(cppcoreguidelines-slicing) - slicing is intended
-        static_cast<AssemblyParams>(params.value()));
+      // run command
+       assemblyTask.execute();
 
-    if (params->isVerbose()) {
-      // attach progress bar
-      assemblyTask.attach(boost::make_shared<bgm::Observer>());
-
-      std::cout << "RUNNING" << std::endl; // std::endl to flush stream
+      if (params->isVerbose()) {
+        std::cout << "\nDONE" << std::endl;
+      }
     }
+    return EXIT_SUCCESS;
 
-    // run command
-    assemblyTask.execute();
-
-    if (params->isVerbose()) {
-      std::cout << "\nDONE" << std::endl;
-    }
-  }
-
-  return 0;
+  } catch (bgm::error::exception &exception) { std::cout << exception.what(); }
+  return EXIT_FAILURE;
 }
