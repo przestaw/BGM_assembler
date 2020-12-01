@@ -17,7 +17,8 @@
 | -f [ --folds ]        | arg  (default = 1)    | No of folds [repeated assemblies] |
 | --marker_preference   | arg  (default = 1)    | preference of marker (true) or empty place (false) during consensus when 50% of maps has 1 and 50% has 0 |
 | --reuse_maps          | flag                  | Reuse rmaps with contigs [from at least 2 rmaps] in each fold |
-| -v [ --verbose ]      | flag                  | Verbose output [current state] |
+| -v [ --verbose ]      | flag                  | Verbose output [progress] |
+| -p [ --perf ]         | flag                  | Performance measurement [in seconds] |
 
 
 

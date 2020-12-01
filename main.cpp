@@ -11,22 +11,25 @@ using namespace bgm;
 /**
  * ProgramParams struct for storing runtime params
  */
-class ProgramParams{
+class ProgramParams {
 public:
-  ProgramParams(const bool verbose,
+  ProgramParams(bool verbose,
+                bool perf,
                 std::string inputFile,
                 std::string outputFile,
                 AssemblyParams params)
-      : verbose_(verbose), inputFile_(std::move(inputFile)),
-        outputFile_(std::move(outputFile)), params_(params)  {}
+      : verbose_(verbose), perf_(perf), inputFile_(std::move(inputFile)),
+        outputFile_(std::move(outputFile)), params_(params) {}
 
   [[nodiscard]] bool isVerbose() const { return verbose_; }
+  [[nodiscard]] bool isPerf() const { return perf_; }
   [[nodiscard]] const std::string &getInputFile() const { return inputFile_; }
   [[nodiscard]] const std::string &getOutputFile() const { return outputFile_; }
   [[nodiscard]] explicit operator AssemblyParams() const { return params_; }
 
 private:
   const bool verbose_;
+  const bool perf_;
   const std::string inputFile_;
   const std::string outputFile_;
   const AssemblyParams params_;
@@ -70,6 +73,7 @@ inline std::optional<ProgramParams> parseParams(int argc, char *argv[]) {
     desc.add_options()("reuse_maps",
                        "Reuse rmaps with contigs [from at least 2 rmaps] in each fold");
     desc.add_options()("verbose,v", "Verbose output");
+    desc.add_options()("perf,p", "Performance measurement");
 
     variables_map vm;
     store(parse_command_line(argc, argv, desc), vm);
@@ -85,7 +89,7 @@ inline std::optional<ProgramParams> parseParams(int argc, char *argv[]) {
        */
       auto checkPresence = [&vm](const std::string &name) {
         if (!vm.count(name)) {
-          throw bgm::error::missing_argument(name);
+          throw bgm::error::MissingArgument(name);
         }
       };
 
@@ -112,9 +116,11 @@ inline std::optional<ProgramParams> parseParams(int argc, char *argv[]) {
                                      folds,
                                      vm["marker_preference"].as<bool>(),
                                      static_cast<bool>(vm.count("reuse_maps")));
-      bool verbosity = vm.count("verbose");
+      bool verbosity = (vm.count("verbose") > 0);
+      bool perf      = (vm.count("perf") > 0);
 
       return ProgramParams(verbosity,
+                           perf,
                            vm["input"].as<std::string>(),
                            vm["output"].as<std::string>(),
                            assemblyParams);
@@ -133,10 +139,9 @@ int main(int argc, char *argv[]) {
   try {
     auto params = parseParams(argc, argv);
     if (params.has_value()) {
-      FileIOAssemblyTask assemblyTask(
-          params->getInputFile(),
-          params->getOutputFile(),
-          static_cast<AssemblyParams>(params.value()));
+      FileIOAssemblyTask assemblyTask(params->getInputFile(),
+                                      params->getOutputFile(),
+                                      static_cast<AssemblyParams>(params.value()));
 
       if (params->isVerbose()) {
         // attach progress bar
@@ -147,7 +152,12 @@ int main(int argc, char *argv[]) {
       }
 
       // run command
-       assemblyTask.execute();
+      if (params->isPerf()) {
+        const double val = assemblyTask.runPerfTest();
+        std::cout << std::endl << val;
+      } else {
+        assemblyTask.execute();
+      }
 
       if (params->isVerbose()) {
         std::cout << "\nDONE" << std::endl;
@@ -155,6 +165,6 @@ int main(int argc, char *argv[]) {
     }
     return EXIT_SUCCESS;
 
-  } catch (bgm::error::exception &exception) { std::cout << exception.what(); }
+  } catch (bgm::error::RuntimeException &exception) { std::cout << exception.what(); }
   return EXIT_FAILURE;
 }
