@@ -7,6 +7,7 @@
 
 #include <common/map_alignment.h>
 #include <data/maps_container.h>
+#include <optional>
 #include <project_defines.h>
 
 namespace bgm {
@@ -20,6 +21,7 @@ namespace bgm {
     // using Alignment   = std::pair<int64_t, size_t>;
     using VisualAlign = bgm::VisualAlignment;
     using LayoutAlign = bgm::LayoutAlignment;
+    using AlignResult = std::pair<size_t, LayoutAlignment>;
 
     /**
      * Constructor
@@ -48,11 +50,11 @@ namespace bgm {
     /**
      * Aligns two maps
      * @param ref reference map
-     * @param tested shifted map
+     * @param tested_ shifted map
      * @return offset between right maps ends, 0 means no meaningful alignment
      */
     [[nodiscard]] LayoutAlignment align(const BinaryMap::Bitset &ref,
-                                        const BinaryMap::Bitset &tested) const;
+                                        const BinaryMap::Bitset &tested_) const;
 
     /**
      * Align two maps for analysis. Used by python interface
@@ -89,7 +91,7 @@ namespace bgm {
     MapsContainer &maps_;
 
     // helper function aligning one neighbour of one map
-    void alignOneMap(size_t index);
+    std::optional<AlignResult> alignOneMap(size_t index);
     // helper function taking next map after finishing previous
     void workerThread();
     // helper function taking range of maps to align

@@ -48,7 +48,7 @@ void AlignAlgorithm::alignMapsMulti(unsigned int threadsCount) {
   }
 }
 
-void AlignAlgorithm::alignOneMap(size_t index) {
+std::optional<bgm::AlignAlgorithm::AlignResult> AlignAlgorithm::alignOneMap(size_t index) {
   /* NOTE : finding all right neighbours comparing with all other maps for
    *        easier multithreading
    * NOTE : left neighbours are found in this process as relation
@@ -74,23 +74,50 @@ void AlignAlgorithm::alignOneMap(size_t index) {
    *        - see notes in align function
    */
   if (best.isValid()) {
-    maps_.addRightNeighbour(index, best.mirrorAlignment(neighbour));
+    //maps_.addRightNeighbour(index, best.mirrorAlignment(neighbour));
+    return std::make_optional(std::make_pair(index, best.mirrorAlignment(neighbour)));
+  } else {
+    return std::nullopt;
+  }
+}
+
+void AlignAlgorithm::workerThread() {
+  size_t index = maps_.getUnaligned();
+  std::deque<AlignResult> results;
+  while (index < maps_.size()) {
+    std::optional<AlignResult> val = alignOneMap(index);
+    if (val) {
+      results.push_back(std::move(val.value()));
+    }
+    index = maps_.getUnaligned();
+  }
+  for(const auto &val : results){
+    maps_.addRightNeighbour(val.first, val.second);
+  }
+}
+
+void AlignAlgorithm::rangeWorkerThread(size_t begin, size_t end) {
+  for (size_t iter = begin; iter < end; ++iter) {
+    std::optional<AlignResult> val = alignOneMap(iter);
+    if (val) {
+      maps_.addRightNeighbour(val->first, val->second);
+    }
   }
 }
 
 AlignAlgorithm::LayoutAlign AlignAlgorithm::align(const BinaryMap::Bitset& ref_,
-                                                  const BinaryMap::Bitset& tested) const {
+                                                  const BinaryMap::Bitset& tested_) const {
   // copy as it will be resized
   BinaryMap::Bitset ref(ref_);
 
   // sanity check
-  if (std::min(ref.size(), tested.size()) <= minOverlapQuants_) {
+  if (std::min(ref.size(), tested_.size()) <= minOverlapQuants_) {
     return LayoutAlignment::notAligned();
   }
 
   // calc max shift
   const size_t refLen     = ref.size();
-  const size_t testedLen  = tested.size();
+  const size_t testedLen  = tested_.size();
   const size_t smallerLen = std::min(refLen, testedLen);
   const size_t maxShift =
       std::min(1 + smallerLen - minOverlapQuants_,
@@ -125,14 +152,14 @@ AlignAlgorithm::LayoutAlign AlignAlgorithm::align(const BinaryMap::Bitset& ref_,
   };
 
   // different approach for longer ref and longer testmap
-  if (ref.size() <= tested.size()) {
-    std::size_t diff = tested.size() - ref.size();
+  if (ref.size() <= tested_.size()) {
+    std::size_t diff = tested_.size() - ref.size();
     for (size_t shift = 0; shift < maxShift; ++shift) {
       // NOTE : bitset has different direction -> lowest & highest position
       // NOTE : use diff to move R ends together
-      bgm::BinaryMap::Bitset shiftedTest = tested >> (shift + diff);
+      bgm::BinaryMap::Bitset shiftedTest = tested_ >> (shift + diff);
       // resize to correct value
-      shiftedTest.resize(tested.size() - (shift + diff));
+      shiftedTest.resize(tested_.size() - (shift + diff));
 
       /* resize to equal lengths
        * perform xor
@@ -141,16 +168,16 @@ AlignAlgorithm::LayoutAlign AlignAlgorithm::align(const BinaryMap::Bitset& ref_,
       performXorAndUpdate(shiftedTest, shift);
     }
   } else { // reference is longer
-    std::size_t diff = ref.size() - tested.size();
+    std::size_t diff = ref.size() - tested_.size();
     // NOTE : bitset has different direction -> lowest & highest position
     // NOTE : use diff to move R ends together
     ref = ref >> diff;
 
     for (size_t shift = 0; shift < maxShift; ++shift) {
       // NOTE : bitset has different direction -> lowest & highest position
-      bgm::BinaryMap::Bitset shiftedTest = tested >> shift;
+      bgm::BinaryMap::Bitset shiftedTest = tested_ >> shift;
       // resize to correct value
-      shiftedTest.resize(tested.size() - shift);
+      shiftedTest.resize(tested_.size() - shift);
 
       /* Note :
        *     - resize to equal lengths
@@ -166,18 +193,6 @@ AlignAlgorithm::LayoutAlign AlignAlgorithm::align(const BinaryMap::Bitset& ref_,
   } else {
     return AlignAlgorithm::LayoutAlign::notAligned();
   }
-}
-
-void AlignAlgorithm::workerThread() {
-  size_t index = maps_.getUnaligned();
-  while (index < maps_.size()) {
-    alignOneMap(index);
-    index = maps_.getUnaligned();
-  }
-}
-
-void AlignAlgorithm::rangeWorkerThread(size_t begin, size_t end) {
-  for (size_t iter = begin; iter < end; ++iter) { alignOneMap(iter); }
 }
 
 VisualAlignment AlignAlgorithm::pyAlignFromBegins(const BinaryMap::Bitset& left,

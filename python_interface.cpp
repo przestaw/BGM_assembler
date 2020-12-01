@@ -109,7 +109,7 @@ BOOST_PYTHON_MODULE(BGM_asm) {
 
   // class CompareBitmaps
   class_<bgm::py::CompareBitmaps, bases<>, bgm::py::CompareBitmaps*, boost::noncopyable>(
-      "CompareBitmaps", init<bgm::BinaryMap, bgm::BinaryMap>(args("ref", "map")))
+      "CompareBitmaps", init<bgm::BinaryMap, bgm::BinaryMap>((arg("ref"), arg("map"))))
       .def("compareInt",
            &bgm::py::CompareBitmaps::alignMapToRefPy<int8_t>,
            "compares binary maps")
@@ -119,7 +119,7 @@ BOOST_PYTHON_MODULE(BGM_asm) {
 
   // class MultiCompareBitmaps
   class_<bgm::py::MultiCompareBitmaps, bases<>, bgm::py::MultiCompareBitmaps*, boost::noncopyable>(
-      "CompareBitmaps", init<bgm::BinaryMap>(args("ref")))
+      "MultiCompareBitmaps", init<bgm::BinaryMap>((arg("ref"))))
       .def("addMapToCompare",
            &bgm::py::MultiCompareBitmaps::addMap,
            "add map for comparison")
