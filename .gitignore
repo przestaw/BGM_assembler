@@ -12,6 +12,7 @@ __pycache__/
 .idea/*
 *.idea/*
 .ipynb_checkpoints/*
+*.pytest_cache/
 [Bb]in/*
 [Dd]ebug/*
 [Dd]ebugPublic/*
@@ -64,3 +65,4 @@ CMakeCache.txt
 *.log
 *.synctex.gz
 *.toc
+

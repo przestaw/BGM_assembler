@@ -18,7 +18,7 @@
 namespace p  = boost::python;
 namespace np = boost::python::numpy;
 
-BOOST_PYTHON_MODULE(BGM_asm) {
+BOOST_PYTHON_MODULE(bgm_module) {
   using namespace boost::python;
 
   // class AssemblyParams with constructor

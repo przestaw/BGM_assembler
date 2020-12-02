@@ -1,20 +1,22 @@
 cmake_minimum_required(VERSION 3.12)
 
 # Set naming scheme 
-set(PROJECT_NAME BGM-asm)
+set(PROJECT_NAME BGM)
 project(${PROJECT_NAME})
 
 set(PROJECT_DESCRIPTION "Binary Maps Assembly prototype")
 
-set(EXECUTABLE ${PROJECT_NAME}-program)
-set(LIBRARY ${PROJECT_NAME})
-set(TEST ${PROJECT_NAME}-test)
-set(BGM_CHECK ${PROJECT_NAME}-check)
+set(EXECUTABLE ${PROJECT_NAME}-asm-program)
+set(LIBRARY ${PROJECT_NAME}-asm)
+set(TEST ${PROJECT_NAME}-asm-test)
+set(BGM_CHECK ${PROJECT_NAME}-asm-check)
 
-set(PYTHON_INT ${PROJECT_NAME}-python)
+set(PYTHON_INT ${PROJECT_NAME}-module-python)
 set(TEST_PY_INT ${PYTHON_INT}-test)
 set(PY_CHECK ${PYTHON_INT}-check)
-set(TEST_PYTEST ${PYTHON_INT}-pytest)
+set(PYTEST_BGM ${PYTHON_INT}-pytest)
+
+set(PYTEST_UTIL ${PROJECT_NAME}-util-pytest)
 
 # Add custom cmake modules path
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake_modules/finders")
@@ -143,7 +145,7 @@ add_library(${PYTHON_INT}
             MODULE
             ${LIB_SRC} ${LIB_INC} ${PY_SRC} ${PY_INC} python_interface.cpp)
 set_target_properties(${PYTHON_INT} PROPERTIES PREFIX "") # remove lib prefix for python module
-set_target_properties(${PYTHON_INT} PROPERTIES OUTPUT_NAME "BGM_asm") # set name to match module name in python convention
+set_target_properties(${PYTHON_INT} PROPERTIES OUTPUT_NAME "bgm_module") # set name to match module name in python convention
 
 # Set up the libraries and header search paths for python3 interface
 target_link_libraries(${PYTHON_INT} ${EXTERNAL_LIBS} ${PYTHON_EXTERNAL})
@@ -155,6 +157,7 @@ set_property(TARGET ${PYTHON_INT} PROPERTY SOVERSION ${MAJOR_VERSION})
 
 # Include src and test for library and test-check
 add_subdirectory("test")
+add_subdirectory("py_test")
 
 # Clang Format
 clangformat_setup(${LIB_SRC} ${LIB_INC} ${TEST_SRC} ${LIB_TMP} ${EXT_SRC} main.cpp ${PY_SRC} ${PY_INC} ${PY_TEST_SRC})

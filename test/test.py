@@ -1,4 +1,6 @@
-from numpy import *
+import matplotlib.pyplot as plt
+import matplotlib.cm as cm
+import numpy as np
 from BGM_asm import AssemblyParams
 from BGM_asm import AssemblyTask
 from BGM_asm import CppBinaryMap
@@ -26,8 +28,13 @@ map4 = CppBinaryMap("map4",      "111000011010100011101")
 map5 = CppBinaryMap("map5",             "11010100011101011")
 
 print("align")
-compareMaps = CompareBitmaps(map2, map3)
+compareMaps = CompareBitmaps(map2, map4)
 print(compareMaps.compare(1, 2, 3, 4))
+plt.imsave('name.png',
+           arr=compareMaps,
+           vmin=1., vmax=4., cmap=cm.get_cmap("gist_ncar"))
+
+
 # print("align2")
 # print(alignMapToRef(map3, map4, -1, 1, 0, 0))
 # print("align3")
