@@ -21,7 +21,7 @@ BOOST_AUTO_TEST_CASE(Test_Align_2_Binmaps_1) {
       "11111111111111111111111111111111111111111111111111111111111111111111111111111111"
       "11111111111111111111111111111100000000000000000000000000000000000000000000000000");
 
-  auto res = bgm::py::findBestAlignemnt(map1, map2);
+  auto res = bgm::py::findBestShift(map1, map2);
 
   auto expected = bgm::VisualAlignment(50, 110, 0);
 
@@ -38,7 +38,7 @@ BOOST_AUTO_TEST_CASE(Test_Align_2_Binmaps_diff_Size_1) {
       "0011111111111111111111111111111111111111111111111111111111111111111111111111111"
       "1111111111111111111111111111111110000000000000000000000000000000000000000000000");
 
-  auto res = bgm::py::findBestAlignemnt(map1, map2);
+  auto res = bgm::py::findBestShift(map1, map2);
 
   auto expected = bgm::VisualAlignment(11, 112, 0);
 
@@ -56,7 +56,7 @@ BOOST_AUTO_TEST_CASE(Test_Align_2_Binmaps_diff_Size_2) {
       "11111111111111111111111111111111000000000000000000000000000000000000000000000000"
       "00");
 
-  auto res = bgm::py::findBestAlignemnt(map1, map2);
+  auto res = bgm::py::findBestShift(map1, map2);
 
   auto expected = bgm::VisualAlignment(15, 112, 0);
 
@@ -74,7 +74,7 @@ BOOST_AUTO_TEST_CASE(Test_Align_2_Binmaps_diff_Size_3) {
       "111111111011111111111111111111111000000011111111111111111111111111111111111111111"
       "11111111111111111000000000000000000000000001110000000");
 
-  auto res = bgm::py::findBestAlignemnt(map1, map2);
+  auto res = bgm::py::findBestShift(map1, map2);
 
   auto expected = bgm::VisualAlignment(20, 134, 0);
 
@@ -92,7 +92,7 @@ BOOST_AUTO_TEST_CASE(Test_Align_2_Binmaps_1_inv) {
       "11111111111111111111111111111111111111111111111111111111111111111111111111111111"
       "11111111111111111111111111111100000000000000000000000000000000000000000000000000");
 
-  auto res = bgm::py::findBestAlignemnt(map2, map1);
+  auto res = bgm::py::findBestShift(map2, map1);
 
   auto expected = bgm::VisualAlignment(-50, 110, 0);
 
@@ -111,7 +111,7 @@ BOOST_AUTO_TEST_CASE(Test_Align_2_Binmaps_diff_Size_2_inv) {
       "11111111111111111111111111111111000000000000000000000000000000000000000000000000"
       "00");
 
-  auto res = bgm::py::findBestAlignemnt(map2, map1);
+  auto res = bgm::py::findBestShift(map2, map1);
 
   auto expected = bgm::VisualAlignment(-15, 112, 0);
 
@@ -130,7 +130,7 @@ BOOST_AUTO_TEST_CASE(Test_Align_2_Binmaps_diff_Size_3_inv) {
       "111111111011111111111111111111111000000011111111111111111111111111111111111111111"
       "11111111111111111000000000000000000000000001110000000");
 
-  auto res = bgm::py::findBestAlignemnt(map2, map1);
+  auto res = bgm::py::findBestShift(map2, map1);
 
   auto expected = bgm::VisualAlignment(-20, 134, 0);
 
@@ -147,7 +147,7 @@ BOOST_AUTO_TEST_CASE(Test_Align_2_Binmaps_With_Diff) {
       "11111111111111111111111111111110000111111111111111111111111111111111111111111111"
       "11111111111111111111111111111100000000000000000000000000000000000000000000000000");
 
-  auto res = bgm::py::findBestAlignemnt(map1, map2);
+  auto res = bgm::py::findBestShift(map1, map2);
 
   auto expected = bgm::VisualAlignment(50, 110, 7);
 
@@ -164,7 +164,7 @@ BOOST_AUTO_TEST_CASE(Test_Align_2_Binmaps_diff_Size_1_With_Diff) {
                      "1111111111111111111111111111111000011111111111111111111111111111111"
                      "1111111111111111111111111111111100000000000000000000000000000");
 
-  auto res = bgm::py::findBestAlignemnt(map1, map2);
+  auto res = bgm::py::findBestShift(map1, map2);
 
   auto expected = bgm::VisualAlignment(15, 128, 17);
 
@@ -182,7 +182,7 @@ BOOST_AUTO_TEST_CASE(Test_Align_2_Binmaps_Diff_Size_2_With_Diff) {
       "1111111110111111111111111111111110000000111111110000111111111110000111111111111111"
       "1111111111111111000000000000000000000000001010000000");
 
-  auto res = bgm::py::findBestAlignemnt(map1, map2);
+  auto res = bgm::py::findBestShift(map1, map2);
 
   auto expected = bgm::VisualAlignment(20, 134, 10);
 

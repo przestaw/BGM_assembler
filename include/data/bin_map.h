@@ -113,6 +113,13 @@ namespace bgm {
      */
     void setContig();
 
+    /**
+     * Counts symbols in map
+     * @param symbol symbol
+     * @return count of symbol
+     */
+    size_t count(bool symbol);
+
   private:
     // data
     std::string identifier_;

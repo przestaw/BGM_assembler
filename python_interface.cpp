@@ -7,10 +7,8 @@
 #include <boost/python/def.hpp>
 #include <boost/python/module.hpp>
 #include <boost/python/numpy.hpp>
-#include <boost/python/overloads.hpp>
-#include <boost/python/raw_function.hpp>
-#include <boost/python/tuple.hpp>
 #include <compare_bitmaps.h>
+#include <error/exeception.h>
 #include <free_functions.h>
 #include <multi_compare_bitmaps.h>
 #include <py_assembly_task.h>
@@ -18,8 +16,14 @@
 namespace p  = boost::python;
 namespace np = boost::python::numpy;
 
+void translateException(bgm::error::MismatchedArgumentsSize const& e){
+  // Use the Python 'C' API to set up an exception object
+  PyErr_SetString(PyExc_ValueError, e.what());
+}
+
 BOOST_PYTHON_MODULE(bgm_module) {
   using namespace boost::python;
+  register_exception_translator<bgm::error::MismatchedArgumentsSize>(&translateException);
 
   // class AssemblyParams with constructor
   // note : signature : unsigned int, unsigned int, double, double, unsigned, bool, bool
@@ -68,15 +72,27 @@ BOOST_PYTHON_MODULE(bgm_module) {
                     &bgm::BinaryMap::getPyIdentifier,
                     &bgm::BinaryMap::setIdentifier,
                     "sequence identifier")
+      .def("__len__", bgm::py::lengthOfBinaryMap)
+      .def("copy", bgm::py::copyBinaryMap, "Returns deepcopy of a map")
+      .def("__str__", &bgm::BinaryMap::toFastaRecord)
       .def("toFastaRecord",
            &bgm::BinaryMap::toFastaRecord,
            "converts map to FASTA-style formated string")
-      //.add_property("markFlag", &bgm::BinaryMap::isMark, &bgm::BinaryMap::setMark)
+      .def("xor",
+           &bgm::py::xorBinaryMaps,
+           "Performs xor of self and other and returns new BinaryMap")
+      .def("xor_count",
+           &bgm::py::xorCountBinaryMaps,
+           "Performs xor of self and other and returns count of 1")
       .add_property(
-          "contigFlag",
-          &bgm::BinaryMap::isContig,
-          &bgm::BinaryMap::setContig,
-          "contig flag - indicates that map origin is from performed consensus");
+          "string_map", &bgm::BinaryMap::toStringBMap, "String version of binary map")
+      .def("count", &bgm::BinaryMap::count, (arg("symbol") = true), "Counts symbols in map")
+      .add_property("contigFlag",
+                    &bgm::BinaryMap::isContig,
+                    &bgm::BinaryMap::setContig,
+                    "contig flag - indicates that map origin is from performed consensus")
+      //.add_property("markFlag", &bgm::BinaryMap::isMark, &bgm::BinaryMap::setMark)
+      ;
 
   // xor count between 2 maps
   def("xorCountBinaryMaps",
@@ -100,7 +116,12 @@ BOOST_PYTHON_MODULE(bgm_module) {
            "obtains resulting binary maps");
 
   // find best align using bgm
-  def("findBestMapAlignemnt",
+  def("findBestShift",
+      &bgm::py::findBestShift,
+      "Finds overlap with the least diffrences between maps");
+
+  // find best align using bgm
+  def("findBestAlignemnt",
       &bgm::py::findBestAlignemnt,
       "Finds overlap with the least diffrences between maps");
 
@@ -118,8 +139,10 @@ BOOST_PYTHON_MODULE(bgm_module) {
            "compares binary maps");
 
   // class MultiCompareBitmaps
-  class_<bgm::py::MultiCompareBitmaps, bases<>, bgm::py::MultiCompareBitmaps*, boost::noncopyable>(
-      "MultiCompareBitmaps", init<bgm::BinaryMap>((arg("ref"))))
+  class_<bgm::py::MultiCompareBitmaps,
+         bases<>,
+         bgm::py::MultiCompareBitmaps*,
+         boost::noncopyable>("MultiCompareBitmaps", init<bgm::BinaryMap>((arg("ref"))))
       .def("addMapToCompare",
            &bgm::py::MultiCompareBitmaps::addMap,
            "add map for comparison")

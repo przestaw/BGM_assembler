@@ -70,3 +70,7 @@ void BinaryMap::setMark(bool mark) { mark_ = mark; }
 bool BinaryMap::isContig() const { return contig_; }
 
 void BinaryMap::setContig() { contig_ = true; }
+
+size_t BinaryMap::count(bool symbol) {
+  return symbol ? map_.count() : map_.size() - map_.count();
+}

@@ -14,7 +14,14 @@ namespace bgm::py {
 
   bgm::BinaryMap xorBinaryMaps(bgm::BinaryMap l, bgm::BinaryMap r);
 
-  int findBestAlignemnt(bgm::BinaryMap l, bgm::BinaryMap r);
+  int findBestShift(bgm::BinaryMap l, bgm::BinaryMap r);
+
+  boost::python::tuple findBestAlignemnt(bgm::BinaryMap l, bgm::BinaryMap r);
+
+  size_t lengthOfBinaryMap(const bgm::BinaryMap &map);
+
+  bgm::BinaryMap copyBinaryMap(const bgm::BinaryMap &map);
+
 } // namespace bgm::py
 
 #endif // BGM_ASM_FREE_FUNCTIONS_H

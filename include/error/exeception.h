@@ -32,6 +32,12 @@ namespace bgm::error {
             "File error : " + filename
             + ". Please check if path and filename was provided correctly") {}
   };
+
+  class MismatchedArgumentsSize : public RuntimeException {
+  public:
+    MismatchedArgumentsSize()
+        : bgm::error::RuntimeException("Mismatched arguments size") {}
+  };
 } // namespace bgm::error
 
 #endif // TEMPLATE_EXECEPTION_H
