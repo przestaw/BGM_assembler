@@ -15,8 +15,8 @@ if(Python3_Interpreter_FOUND)
     add_custom_target(${PYTEST_BGM}
             COMMAND
             ${CMAKE_COMMAND} -E copy
-                ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/bgm_module.so
-                ${PROJECT_SOURCE_DIR}/python/bgm_module.so
+                ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/_bgm_module.so
+            ../python/bgm_module/_bgm_module.so
             &&
             ${PYTEST_COMMAND} ${PROJECT_SOURCE_DIR}/py_test/bgm_module
             WORKING_DIRECTORY

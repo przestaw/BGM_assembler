@@ -145,7 +145,7 @@ add_library(${PYTHON_INT}
             MODULE
             ${LIB_SRC} ${LIB_INC} ${PY_SRC} ${PY_INC} python_interface.cpp)
 set_target_properties(${PYTHON_INT} PROPERTIES PREFIX "") # remove lib prefix for python module
-set_target_properties(${PYTHON_INT} PROPERTIES OUTPUT_NAME "bgm_module") # set name to match module name in python convention
+set_target_properties(${PYTHON_INT} PROPERTIES OUTPUT_NAME "_bgm_module") # set name to match module name in python convention
 
 # Set up the libraries and header search paths for python3 interface
 target_link_libraries(${PYTHON_INT} ${EXTERNAL_LIBS} ${PYTHON_EXTERNAL})

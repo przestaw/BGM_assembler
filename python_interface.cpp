@@ -21,7 +21,7 @@ void translateException(bgm::error::MismatchedArgumentsSize const& e){
   PyErr_SetString(PyExc_ValueError, e.what());
 }
 
-BOOST_PYTHON_MODULE(bgm_module) {
+BOOST_PYTHON_MODULE(_bgm_module) {
   using namespace boost::python;
   register_exception_translator<bgm::error::MismatchedArgumentsSize>(&translateException);
 
@@ -132,7 +132,7 @@ BOOST_PYTHON_MODULE(bgm_module) {
   class_<bgm::py::CompareBitmaps, bases<>, bgm::py::CompareBitmaps*, boost::noncopyable>(
       "CompareBitmaps", init<bgm::BinaryMap, bgm::BinaryMap>((arg("ref"), arg("map"))))
       .def("compareInt",
-           &bgm::py::CompareBitmaps::alignMapToRefPy<int8_t>,
+           &bgm::py::CompareBitmaps::alignMapToRefPy<uint8_t>,
            "compares binary maps")
       .def("compareFloat",
            &bgm::py::CompareBitmaps::alignMapToRefPy<float>,
