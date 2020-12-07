@@ -1,7 +1,7 @@
 import numpy as np
 from matplotlib import pyplot as plt, cm, axes
-from _bgm_module import CppBinaryMap
-from _bgm_module import CompareBitmaps
+from bgm_module._bgm_module import CppBinaryMap
+from bgm_module._bgm_module import CompareBitmaps
 
 multi_colors = {
     "blue": 0.16,
@@ -25,8 +25,8 @@ def plot2bitmaps(ref: CppBinaryMap, test: CppBinaryMap, h: int = 4, colors=None,
         colors = multi_colors
     compareMaps = CompareBitmaps(ref, test)
     compared = compareMaps.compareFloat(colors["empty"],
-                                        colors["blue"],
                                         colors["red"],
+                                        colors["blue"],
                                         colors["green"])
     data = []
     data.extend(np.tile(compared[0], h))
@@ -36,17 +36,14 @@ def plot2bitmaps(ref: CppBinaryMap, test: CppBinaryMap, h: int = 4, colors=None,
     data = np.array(data).reshape(totH, int(len(data) / totH))
 
     plt.imshow(data, interpolation='nearest', vmin=0, vmax=1, cmap=colors["cmap"])
-
     plt.yticks([h * 0.5 - 0.5, h * 1.5 - 0.5, h * 2.5 - 0.5], [ref.name, test.name, "overlap"], rotation=30)
+    plt.gcf().tight_layout()
 
     if save:
+        plt.imsave("cmp"+ref.name+"-"+test.name+".raw.png", data, vmin=0, vmax=1, cmap=colors["cmap"])
         plt.savefig("cmp"+ref.name+"-"+test.name+".png")
 
-
-if __name__ == '__main__':
-    map2 = CppBinaryMap("map2", "101011110000110101000111")
-    map4 = CppBinaryMap("map4", "111000011010100011101")
-    plot2bitmaps(map2, map4)
+    return data
 
 
 

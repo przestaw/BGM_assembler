@@ -98,7 +98,7 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 
     # using GCC
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 -g -Wshadow -Wall -pedantic -Wextra -Wold-style-cast -Wl,--no-undefined")
-    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -finline-functions -fdevirtualize -fmerge-constants  -march=native -mtune=native")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -finline-functions -fdevirtualize -fmerge-constants")
     # find and set toolchain
     include(GNUtoolchain)
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
@@ -139,7 +139,7 @@ add_executable(${EXECUTABLE} main.cpp)
 add_dependencies(${EXECUTABLE} ${LIBRARY})
 target_link_libraries(${EXECUTABLE} ${LIBRARY})
 target_link_libraries(${EXECUTABLE} ${EXTERNAL_LIBS})
-
+#target_link_libraries(${EXECUTABLE} -static-libgcc -static-libstdc++)
 # Python3 interface
 add_library(${PYTHON_INT}
             MODULE
