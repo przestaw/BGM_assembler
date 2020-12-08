@@ -16,7 +16,7 @@
 namespace p  = boost::python;
 namespace np = boost::python::numpy;
 
-void translateException(bgm::error::MismatchedArgumentsSize const& e){
+void translateException(bgm::error::MismatchedArgumentsSize const& e) {
   // Use the Python 'C' API to set up an exception object
   PyErr_SetString(PyExc_ValueError, e.what());
 }
@@ -86,7 +86,13 @@ BOOST_PYTHON_MODULE(_bgm_module) {
            "Performs xor of self and other and returns count of 1")
       .add_property(
           "string_map", &bgm::BinaryMap::toStringBMap, "String version of binary map")
-      .def("count", &bgm::BinaryMap::count, (arg("symbol") = true), "Counts symbols in map")
+      .def("count",
+           &bgm::BinaryMap::count,
+           (arg("symbol") = true),
+           "Counts symbols in map")
+      .def(
+          "truncate", bgm::py::truncate, "Truncates map if arg is larger than map length")
+      .def("shift_left", bgm::py::shiftLeft, "Shifts map to the left")
       .add_property("contigFlag",
                     &bgm::BinaryMap::isContig,
                     &bgm::BinaryMap::setContig,

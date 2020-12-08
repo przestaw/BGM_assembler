@@ -1,7 +1,6 @@
 from bgm_module import CppBinaryMap
 from bgm_module import plot2bitmaps
 import numpy as np
-import matplotlib.pyplot as plt
 
 
 class TestAlignMaps:
@@ -21,7 +20,7 @@ class TestAlignMaps:
                   [1., 1., 1., 0.45, 0.45, 0.45, 0.45, 0.45, 1., 1., 1.]]
 
         for i in range(0, 5):
-            for j in range(0, 10):
+            for j in range(0, len(expect[0])):
                 assert np.isclose(result[i][j], expect[i][j])
 
     def test_align_2_binmaps_diff_size_1(self):
@@ -58,7 +57,7 @@ class TestAlignMaps:
                    1., 1., 1., 1., 1., 1., 1., 1., ]]
 
         for i in range(0, 5):
-            for j in range(0, 10):
+            for j in range(0, len(expect[0])):
                 assert np.isclose(result[i][j], expect[i][j])
 
     def test_align_2_binmaps_diff_size_2(self):
@@ -86,5 +85,6 @@ class TestAlignMaps:
              0.45, 0.45, 0.45, 0.45, 0.45, 0.45, 0.45, 0.45, 1., 1., 1., 1., 1., 1., 1., 1., 1., ]]
 
         for i in range(0, 5):
-            for j in range(0, 10):
+            for j in range(0, len(expect[0])):
                 assert np.isclose(result[i][j], expect[i][j])
+

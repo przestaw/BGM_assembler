@@ -22,6 +22,10 @@ namespace bgm::py {
 
   bgm::BinaryMap copyBinaryMap(const bgm::BinaryMap &map);
 
+  bgm::BinaryMap truncate(bgm::BinaryMap &map, size_t size);
+
+  bgm::BinaryMap shiftLeft(bgm::BinaryMap &map, size_t shift);
+
 } // namespace bgm::py
 
 #endif // BGM_ASM_FREE_FUNCTIONS_H

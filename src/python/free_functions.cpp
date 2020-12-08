@@ -42,3 +42,22 @@ size_t bgm::py::lengthOfBinaryMap(const bgm::BinaryMap& map) {
 bgm::BinaryMap bgm::py::copyBinaryMap(const bgm::BinaryMap& map) {
   return bgm::BinaryMap(map.getIdentifier(), map.getMap());
 }
+
+bgm::BinaryMap bgm::py::truncate(bgm::BinaryMap& map, size_t size) {
+  auto bmap = map.getMap();
+  if(map.getMap().size() > size){
+    bmap.resize(size);
+  }
+  return bgm::BinaryMap(map.getIdentifier(), bmap);
+}
+
+bgm::BinaryMap bgm::py::shiftLeft(bgm::BinaryMap& map, size_t shift) {
+  auto bmap = map.getMap();
+  if(bmap.size() > shift){
+    bmap = bmap >> shift;
+    bmap.resize(bmap.size() - shift);
+  } else {
+    bmap.resize(0);
+  }
+  return bgm::BinaryMap(map.getIdentifier(), bmap);
+}
