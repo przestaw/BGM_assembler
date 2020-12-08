@@ -38,7 +38,7 @@ namespace bgm::py {
   }
 
   inline MarkerType
-  getMapValAtPos(const size_t n, const size_t start, const bgm::BinaryMap& bMap) {
+  getMapValAtPos(const int n, const int start, const bgm::BinaryMap& bMap) {
     if (n < start) {
       return MarkerType::Empty;
     } else if (n < bMap.getMap().size() + start) {
@@ -49,7 +49,7 @@ namespace bgm::py {
   }
 
   inline MarkerType
-  getRefValAtPos(const size_t n, const size_t start, const bgm::BinaryMap& bMap) {
+  getRefValAtPos(const int n, const int start, const bgm::BinaryMap& bMap) {
     if (n < start) {
       return MarkerType::Empty;
     } else if (n < bMap.getMap().size() + start) {

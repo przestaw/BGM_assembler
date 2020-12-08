@@ -39,20 +39,28 @@ namespace bgm::py {
     boost::python::numpy::ndarray
     alignMapToRefPy(ValueType empty, ValueType marker, ValueType map, ValueType refmap);
 
+    /**
+     * Returns names of maps in comparison as python list
+     * @return names of maps in comparison
+     */
+    boost::python::list getNames();
+
   private:
+    // input data
     mutable std::mutex mapsGuard;
     bgm::BinaryMap ref_;
     std::vector<bgm::BinaryMap> maps_;
 
+    // struct for data save
     struct MapAlignDescriptor {
-      //      MapAlignDescriptor(std::string name,
-      //                         int shift,
-      //                         size_t overlap,
-      //                         size_t fo,
-      //                         size_t f,
-      //                         size_t r,
-      //                         size_t ro);
-      std::string name;
+      MapAlignDescriptor(const BinaryMap& ref,
+                         int shift      = 0,
+                         size_t overlap = 0,
+                         size_t fo      = 0,
+                         size_t f       = 0,
+                         size_t r       = 0,
+                         size_t ro      = 0);
+      const bgm::BinaryMap& ref;
       int shift;
       size_t overlap;
       size_t fo;
@@ -60,6 +68,21 @@ namespace bgm::py {
       size_t r;
       size_t ro;
     };
+
+    // internal stages data
+    bool aligned = false;
+    size_t maxFo = 0;
+    size_t maxRo = 0;
+    std::vector<MapAlignDescriptor> alignResults;
+
+    // output data
+    std::vector<MarkerType> adjusted;
+    std::vector<std::string> names;
+
+    // stages
+    void alignMaps();
+    void adjustAndElongate();
+    void adjustAndTrucnate();
   };
 
   template <typename ValueType>
@@ -71,16 +94,15 @@ namespace bgm::py {
       return markerToValueType(val, empty, marker, map, refmap);
     };
 
-    // TODO -> change type to vec<vec<value>>
-    const auto data = this->alignMapsToRef();
+    alignMapsToRef();
 
     // NOTE: need to copy data to maintain ownership !
     boost::python::numpy::ndarray ret = boost::python::numpy::zeros(
         // TODO : shape == (lines, size/lines)
-        boost::python::make_tuple(1, data.size()),
+        boost::python::make_tuple(names.size(), ref_.getMap().size()),
         boost::python::numpy::dtype::get_builtin<ValueType>());
-    std::transform(data.begin(),
-                   data.end(),
+    std::transform(adjusted.begin(),
+                   adjusted.end(),
                    reinterpret_cast<ValueType*>(ret.get_data()),
                    converter);
 

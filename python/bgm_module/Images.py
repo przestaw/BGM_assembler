@@ -2,6 +2,7 @@ import numpy as np
 from matplotlib import pyplot as plt, cm, axes
 from bgm_module._bgm_module import CppBinaryMap
 from bgm_module._bgm_module import CompareBitmaps
+from bgm_module._bgm_module import MultiCompareBitmaps
 
 multi_colors = {
     "blue": 0.16,
@@ -37,6 +38,36 @@ def plot2bitmaps(ref: CppBinaryMap, test: CppBinaryMap, h: int = 4, colors=None,
 
     plt.imshow(data, interpolation='nearest', vmin=0, vmax=1, cmap=colors["cmap"])
     plt.yticks([h * 0.5 - 0.5, h * 1.5 - 0.5, h * 2.5 - 0.5], [ref.name, test.name, "overlap"], rotation=30)
+    plt.gcf().tight_layout()
+
+    if save:
+        plt.imsave("cmp"+ref.name+"-"+test.name+".raw.png", data, vmin=0, vmax=1, cmap=colors["cmap"])
+        plt.savefig("cmp"+ref.name+"-"+test.name+".png")
+
+    return data
+
+
+def plotMultiBitmaps(ref: CppBinaryMap, test: [], h: int = 4, colors=None, save=False):
+    if colors is None:
+        colors = multi_colors
+    compareMaps = MultiCompareBitmaps(ref)
+
+    for iMap in test:
+        compareMaps.addMapToCompare(iMap)
+
+    compared = compareMaps.compareFloat(colors["empty"],
+                                        colors["red"],
+                                        colors["blue"],
+                                        colors["green"])
+    data = []
+    for i in range(0, len(compared)):
+        data.extend(np.tile(compared[i], h))
+
+    totH = h * (len(test) + 1)
+    data = np.array(data).reshape(totH, int(len(data) / totH))
+
+    plt.imshow(data, interpolation='nearest', vmin=0, vmax=1, cmap=colors["cmap"])
+    plt.yticks([h * (i + 0.5) - 0.5 for i in range(0, len(compareMaps.names))], compareMaps.names, rotation=30)
     plt.gcf().tight_layout()
 
     if save:

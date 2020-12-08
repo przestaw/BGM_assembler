@@ -157,5 +157,7 @@ BOOST_PYTHON_MODULE(_bgm_module) {
            "compares binary maps")
       .def("compareFloat",
            &bgm::py::MultiCompareBitmaps::alignMapToRefPy<float>,
-           "compares binary maps");
+           "compares binary maps")
+      .add_property(
+          "names", &bgm::py::MultiCompareBitmaps::getNames, "Names of compared maps");
 }
