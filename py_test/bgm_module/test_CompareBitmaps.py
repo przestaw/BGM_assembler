@@ -20,7 +20,7 @@ class TestAlignMaps:
 
         for i in range(0, 2):
             for j in range(0, len(expect[0])):
-                assert np.isclose(result[i][j], expect[i][j])
+                assert result[i][j] == expect[i][j]
 
     def test_align_2_binmaps_diff_size_1(self):
         map1 = CppBinaryMap('one',
@@ -49,7 +49,7 @@ class TestAlignMaps:
 
         for i in range(0, 2):
             for j in range(0, len(expect[0])):
-                assert np.isclose(result[i][j], expect[i][j])
+                assert result[i][j] == expect[i][j]
 
     def test_align_2_binmaps_diff_size_2(self):
         map1 = CppBinaryMap('one',
@@ -75,4 +75,4 @@ class TestAlignMaps:
 
         for i in range(0, 2):
             for j in range(0, len(expect[0])):
-                assert np.isclose(result[i][j], expect[i][j])
+                assert result[i][j] == expect[i][j]

@@ -41,13 +41,13 @@ def plot2bitmaps(ref: CppBinaryMap, test: CppBinaryMap, h: int = 4, colors=None,
     plt.gcf().tight_layout()
 
     if save:
-        plt.imsave("cmp"+ref.name+"-"+test.name+".raw.png", data, vmin=0, vmax=1, cmap=colors["cmap"])
-        plt.savefig("cmp"+ref.name+"-"+test.name+".png")
+        plt.imsave("cmp" + ref.name + "-" + test.name + ".raw.png", data, vmin=0, vmax=1, cmap=colors["cmap"])
+        plt.savefig("cmp" + ref.name + "-" + test.name + ".png")
 
     return data
 
 
-def plotMultiBitmaps(ref: CppBinaryMap, test: [], h: int = 4, colors=None, save=False):
+def plotMultiBitmaps(ref: CppBinaryMap, test: [], h: int = 4, truncate: bool = True, colors=None, save: bool = False):
     if colors is None:
         colors = multi_colors
     compareMaps = MultiCompareBitmaps(ref)
@@ -58,7 +58,8 @@ def plotMultiBitmaps(ref: CppBinaryMap, test: [], h: int = 4, colors=None, save=
     compared = compareMaps.compareFloat(colors["empty"],
                                         colors["red"],
                                         colors["blue"],
-                                        colors["green"])
+                                        colors["green"],
+                                        truncate)
     data = []
     for i in range(0, len(compared)):
         data.extend(np.tile(compared[i], h))
@@ -71,10 +72,7 @@ def plotMultiBitmaps(ref: CppBinaryMap, test: [], h: int = 4, colors=None, save=
     plt.gcf().tight_layout()
 
     if save:
-        plt.imsave("cmp"+ref.name+"-"+test.name+".raw.png", data, vmin=0, vmax=1, cmap=colors["cmap"])
-        plt.savefig("cmp"+ref.name+"-"+test.name+".png")
+        plt.imsave("cmp" + ref.name + "-" + test.name + ".raw.png", data, vmin=0, vmax=1, cmap=colors["cmap"])
+        plt.savefig("cmp" + ref.name + "-" + test.name + ".png")
 
     return data
-
-
-

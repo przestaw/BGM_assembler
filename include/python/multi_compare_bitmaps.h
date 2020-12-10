@@ -21,9 +21,10 @@ namespace bgm::py {
 
     /**
      * Method performing comparison between maps
+     * @param truncate truncate or enlongate maps
      * @return linear vector of lines of aligned maps bitmap
      */
-    std::vector<MarkerType> alignMapsToRef();
+    std::vector<MarkerType> alignMapsToRef(bool truncate = true);
 
     /**
      * Method performing comparison between two maps,
@@ -33,11 +34,15 @@ namespace bgm::py {
      * @param marker marker value
      * @param map map value
      * @param refmap compare value
+     * @param truncate truncate or enlongate maps
      * @return numpy array with comparison
      */
     template <typename ValueType>
-    boost::python::numpy::ndarray
-    alignMapToRefPy(ValueType empty, ValueType marker, ValueType map, ValueType refmap);
+    boost::python::numpy::ndarray alignMapToRefPy(ValueType empty,
+                                                  ValueType marker,
+                                                  ValueType map,
+                                                  ValueType refmap,
+                                                  bool truncate = true);
 
     /**
      * Returns names of maps in comparison as python list
@@ -53,26 +58,16 @@ namespace bgm::py {
 
     // struct for data save
     struct MapAlignDescriptor {
-      MapAlignDescriptor(const BinaryMap& ref,
-                         int shift      = 0,
-                         size_t overlap = 0,
-                         size_t fo      = 0,
-                         size_t f       = 0,
-                         size_t r       = 0,
-                         size_t ro      = 0);
+      MapAlignDescriptor(const BinaryMap& ref, int shift = 0);
       const bgm::BinaryMap& ref;
       int shift;
-      size_t overlap;
-      size_t fo;
-      size_t f;
-      size_t r;
-      size_t ro;
     };
 
     // internal stages data
-    bool aligned = false;
-    size_t maxFo = 0;
-    size_t maxRo = 0;
+    bool aligned  = false;
+    size_t maxFo  = 0;
+    size_t maxRo  = 0;
+    size_t totLen = 0;
     std::vector<MapAlignDescriptor> alignResults;
 
     // output data
@@ -82,24 +77,25 @@ namespace bgm::py {
     // stages
     void alignMaps();
     void adjustAndElongate();
-    void adjustAndTrucnate();
+    void adjustAndTruncate();
   };
 
   template <typename ValueType>
-  boost::python::numpy::ndarray MultiCompareBitmaps::alignMapToRefPy(ValueType empty,
-                                                                     ValueType marker,
-                                                                     ValueType map,
-                                                                     ValueType refmap) {
+  boost::python::numpy::ndarray
+  MultiCompareBitmaps::alignMapToRefPy(ValueType empty,
+                                       ValueType marker,
+                                       ValueType map,
+                                       ValueType refmap,
+                                       bool truncate) {
     const auto converter = [&](MarkerType val) {
       return markerToValueType(val, empty, marker, map, refmap);
     };
 
-    alignMapsToRef();
+    alignMapsToRef(truncate);
 
     // NOTE: need to copy data to maintain ownership !
     boost::python::numpy::ndarray ret = boost::python::numpy::zeros(
-        // TODO : shape == (lines, size/lines)
-        boost::python::make_tuple(names.size(), ref_.getMap().size()),
+        boost::python::make_tuple(names.size(), totLen),
         boost::python::numpy::dtype::get_builtin<ValueType>());
     std::transform(adjusted.begin(),
                    adjusted.end(),
