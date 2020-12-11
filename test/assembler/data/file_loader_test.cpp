@@ -48,7 +48,15 @@ BOOST_AUTO_TEST_CASE(StreamFileTest_ReturnsCorrectCount) {
   std::stringstream stream(testFile);
   auto result = bgm::FileLoader::loadFile(stream);
 
-  BOOST_CHECK_EQUAL(result.size(), 2);
+  BOOST_REQUIRE_EQUAL(result.size(), 4);
+
+  auto reversedFirst = result[0].toStringBMap();
+  std::reverse(reversedFirst.begin(), reversedFirst.end());
+  BOOST_CHECK_EQUAL(result[1].toStringBMap(), reversedFirst);
+
+  auto reversedSecond = result[2].toStringBMap();
+  std::reverse(reversedSecond.begin(), reversedSecond.end());
+  BOOST_CHECK_EQUAL(result[3].toStringBMap(), reversedSecond);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

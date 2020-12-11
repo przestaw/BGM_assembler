@@ -8,6 +8,7 @@ __pycache__/
 *$py.class
 
 #directories
+/doc/*
 *Doxygen/
 .idea/*
 *.idea/*
@@ -65,4 +66,3 @@ CMakeCache.txt
 *.log
 *.synctex.gz
 *.toc
-

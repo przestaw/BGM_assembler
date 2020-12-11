@@ -142,3 +142,17 @@ class DigestUtil:
         ret = seq.lstrip(symbol)
         ret = ret.rstrip(symbol)
         return ret
+
+
+    @staticmethod
+    def generate_binary_string(sequence):
+        """
+
+        """
+        int_seq = [int(round(i)) for i in sequence]
+        diffs = [int_seq[i] - int_seq[i - 1] for i in range(1, len(int_seq) - 1)]
+        stringmap = "1"
+        for dif in diffs:
+            stringmap = stringmap + (dif - 1) * '0' + '1'
+
+        return stringmap

@@ -1,4 +1,5 @@
 import os.path as path
+import numpy as np
 from bgm_util import BaseRecord
 
 
@@ -61,6 +62,11 @@ class FileIO:
 
     @staticmethod
     def write_valouev_maps(maps, filename):
+        """
+        Writes valouev style maps file
+        @param maps: pairs of (identifier, sequence)
+        @param filename: filename
+        """
         # unit = Kbp
 
         # "maps" - tables [name, [distance, distance, ...]]
@@ -84,3 +90,54 @@ class FileIO:
 
             index = index + 1
         file.close()
+
+    @staticmethod
+    def parse_BNX_ref_file(filename):
+        """
+        Reads BNX file with one record
+        @param filename: filename
+        @return: tuple with (distances as array, Recognition Site)
+        """
+        if not path.isfile(filename):
+            raise FileNotFoundError
+
+        infile = open(filename)
+        distances = []
+        site = None
+        for line in infile:
+            if line.startswith('1'):
+                distances = np.array(line[2:].rstrip('\n').split('\t'))
+                distances = distances.astype(np.float)
+            # elif line.startswith('0'):
+            #    # metadata
+            elif line.startswith('#'):
+                if line.startswith('# Nickase Recognition Site'):
+                    site = line.rstrip('\t').split(':')[1]
+            # elif line.startswith('Q'):
+            #     # Quality data line QX11 or QX12
+        infile.close()
+
+        return distances, site
+
+    @staticmethod
+    def parse_BNX_file(filename):
+        """
+        Reads BNX file with multiple rmaps
+        @param filename: filename
+        @return: tuple with list of distances as array
+        """
+        if not path.isfile(filename):
+            raise FileNotFoundError
+
+        infile = open(filename)
+        distances = []
+        for line in infile:
+            if line.startswith('1'):
+                line_dist = np.array(line[2:].rstrip('\n').split('\t'))
+                distances.append(line_dist.astype(np.float))
+            # elif line.startswith('0'):
+            #    # metadata
+            # elif line.startswith('Q'):
+            #     # Quality data line QX11 or QX12
+
+        return distances

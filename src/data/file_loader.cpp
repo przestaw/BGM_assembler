@@ -10,19 +10,17 @@ using namespace bgm;
 std::vector<BinaryMap> FileLoader::loadFile(std::istream& input, size_t minLen) {
   std::vector<BinaryMap> ret;
 
-  for (auto temp = parseBinMap(input); std::get<0>(temp); temp = parseBinMap(input)) {
-    if (minLen < std::get<2>(temp).size()) {
-      ret.emplace_back(std::get<1>(temp), std::get<2>(temp));
-    } // else too small
-  }
-
-  // 2 maps variant
-  //  for (auto temp = parseBinMaps(input); std::get<0>(temp);
-  //       temp      = parseBinMaps(input)) {
-  //    ret.emplace_back(std::get<1>(temp), std::get<2>(temp).first);
-  //    ret.emplace_back("reversed " + std::get<1>(temp),
-  //    std::get<2>(temp).second);
+  //  for (auto temp = parseBinMap(input); std::get<0>(temp); temp = parseBinMap(input)) {
+  //    if (minLen < std::get<2>(temp).size()) {
+  //      ret.emplace_back(std::get<1>(temp), std::get<2>(temp));
+  //    } // else too small
   //  }
+
+  // /* 2 maps variant */
+  for (auto temp = parseBinMaps(input); std::get<0>(temp); temp = parseBinMaps(input)) {
+    ret.emplace_back(std::get<1>(temp), std::get<2>(temp).first);
+    ret.emplace_back("reversed " + std::get<1>(temp), std::get<2>(temp).second);
+  }
 
   return ret;
 }
@@ -46,11 +44,9 @@ BinaryMap::Bitset FileLoader::getSequence(std::istream& in) {
     seq += tmpLine;
   }
 
-  // std::string rev_seq = seq;
   std::reverse(seq.begin(), seq.end());
 
   return BinaryMap::Bitset(seq);
-  // std::string rev_seq = seq;
 }
 
 FileLoader::ParsedRecord FileLoader::parseBinMaps(std::istream& in) {
