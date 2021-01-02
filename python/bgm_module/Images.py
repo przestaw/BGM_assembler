@@ -72,7 +72,7 @@ def plotMultiBitmaps(ref: CppBinaryMap, test: [], h: int = 4, truncate: bool = T
     plt.gcf().tight_layout()
 
     if save:
-        plt.imsave("cmp" + ref.name + "-" + test.name + ".raw.png", data, vmin=0, vmax=1, cmap=colors["cmap"])
-        plt.savefig("cmp" + ref.name + "-" + test.name + ".png")
+        plt.imsave(save + "/cmp" + ref.name + "-multi.raw.png", data, vmin=0, vmax=1, cmap=colors["cmap"])
+        plt.savefig(save + "/cmp" + ref.name + "-multi.png")
 
     return data

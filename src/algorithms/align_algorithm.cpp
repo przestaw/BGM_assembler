@@ -48,7 +48,8 @@ void AlignAlgorithm::alignMapsMulti(unsigned int threadsCount) {
   }
 }
 
-std::optional<bgm::AlignAlgorithm::AlignResult> AlignAlgorithm::alignOneMap(size_t index) {
+std::optional<bgm::AlignAlgorithm::AlignResult>
+AlignAlgorithm::alignOneMap(size_t index) {
   /* NOTE : finding all right neighbours comparing with all other maps for
    *        easier multithreading
    * NOTE : left neighbours are found in this process as relation
@@ -74,7 +75,7 @@ std::optional<bgm::AlignAlgorithm::AlignResult> AlignAlgorithm::alignOneMap(size
    *        - see notes in align function
    */
   if (best.isValid()) {
-    //maps_.addRightNeighbour(index, best.mirrorAlignment(neighbour));
+    // maps_.addRightNeighbour(index, best.mirrorAlignment(neighbour));
     return std::make_optional(std::make_pair(index, best.mirrorAlignment(neighbour)));
   } else {
     return std::nullopt;
@@ -91,9 +92,7 @@ void AlignAlgorithm::workerThread() {
     }
     index = maps_.getUnaligned();
   }
-  for(const auto &val : results){
-    maps_.addRightNeighbour(val.first, val.second);
-  }
+  for (const auto& val : results) { maps_.addRightNeighbour(val.first, val.second); }
 }
 
 void AlignAlgorithm::rangeWorkerThread(size_t begin, size_t end) {
@@ -105,8 +104,9 @@ void AlignAlgorithm::rangeWorkerThread(size_t begin, size_t end) {
   }
 }
 
-AlignAlgorithm::LayoutAlign AlignAlgorithm::align(const BinaryMap::Bitset& ref_,
-                                                  const BinaryMap::Bitset& tested_) const {
+AlignAlgorithm::LayoutAlign
+AlignAlgorithm::align(const BinaryMap::Bitset& ref_,
+                      const BinaryMap::Bitset& tested_) const {
   // copy as it will be resized
   BinaryMap::Bitset ref(ref_);
 

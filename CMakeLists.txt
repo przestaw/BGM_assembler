@@ -40,7 +40,7 @@ find_package(Doxygen)
 find_package(CLANG_TIDY)
 if (CLANG_TIDY_FOUND)
     set(CLANG_TIDY_BGM_CHECKS "cppcoreguidelines-*,performance-*,portability-*,-clang-analyzer-*,readability-*,cert-*,bugprone-*,modernize-*")
-    set(CXX_CLANG_TIDY ${CLANG_TIDY_EXE};-checks=${CLANG_TIDY_BGM_CHECKS};-header-filter='${PROJECT_SOURCE_DIR}/include/*')
+    set(CXX_CLANG_TIDY ${CLANG_TIDY_EXE};-checks=${CLANG_TIDY_BGM_CHECKS};-header-filter='${PROJECT_SOURCE_DIR}/src/**/*.h')
 endif ()
 
 # Add Clang Format
@@ -119,14 +119,12 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
 
 # include dirs
-include_directories(${PROJECT_SOURCE_DIR}/include)
+include_directories(${PROJECT_SOURCE_DIR}/src)
 include_directories(${BOOST_INCLUDE_DIR})
 include_directories(${PROJECT_SOURCE_DIR}/external) # for mt4cpp
-include_directories(include/python)
 include_directories(PRIVATE ${PYTHON_INCLUDE_DIRS})
 
 # find source files
-add_subdirectory(${PROJECT_SOURCE_DIR}/include)
 add_subdirectory(${PROJECT_SOURCE_DIR}/src)
 
 # library
@@ -138,7 +136,7 @@ add_executable(${EXECUTABLE} main.cpp)
 add_dependencies(${EXECUTABLE} ${LIBRARY})
 target_link_libraries(${EXECUTABLE} ${LIBRARY})
 target_link_libraries(${EXECUTABLE} ${EXTERNAL_LIBS})
-#target_link_libraries(${EXECUTABLE} -static-libgcc -static-libstdc++)
+
 # Python3 interface
 add_library(${PYTHON_INT}
             MODULE

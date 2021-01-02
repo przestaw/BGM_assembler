@@ -6,8 +6,8 @@
 #define BGM_ASM_MAP_ALIGNMENT_H
 
 #include <cstdint>
-#include <ostream>
 #include <limits>
+#include <ostream>
 
 namespace bgm {
   /**

@@ -81,12 +81,11 @@ namespace bgm::py {
   };
 
   template <typename ValueType>
-  boost::python::numpy::ndarray
-  MultiCompareBitmaps::alignMapToRefPy(ValueType empty,
-                                       ValueType marker,
-                                       ValueType map,
-                                       ValueType refmap,
-                                       bool truncate) {
+  boost::python::numpy::ndarray MultiCompareBitmaps::alignMapToRefPy(ValueType empty,
+                                                                     ValueType marker,
+                                                                     ValueType map,
+                                                                     ValueType refmap,
+                                                                     bool truncate) {
     const auto converter = [&](MarkerType val) {
       return markerToValueType(val, empty, marker, map, refmap);
     };

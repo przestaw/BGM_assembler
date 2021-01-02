@@ -141,3 +141,24 @@ class FileIO:
             #     # Quality data line QX11 or QX12
 
         return distances
+
+    @staticmethod
+    def parse_CMAP_file(filename):
+        """
+        Reads CMAP file with optical map
+        @param filename: filename
+        @return: list of distances as array
+        """
+        if not path.isfile(filename):
+            raise FileNotFoundError(filename)
+
+        infile = open(filename)
+        distances = []
+        for line in infile:
+            #if line.startswith('1'):
+            if not line.startswith('#'):
+                line_vals = np.array(line.rstrip('\n').split('\t'))
+                distances.append(int(line_vals[5]))
+
+
+        return distances

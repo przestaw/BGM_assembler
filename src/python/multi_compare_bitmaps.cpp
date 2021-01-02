@@ -22,9 +22,9 @@ bgm::py::MultiCompareBitmaps::alignMapsToRef(bool truncate) {
 
   this->alignMaps();
 
-  if(truncate){
+  if (truncate) {
     this->adjustAndTruncate();
-  } else{
+  } else {
     this->adjustAndElongate();
   }
 
