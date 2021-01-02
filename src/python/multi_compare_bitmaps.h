@@ -7,7 +7,7 @@
 
 #include <boost/python/numpy.hpp>
 #include <data/bin_map.h>
-#include <marker_type.h>
+#include <python/marker_type.h>
 #include <mutex>
 
 namespace bgm::py {

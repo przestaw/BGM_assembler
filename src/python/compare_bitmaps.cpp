@@ -2,7 +2,7 @@
 // Created by przestaw on 10.11.2020.
 //
 
-#include <compare_bitmaps.h>
+#include <python/compare_bitmaps.h>
 #include <utility>
 
 using namespace bgm;

@@ -5,7 +5,7 @@
 #include <boost/test/unit_test.hpp>
 #include <common/map_alignment.h>
 #include <data/bin_map.h>
-#include <free_functions.h>
+#include <python/free_functions.h>
 
 BOOST_AUTO_TEST_SUITE(BGM_Py_Test_Suite)
 

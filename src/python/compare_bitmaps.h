@@ -9,7 +9,7 @@
 #include <boost/python.hpp>
 #include <boost/python/numpy.hpp>
 #include <data/bin_map.h>
-#include <marker_type.h>
+#include <python/marker_type.h>
 
 namespace bgm::py {
 

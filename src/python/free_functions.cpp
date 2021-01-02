@@ -1,6 +1,6 @@
 #include <algorithms/align_algorithm.h>
 #include <error/exeception.h>
-#include <free_functions.h>
+#include <python/free_functions.h>
 
 namespace p  = boost::python;
 namespace np = boost::python::numpy;

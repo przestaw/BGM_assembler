@@ -3,7 +3,7 @@
 //
 
 #include <boost/test/unit_test.hpp>
-#include <py_assembly_task.h>
+#include <python/py_assembly_task.h>
 
 BOOST_AUTO_TEST_SUITE(BGM_Py_Test_Suite)
 

@@ -7,11 +7,11 @@
 #include <boost/python/def.hpp>
 #include <boost/python/module.hpp>
 #include <boost/python/numpy.hpp>
-#include <compare_bitmaps.h>
+#include <python/compare_bitmaps.h>
+#include <python/free_functions.h>
+#include <python/multi_compare_bitmaps.h>
+#include <python/py_assembly_task.h>
 #include <error/exeception.h>
-#include <free_functions.h>
-#include <multi_compare_bitmaps.h>
-#include <py_assembly_task.h>
 
 namespace p  = boost::python;
 namespace np = boost::python::numpy;

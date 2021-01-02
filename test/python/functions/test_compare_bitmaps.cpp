@@ -2,7 +2,7 @@
 // Created by przestaw on 12.11.2020.
 //
 #include <boost/test/unit_test.hpp>
-#include <compare_bitmaps.h>
+#include <python/compare_bitmaps.h>
 #include <data/bin_map.h>
 
 BOOST_AUTO_TEST_SUITE(BGM_Py_Test_Suite)

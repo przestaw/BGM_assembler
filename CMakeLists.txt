@@ -176,6 +176,7 @@ if(DOXYGEN_FOUND)
 
     set(DOXYGEN_FILE_PATTERNS *.h *.c *.cpp *.hpp *.cc *.cxx *.hxx *.hh)
     set(DOXYGEN_EXTRACT_ALL YES)
+    set(DOXYGEN_UML_LOOK YES)
 
     set(DOXYGEN_GENERATE_TREEVIEW YES)
     set(DOXYGEN_MARKDOWN_SUPPORT YES)
@@ -184,5 +185,5 @@ if(DOXYGEN_FOUND)
     set(DOXYGEN_GENERATE_HTML YES)
     set(DOXYGEN_GENERATE_MAN NO)
 
-    doxygen_add_docs(${PROJECT_NAME}-doxygen ${LIB_INC} ${LIB_SRC} ${LIB_TMP})
+    doxygen_add_docs(${PROJECT_NAME}-doxygen ${LIB_INC} ${LIB_SRC} ${LIB_TMP} ${PY_SRC} ${PY_INC})
 endif()

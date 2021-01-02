@@ -3,7 +3,7 @@
 //
 
 #include <data/result_writer.hpp>
-#include <py_assembly_task.h>
+#include <python/py_assembly_task.h>
 
 using namespace bgm;
 using namespace bgm::py;

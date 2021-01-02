@@ -3,7 +3,7 @@
 //
 #include <algorithms/align_algorithm.h>
 #include <error/exeception.h>
-#include <multi_compare_bitmaps.h>
+#include <python/multi_compare_bitmaps.h>
 #include <utility>
 
 bgm::py::MultiCompareBitmaps::MultiCompareBitmaps(bgm::BinaryMap ref)
