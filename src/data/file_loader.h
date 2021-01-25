@@ -12,10 +12,10 @@
 namespace bgm {
   class FileLoader {
   private:
-    using SingleRecord = std::tuple<bool, std::string, BinaryMap::Bitset>;
+    using SingleRecord = std::optional<std::pair<std::string, BinaryMap::Bitset>>;
 
     using SequencePair = std::pair<BinaryMap::Bitset, BinaryMap::Bitset>;
-    using ParsedRecord = std::tuple<bool, std::string, SequencePair>;
+    using ParsedRecord = std::optional<std::pair<std::string, SequencePair>>;
 
   public:
     // FIXME : use 2 maps [with reverse map] function variants
