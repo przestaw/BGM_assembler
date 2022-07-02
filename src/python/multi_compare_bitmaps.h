@@ -11,12 +11,23 @@
 #include <mutex>
 
 namespace bgm::py {
+  /**
+   * Aligns and compares multiple binary maps against a single reference map
+   */
   class MultiCompareBitmaps {
   public:
     using MarkerType = bgm::py::MarkerType;
 
+    /**
+     * Constructor
+     * @param ref reference binary map
+     */
     MultiCompareBitmaps(bgm::BinaryMap ref);
 
+    /**
+     * Adds a binary map to the comparison set
+     * @param map binary map to compare against reference
+     */
     void addMap(bgm::BinaryMap map);
 
     /**

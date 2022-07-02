@@ -147,7 +147,9 @@ class DigestUtil:
     @staticmethod
     def generate_binary_string(sequence):
         """
-
+        Converts an array of restriction site positions (in bases) into a base-resolution binary string.
+        @param sequence: ordered sequence of nickase recognition site coordinates
+        @return: binary string with '1' at restriction sites and '0' elsewhere
         """
         int_seq = [int(round(i)) for i in sequence]
         diffs = [int_seq[i] - int_seq[i - 1] for i in range(1, len(int_seq) - 1)]

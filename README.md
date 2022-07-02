@@ -1,73 +1,112 @@
-# BGM-asm prototype
-## Binary Genome Map Assembly
+# BGM_assembler — Binary Genome Map Assembly
 
-### Program Usage
+C++17 library, command-line assembler (`BGM-asm-program`), and Python extension module (`_bgm_module`) for *de novo* assembly of Optical Mapping (OM) genomic reads using binary representation.
 
-##### Options:
+---
 
-| command               | type                  | description |
-| :---                  | :----:                | :---  |
-| -h [ --help ]         | flag                  | Help screen |
-| -i [ --input ]        | arg                   | Input file |
-| -o [ --output ]       | arg                   | Output file |
-| --margin_quant        | arg                   | Margin of maps overlap in quants [min no of symbols for overlap to be meaningful] |
-| --margin_part         | arg                   | Margin of maps part overlap[min part of map overlap to be meaningful] |
-| --thresh              | arg                   | Max part of differences between two maps to be considered meaningful |
-| -t [ --threads ]      | arg  (default = 1)    | No of threads used for parallel algorithm parts[0 will force to use max detected threads, higher values will create desired threads count] |
-| -f [ --folds ]        | arg  (default = 1)    | No of folds [repeated assemblies] |
-| --marker_preference   | arg  (default = 1)    | preference of marker (true) or empty place (false) during consensus when 50% of maps has 1 and 50% has 0 |
-| --reuse_maps          | flag                  | Reuse rmaps with contigs [from at least 2 rmaps] in each fold |
-| -v [ --verbose ]      | flag                  | Verbose output [progress] |
-| -p [ --perf ]         | flag                  | Performance measurement [in seconds] |
+## Algorithm Overview
 
+Optical Mapping reads describe long DNA fragments (up to 1 Mbp). Instead of costly dynamic programming alignments, `BGM_assembler` represents restriction maps as compact bit vectors and performs assembly in four stages:
 
+1. **Quantization & Binary Conversion** — converting restriction maps (`.bnx` / `.cmap`) into binary strings (`fasta01` / `.binmaps`).
+2. **Overlap Detection** — fast bitwise XOR / bit-shift alignment across parallel worker threads.
+3. **Layout Determination** — constructing the overlap graph and resolving map layout.
+4. **Consensus Generation** — iterative folding to produce consensus genomic maps.
 
-### Build instructions
+---
 
-- Project uses *boost* library for testing and parsing program parameters 
-- When calling CMake for the first time, all needed compiler options must be
-  specified on the command line.  After this initial call to CMake, the compiler
-  definitions must not be included for further calls to CMake.  Other options
-  can be specified on the command line multiple times including all definitions
-  in the build options section below.
-- Example of configuring, building, reconfiguring, rebuilding:
+## Repository Structure
 
-  ````
-  # Initial configuration
-    $ mkdir build
-    $ cd build
-    $ cmake -DCMAKE_CXX_COMPILER=clang++ ..  
-    $ make
-    ...
-  # Second configuration
-    $ make clean
-    $ cmake -DCMAKE_BUILD_TYPE=Debug ..                               
-    $ make
-    ...
-  # Third configuration
-    $ rm -rf *
-    $ cmake -DCMAKE_CXX_COMPILER=g++ ..        
-    $ make
+- `./` — entry points (`main.cpp` for CLI, `python_interface.cpp` for `Boost.Python` bindings) and `CMakeLists.txt`
+- `src/` — C++17 core library (`data/`, `algorithms/`, `common/`)
+- `python/` — Python utilities (`bgm_util`) and `bnx_convert.py` converter for `.bnx` optical map files
+- `test/` — C++ unit tests (`Boost.Test`)
+- `py_test/` — Python unit tests for the native module and helper package
+- `external/` — bundled headers (`mt4cpp`)
+- `cmake_modules/` — CMake finders and toolchain helpers
 
+---
 
-- CMake variables
-    - **CMAKE_BUILD_TYPE** = ``Release|Debug``
-      Build type can be ``Release``, ``Debug`` which chooses
-      the optimization level and presence of debugging symbols.
-    
-    - **CMAKE_CXX_COMPILER** = <C++ compiler name>
-      Specify the C++ compiler.
-  
-- For full documentation consult the CMake manual or execute
-    ```
-    cmake --help-variable VARIABLE_NAME 
-  
-- Project targets :
+## Building
 
-    - **BGM-asm-library** - library containing all classes excluding parameters
-    - **BGM-asm-program** - program available for command line usage
-    - **BGM-asm-test** - unit tests for Cpp library made with *boost*
-    - **BGM-asm-check** - dummy target for test run during library compilation
-    - **BGM-asm-python** - python package utilizing boost.python
-    - **BGM-asm-python-test** - unit tests for python package made with *boost*
-    - **BGM-asm-python-check** - dummy target for test run during python package compilation
+### Requirements
+
+- C++17 compiler (`GCC` or `Clang`)
+- `CMake >= 3.12`
+- `Boost` (`program_options`, `thread`, `unit_test_framework`, `python`, `numpy`)
+- `Python 3` development headers (`python3-dev`) and `bitarray`, `numpy`, `matplotlib` for Python scripts
+
+### Compile CLI & Library
+
+```bash
+mkdir build && cd build
+cmake -DCMAKE_BUILD_TYPE=Release ..
+make -j 4 BGM-asm-program
+```
+
+### CMake Targets
+
+- **`BGM-asm`** — core static C++ library
+- **`BGM-asm-program`** — command-line assembler executable
+- **`BGM-asm-test`** / **`BGM-asm-check`** — C++ unit tests (`Boost.Test`)
+- **`BGM-module-python`** (`_bgm_module.so`) — Python 3 extension module (`Boost.Python`)
+- **`BGM-module-python-test`** — unit tests for the Python bindings
+
+---
+
+## Usage
+
+### Command-Line Options (`BGM-asm-program`)
+
+| Option | Type | Description |
+| :--- | :---: | :--- |
+| `-h [ --help ]` | flag | Display help message |
+| `-i [ --input ]` | arg | Input binary maps file (`.binmaps` / `.fasta01`) |
+| `-o [ --output ]` | arg | Output consensus file path |
+| `--margin_quant` | arg | Minimum overlap length in quants for an alignment to be considered meaningful |
+| `--margin_part` | arg | Minimum fraction of map length required in overlap |
+| `--thresh` | arg | Maximum allowed fraction of differing bits in overlap |
+| `-t [ --threads ]` | arg (`1`) | Number of worker threads (`0` = auto-detect hardware concurrency) |
+| `-f [ --folds ]` | arg (`1`) | Number of iterative assembly folds |
+| `--marker_preference` | arg (`1`) | Tie-breaking preference (`1` = marker, `0` = empty) on 50/50 consensus |
+| `--reuse_maps` | flag | Reuse restriction maps with contigs in subsequent folds |
+| `-v [ --verbose ]` | flag | Verbose progress output |
+| `-p [ --perf ]` | flag | Print execution time in seconds |
+
+### Quick Start Example
+
+1. Download an example dataset from [SourceForge Datasets](https://sourceforge.net/projects/binary-genome-maps/files/datasets/), or convert a raw `.bnx` file:
+
+   ```bash
+   pip3 install bitarray numpy matplotlib
+   python3 ./python/bnx_convert.py -f ./AB22.bnx -p ./
+   ```
+
+2. Run the assembler with 4 folds and 4 threads:
+
+   ```bash
+   ./BGM-asm-program \
+     -i ./e.coli-enz-BspQI-cov-40.0-q-1000.binmaps \
+     -o ./my_result \
+     --margin_quant 10 \
+     --margin_part 0.65 \
+     --thresh 0.15 \
+     -f 4 -t 4
+   ```
+
+---
+
+## Publication & Companion Archives
+
+- **Paper (arXiv):** Przemysław Stawczyk, Robert Nowak, *"Fast genomic optical map assembly algorithm using binary representation"*, arXiv:2210.06865 [q-bio.GN], 2022 — [https://arxiv.org/abs/2210.06865v1](https://arxiv.org/abs/2210.06865v1) ([DOI: 10.48550/arXiv.2210.06865](https://doi.org/10.48550/arXiv.2210.06865))
+- **SourceForge Companion Repository & Datasets:** [https://sourceforge.net/p/binary-genome-maps/code/ci/master/tree/](https://sourceforge.net/p/binary-genome-maps/code/ci/master/tree/) (benchmark datasets, evaluation notebooks, and comparison scripts)
+
+```bibtex
+@article{stawczyk2022fast,
+  title   = {Fast genomic optical map assembly algorithm using binary representation},
+  author  = {Stawczyk, Przemys{\l}aw and Nowak, Robert},
+  journal = {arXiv preprint arXiv:2210.06865},
+  year    = {2022},
+  doi     = {10.48550/arXiv.2210.06865}
+}
+```

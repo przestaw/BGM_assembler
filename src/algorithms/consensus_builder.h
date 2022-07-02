@@ -49,6 +49,10 @@ namespace bgm {
      */
     void reset();
 
+    /**
+     * Moves out resulting consensus maps and resets builder state for the next fold
+     * @return vector of resulting consensus maps
+     */
     [[nodiscard]] std::vector<BinaryMap> getConsensusMapsAndReset();
 
   private:

@@ -9,6 +9,7 @@
 #include <data/maps_container.h>
 #include <optional>
 #include <project_defines.h>
+#include <deque>
 
 namespace bgm {
   class AlignAlgorithm {

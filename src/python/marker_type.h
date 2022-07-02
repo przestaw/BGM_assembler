@@ -18,6 +18,16 @@ namespace bgm::py {
     CompareOrReferenceMap = 2   //!< represents comparison line or reference map
   };
 
+  /**
+   * Maps a MarkerType enum value to a user-provided numeric representation
+   * @tparam ValueType output numeric type
+   * @param val marker type to convert
+   * @param empty value returned for MarkerType::Empty
+   * @param marker value returned for MarkerType::Marker
+   * @param map value returned for MarkerType::Map
+   * @param compare value returned for MarkerType::CompareOrReferenceMap
+   * @return corresponding numeric value
+   */
   template <typename ValueType>
   inline ValueType markerToValueType(MarkerType val,
                                      ValueType empty,
@@ -37,6 +47,13 @@ namespace bgm::py {
     }
   }
 
+  /**
+   * Returns MarkerType at position n for a shifted query binary map
+   * @param n global column position
+   * @param start start offset of the binary map
+   * @param bMap binary map
+   * @return MarkerType at position n
+   */
   inline MarkerType
   getMapValAtPos(const int n, const int start, const bgm::BinaryMap& bMap) {
     if (n < start) {
@@ -48,6 +65,13 @@ namespace bgm::py {
     }
   }
 
+  /**
+   * Returns MarkerType at position n for a shifted reference binary map
+   * @param n global column position
+   * @param start start offset of the reference map
+   * @param bMap reference binary map
+   * @return MarkerType at position n
+   */
   inline MarkerType
   getRefValAtPos(const int n, const int start, const bgm::BinaryMap& bMap) {
     if (n < start) {

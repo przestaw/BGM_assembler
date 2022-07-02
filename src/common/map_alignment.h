@@ -81,15 +81,36 @@ namespace bgm {
     double quality_;
   };
 
+  /**
+   * Value object holding alignment shift, overlap length, and difference count for visualization
+   */
   class VisualAlignment {
   public:
+    /**
+     * Constructor
+     * @param shift offset between map beginnings
+     * @param overlap length of overlapping region in quants
+     * @param quality number of differing bits in overlap
+     */
     VisualAlignment(const unsigned long shift,
                     const unsigned long overlap,
                     const std::size_t quality)
         : shift_(shift), overlap_(overlap), diffrences_(quality) {}
 
+    /**
+     * Getter for shift between map beginnings
+     * @return shift offset
+     */
     [[nodiscard]] inline int getShift() const { return shift_; }
+    /**
+     * Getter for overlap length
+     * @return overlap length in quants
+     */
     [[nodiscard]] inline std::size_t getOverlap() const { return overlap_; }
+    /**
+     * Getter for number of differences in overlap
+     * @return difference count
+     */
     [[nodiscard]] inline std::size_t getDiffrences() const { return diffrences_; }
 
     inline bool operator==(const VisualAlignment& rhs) const {

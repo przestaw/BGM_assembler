@@ -22,6 +22,15 @@ simple_colors = {
 
 
 def plot2bitmaps(ref: CppBinaryMap, test: CppBinaryMap, h: int = 4, colors=None, save=False):
+    """
+    Aligns and plots two binary maps along with their overlap row using the C++ extension module.
+    @param ref: reference CppBinaryMap
+    @param test: tested CppBinaryMap
+    @param h: vertical pixel height of each rendered bar
+    @param colors: optional color mapping dictionary
+    @param save: if True, saves rendered PNG files to disk
+    @return: 2D numpy array representing the rendered comparison image
+    """
     if colors is None:
         colors = multi_colors
     compareMaps = CompareBitmaps(ref, test)
@@ -48,6 +57,16 @@ def plot2bitmaps(ref: CppBinaryMap, test: CppBinaryMap, h: int = 4, colors=None,
 
 
 def plotMultiBitmaps(ref: CppBinaryMap, test: [], h: int = 4, truncate: bool = True, colors=None, save: bool = False):
+    """
+    Aligns and plots multiple binary maps against a reference map using the C++ extension module.
+    @param ref: reference CppBinaryMap
+    @param test: iterable of tested CppBinaryMap objects
+    @param h: vertical pixel height of each rendered bar
+    @param truncate: whether to truncate overhangs to the reference map length
+    @param colors: optional color mapping dictionary
+    @param save: target directory path to save PNG files, or False to skip saving
+    @return: 2D numpy array representing the rendered multi-map alignment image
+    """
     if colors is None:
         colors = multi_colors
     compareMaps = MultiCompareBitmaps(ref)

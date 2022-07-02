@@ -28,6 +28,13 @@ simple_colors = {
 
 
 def arr_from_binmap(binmap, ref=False, colors=None):
+    """
+    Converts a binary map string ('0', '1', 'n') into a list of numeric color values.
+    @param binmap: binary map string with optional 'n' padding
+    @param ref: if True, uses reference map palette colors
+    @param colors: color mapping dictionary
+    @return: list of float color intensities
+    """
     if colors is None:
         colors = multi_colors
 
@@ -49,6 +56,13 @@ def arr_from_binmap(binmap, ref=False, colors=None):
 
 
 def arr_diff(one, two, colors=None):
+    """
+    Computes a color-coded difference row between two aligned binary map strings.
+    @param one: first aligned binary map string
+    @param two: second aligned binary map string
+    @param colors: color mapping dictionary
+    @return: list of float color intensities representing matches and mismatches
+    """
     if colors is None:
         colors = multi_colors
 

@@ -12,16 +12,24 @@
 
 namespace bgm {
 
+  /**
+   * In-memory assembly task executing alignment and consensus folds on a vector of BinaryMaps
+   */
   class AssemblyTask : public AbstractTask {
   public:
     using Params = AbstractTask::Params;
 
     /**
-     * Constructos
-     * @param params parameter for task
+     * Constructor
+     * @param maps input binary maps
+     * @param params parameters for assembly task
      */
     AssemblyTask(std::vector<BinaryMap> maps, Params params);
 
+    /**
+     * Returns assembled consensus binary maps
+     * @return vector of resulting BinaryMaps
+     */
     std::vector<BinaryMap> getResult();
 
   protected:
